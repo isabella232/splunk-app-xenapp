@@ -1,0 +1,170 @@
+<view template="dashboard.html" stylesheet="dashboard2.css">
+  <label>User Experience</label>
+  <module name="AccountBar" layoutPanel="appHeader" />
+  <module name="AppBar" layoutPanel="navigationHeader" />
+  <module name="Message" layoutPanel="messaging">
+    <param name="filter">*</param>
+    <param name="clearOnJobDispatch">False</param>
+    <param name="maxSize">1</param>
+  </module>
+  <module name="TitleBar" layoutPanel="viewHeader">
+    <param name="actionsMenuFilter">dashboard</param>
+  </module>
+  <module name="GenericHeader" layoutPanel="panel_row1_col1">
+    <param name="label">User Experience</param>
+  </module>
+  <module name="StaticContentSample" layoutPanel="panel_row1_col1">
+    <param name="text">This Report allows you to profile and score a users Citirx App session. A user experience score of 1 (lowest) - 5 (highest) is assigned to various the various components monitored as part of that VDI session. To get started, enter a username, desktop hostname and select a time range below.</param>
+  </module>
+  <module name="ServerSideInclude" layoutPanel="panel_row1_col1">
+    <param name="src">usrexp_key.html</param>
+  </module>
+  <module name="TimeRangePicker" layoutPanel="panel_row2_col1_grp1">
+    <param name="selected">Last 15 Minutes</param>
+    <param name="searchWhenChanged">False</param>
+    <module name="ExtendedFieldSearch" layoutPanel="panel_row2_col1_grp2">
+      <param name="label">UserName:</param>
+      <param name="field">UserName</param>
+      <param name="replacementMap">
+        <param name="arg">
+          <param name="UserName">
+            <param name="value"></param>
+          </param>
+        </param>
+      </param>
+      <param name="intention">
+        <param name="name">stringreplace</param>
+        <param name="arg">
+          <param name="UserName">
+            <param name="default"></param>
+            <param name="prefix">UserName="</param>
+            <param name="suffix">"</param>
+            <param name="fillOnEmpty">false</param>
+          </param>
+        </param>
+      </param>
+      <module name="SubmitButton" layoutPanel="panel_row2_col1_grp3">
+        <param name="allowSoftSubmit">False</param>
+        <param name="label">Submit</param>
+        <module name="HiddenSearch" group="ICA Session Info">
+          <param name="search">index=xenapp sourcetype="CitrixXA6:ICASession" $UserName$ | fields LatencySessionAverage</param>
+          <module name="JobProgressIndicator"></module>
+          <module name="ViewRedirectorLink">
+            <param name="viewTarget">flashtimeline</param>
+            <param name="label">Session Details</param>
+          </module>
+          <module name="HiddenPostProcess" layoutPanel="panel_row4_col1_grp1" group="Latency Over Time">
+            <param name="search">| timechart max(LatencySessionAverage) as LatencySessionAverage</param>
+            <module name="HiddenChartFormatter">
+              <param name="chart">line</param>
+              <param name="chart.stackMode">none</param>
+              <param name="legend.placement">bottom</param>
+              <module name="FlashChart">
+                <param name="width">100%</param>
+                <module name="ConvertToDrilldownSearch">
+                  <module name="ViewRedirector">
+                    <param name="viewTarget">flashtimeline</param>
+                  </module>
+                </module>
+              </module>
+            </module>
+          </module>
+          <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp1" group="ICA Session Info">
+            <param name="search">| stats median(LatencySessionAverage) as LatencySessionAverage | eval LatencySessionAverage = round(LatencySessionAverage,2) | eval usrexp =case(LatencySessionAverage&gt;=200,"1",LatencySessionAverage&gt;=180,"2",LatencySessionAverage&gt;=165,"3",LatencySessionAverage&gt;=110,"4",LatencySessionAverage&lt;110,"5") | eval usrexp="usrexp"+usrexp</param>
+            <module name="SingleValue">
+              <param name="field">LatencySessionAverage</param>
+              <param name="classField">usrexp</param>
+              <param name="format">count</param>
+              <param name="beforeLabel">ICA Session Latency:</param>
+            </module>
+          </module>
+        </module>
+        <module name="HiddenSearch" group="% CPU">
+          <param name="search">sourcetype=Perfmon:CPULoad Processor object="Processor" [search index=xenapp sourcetype="CitrixXA6:Session" $UserName$ | stats first(MachineName) as MachineName by UserName | head 1 | rename MachineName as host | fields host ] | stats last(Value) as Value by _time</param>
+          <module name="JobProgressIndicator"></module>
+          <module name="HiddenPostProcess" layoutPanel="panel_row6_col1" group="% CPU Utilization">
+            <param name="search">| timechart max(Value) as "Max % CPU" avg(Value) as "Avg % CPU" min(Value) as "Min % CPU"</param>
+            <module name="HiddenChartFormatter">
+              <param name="chart">line</param>
+              <param name="chart.stackMode">none</param>
+              <param name="legend.placement">bottom</param>
+              <module name="FlashChart">
+                <param name="width">100%</param>
+              </module>
+            </module>
+          </module>
+          <module name="HiddenPostProcess" layoutPanel="panel_row5_col1_grp1">
+            <param name="search">| stats median(Value) as Value | eval Value=round(Value,2) |eval usrexp =case(LatencySessionAverage&gt;=200,"1",LatencySessionAverage&gt;=180,"2",LatencySessionAverage&gt;=165,"3",LatencySessionAverage&gt;=110,"4",LatencySessionAverage&lt;110,"5") | eval usrexp="usrexp"+usrexp</param>
+            <module name="SingleValue">
+              <param name="field">Value</param>
+              <param name="classField">usrexp</param>
+              <param name="format">count</param>
+              <param name="beforeLabel">% Processor Time:</param>
+            </module>
+          </module>
+        </module>
+        <module name="HiddenSearch" layoutPanel="panel_row6_col2" group="Available Memory in Megabytes">
+          <param name="search">index=perfmon sourcetype="Perfmon:AvailableMemory" object="Memory" Memory [search index=xenapp sourcetype="CitrixXA6:Session" $UserName$ | stats first(MachineName) as MachineName by UserName | head 1 | rename MachineName as host | fields host ] | stats last(Value) as Value by _time</param>
+          <module name="JobProgressIndicator"></module>
+          <module name="HiddenPostProcess" layoutPanel="panel_row6_col2" group="Available Memory in Megabytes">
+            <param name="search">| eval Value=Value/1024/1024 | timechart max(Value) as MaxMBFree avg(Value) as AvgMBFree min(Value) as MinMBFree | eval MaxMBFree= round(MaxMBFree,2) | eval AvgMBFree= round(AvgMBFree,2) | eval MinMBFree= round(MinMBFree,2)</param>
+            <module name="HiddenChartFormatter">
+              <param name="chart">line</param>
+              <param name="chart.stackMode">none</param>
+              <param name="legend.placement">bottom</param>
+              <module name="FlashChart">
+                <param name="width">100%</param>
+              </module>
+            </module>
+          </module>
+          <module name="HiddenPostProcess" layoutPanel="panel_row5_col1_grp2">
+            <param name="search">| eval Value=Value/1024/1024 | stats median(Value) as Value | eval Value=round(Value,2) |eval usrexp =case(LatencySessionAverage&gt;=200,"1",LatencySessionAverage&gt;=180,"2",LatencySessionAverage&gt;=165,"3",LatencySessionAverage&gt;=110,"4",LatencySessionAverage&lt;110,"5") | eval usrexp="usrexp"+usrexp</param>
+            <module name="SingleValue">
+              <param name="field">Value</param>
+              <param name="classField">usrexp</param>
+              <param name="format">count</param>
+              <param name="beforeLabel">Available Memory in Megabytes:</param>
+            </module>
+          </module>
+        </module>
+        <module name="HiddenSearch" layoutPanel="panel_row6_col3" group="Disk Transfers/Sec">
+          <param name="search">index=perfmon counter="Disk Transfers/Sec" sourcetype="Perfmon:LogicalDisk" object=LogicalDisk [search index=xenapp sourcetype="CitrixXA6:Session" $UserName$ | stats first(MachineName) as MachineName by UserName | head 1 | rename MachineName as host | fields host ] | stats last(Value) as Value by _time</param>
+          <module name="JobProgressIndicator"></module>
+          <module name="HiddenPostProcess" layoutPanel="panel_row6_col3" group="Disk Transfers/Sec">
+            <param name="search">| timechart max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min Disk Transfers/Sec" | rename max as "Max Disk Transfers/Sec" | rename avg as "Avg Disk Transfers/Sec"</param>
+            <module name="HiddenChartFormatter">
+              <param name="chart">line</param>
+              <param name="chart.stackMode">none</param>
+              <param name="legend.placement">bottom</param>
+              <module name="FlashChart">
+                <param name="width">100%</param>
+              </module>
+            </module>
+          </module>
+          <module name="HiddenPostProcess" layoutPanel="panel_row5_col1_grp3">
+            <param name="search">| stats median(Value) as Value | eval Value=round(Value,2) | eval Value=round(Value,2) |eval usrexp =case(LatencySessionAverage&gt;=200,"1",LatencySessionAverage&gt;=180,"2",LatencySessionAverage&gt;=165,"3",LatencySessionAverage&gt;=110,"4",LatencySessionAverage&lt;110,"5") | eval usrexp="usrexp"+usrexp</param>
+            <module name="SingleValue">
+              <param name="field">Value</param>
+              <param name="classField">usrexp</param>
+              <param name="format">count</param>
+              <param name="beforeLabel">Disk Transfers/Sec:</param>
+            </module>
+          </module>
+        </module>
+        <module name="HiddenSearch" layoutPanel="panel_row7_col1" group="Windows WinEvent Log">
+          <param name="search">index=winevents Type="Warning" OR Type="Error" sourcetype="WinEventLog:*" [search index=xenapp sourcetype="CitrixXA6:Session" $UserName$ | stats first(MachineName) as MachineName by UserName | head 1 | rename MachineName as host | fields host ] |stats values(SourceName) as "Source(s)" values(Message) as "Message(s)" by Type host | head 10 | sort - count</param>
+          <module name="SimpleResultsTable">
+            <param name="drilldown">row</param>
+            <param name="entityName">results</param>
+            <param name="count">15</param>
+            <param name="displayRowNumbers">False</param>
+          </module>
+          <module name="ViewRedirectorLink">
+            <param name="viewTarget">flashtimeline</param>
+            <param name="label">View WinEvent Errors</param>
+          </module>
+        </module>
+      </module>
+    </module>
+  </module>
+</view>

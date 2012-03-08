@@ -1,0 +1,84 @@
+[script://$SPLUNK_HOME\bin\scripts\splunk-perfmon.path]
+disabled = 0
+index = perfmon
+
+[script://$SPLUNK_HOME\bin\scripts\splunk-wmi.path]
+disabled = 0
+index = perfmon
+
+
+[WinEventLog:Application]
+disabled = 0
+index = winevents
+
+[WinEventLog:System]
+disabled = 0
+index = winevents
+
+[WinEventLog:Security]
+disabled = 0
+index = winevents
+
+[monitor://$WINDIR\WindowsUpdate.log]
+sourcetype = WindowsUpdateLog
+disabled = 1
+index = winevents
+
+[WinEventLog:Forwarded Events]
+disabled = 0
+index = winevents
+
+[WinEventLog:Setup]
+disabled = 0
+index = winevents
+
+
+
+###############################################################################
+#
+# The following scripts use the Citrix XenApp Powershell functions and need to run on a XenApp Server
+# 
+###############################################################################
+[script://.\bin\GetXAApplicationReport60.path]
+source=CitrixXA6:PowerShell
+sourcetype=CitrixXA6:Application
+index=xenapp
+interval=600
+disabled=0
+
+[script://.\bin\GetXAServer60.py]
+source=CitrixXA6:PowerShell
+sourcetype=CitrixXA6:Server
+index=xenapp
+interval=600
+disabled=0
+
+[script://.\bin\GetXAServerHotfix60.py]
+source=CitrixXA6:PowerShell
+sourcetype=CitrixXA6:ServerHotfix
+index=xenapp
+interval=600
+disabled=0
+
+[script://.\bin\GetXAServerLoad60.py]
+source=CitrixXA6:PowerShell
+sourcetype=CitrixXA6:ServerLoad
+index=xenapp
+interval=600
+disabled=0
+
+[script://.\bin\GetXASession60.py]
+source=CitrixXA6:PowerShell
+sourcetype=CitrixXA6:Session
+index=xenapp
+interval=600
+disabled=0
+
+[script://.\bin\GetXASessionProcess60.py]
+source=CitrixXA6:PowerShell
+sourcetype=CitrixXA6:SessionProcess
+index=xenapp
+interval=600
+disabled=0
+
+
