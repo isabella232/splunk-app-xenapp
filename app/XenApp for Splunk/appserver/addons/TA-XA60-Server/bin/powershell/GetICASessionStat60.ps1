@@ -17,7 +17,7 @@ if($ICASessions)
 				'{0}="{1}"' -f "UserName",($Value -replace ".*\((.*)\)",'$1')
 			}
 		}
-        
+
         $output += '{0}="{1}"' -f "ScriptRunTime",$ScriptRunTime
         
 		Write-Host ("{0:MM/dd/yyyy HH:mm:ss} GMT - {1}" -f ((get-date).ToUniversalTime()),( $output -join " " ))
