@@ -1,7 +1,7 @@
 Param($Computer = $ENV:ComputerName)   
 
 $ScriptRunTime = (get-date).ToFileTime()
-$myobjs = @()   
+  
 $RemoteRegistry = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey("LocalMachine",$Computer)   
 
 $RegKey = $RemoteRegistry.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\")  
@@ -11,13 +11,17 @@ foreach($key in $RegKey.GetSubKeyNames())
     $DisplayName = $SubKey.GetValue("DisplayName")
     if($DisplayName)
     {
-        write-Host ('Name="{0}" '           -f $DisplayName) 	-nonewline
-        write-Host ('Version="{0}" '        -f $SubKey.GetValue("DisplayVersion"))  -nonewline
-        write-Host ('InstallLocation="{0}" ' -f $SubKey.GetValue("InstallLocation"))  -nonewline
-        write-Host ('Vendor="{0}" '         -f $SubKey.GetValue("Publisher")) -nonewline
-        write-Host ('ScriptRunTime="{0}"'   -f $ScriptRunTime)
+        $output  = 'Name="{0}"'            -f $DisplayName
+        $output += 'Version="{0}" '        -f ($SubKey.GetValue("DisplayVersion"))  
+        $output += 'InstallLocation="{0}"' -f ($SubKey.GetValue("InstallLocation")) 
+        $output += 'Vendor="{0}"'          -f ($SubKey.GetValue("Publisher")) 
+        $output += 'ScriptRunTime="{0}"'   -f $ScriptRunTime
     }
-
+    
+    if($output)
+    {
+        Write-Host ("{0:MM/dd/yyyy HH:mm:ss} GMT - {1}" -f ((get-date).ToUniversalTime()),( $output -join " " ))
+    }
 }   
 
 $RegKey = $RemoteRegistry.OpenSubKey("SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall")   
@@ -27,10 +31,16 @@ foreach($key in $RegKey.GetSubKeyNames())
     $DisplayName = $SubKey.GetValue("DisplayName")
     if($DisplayName)
     {
-        write-Host ('Name="{0}" '           -f $DisplayName) 	-nonewline
-        write-Host ('Version="{0}" '        -f $SubKey.GetValue("DisplayVersion"))  -nonewline
-        write-Host ('InstallLocation="{0}" ' -f $SubKey.GetValue("InstallLocation"))  -nonewline
-        write-Host ('Vendor="{0}" '         -f $SubKey.GetValue("Publisher")) -nonewline
-        write-Host ('ScriptRunTime="{0}"'   -f $ScriptRunTime)
+        $output  = 'Name="{0}" '           -f $DisplayName
+        $output += 'Version="{0}" '        -f ($SubKey.GetValue("DisplayVersion")) 
+        $output += 'InstallLocation="{0}"' -f ($SubKey.GetValue("InstallLocation"))
+        $output += 'Vendor="{0}"'          -f ($SubKey.GetValue("Publisher"))
+        $output += 'ScriptRunTime="{0}"'   -f $ScriptRunTime
+    }
+    
+    if($output)
+    {
+        Write-Host ("{0:MM/dd/yyyy HH:mm:ss} GMT - {1}" -f ((get-date).ToUniversalTime()),( $output -join " " ))
     }
 }   
+
