@@ -1,7 +1,8 @@
+<?xml version="1.0"?>
 <view template="dashboard.html" stylesheet="dashboard2.css">
   <label>User Experience</label>
-  <module name="AccountBar" layoutPanel="appHeader" />
-  <module name="AppBar" layoutPanel="navigationHeader" />
+  <module name="AccountBar" layoutPanel="appHeader"/>
+  <module name="AppBar" layoutPanel="navigationHeader"/>
   <module name="Message" layoutPanel="messaging">
     <param name="filter">*</param>
     <param name="clearOnJobDispatch">False</param>
@@ -31,7 +32,7 @@
       <param name="replacementMap">
         <param name="arg">
           <param name="user">
-            <param name="value"></param>
+            <param name="value"/>
           </param>
         </param>
       </param>
@@ -39,7 +40,7 @@
         <param name="name">stringreplace</param>
         <param name="arg">
           <param name="user">
-            <param name="default"></param>
+            <param name="default"/>
             <param name="prefix">user="</param>
             <param name="suffix">"</param>
             <param name="fillOnEmpty">false</param>
@@ -52,7 +53,7 @@
         <param name="replacementMap">
           <param name="arg">
             <param name="vm_name">
-              <param name="value"></param>
+              <param name="value"/>
             </param>
           </param>
         </param>
@@ -60,7 +61,7 @@
           <param name="name">stringreplace</param>
           <param name="arg">
             <param name="vm_name">
-              <param name="default"></param>
+              <param name="default"/>
               <param name="prefix">vm_name="</param>
               <param name="suffix">"</param>
               <param name="fillOnEmpty">false</param>
@@ -71,8 +72,8 @@
           <param name="allowSoftSubmit">False</param>
           <param name="label">Submit</param>
           <module name="HiddenSearch" group="ICA Session Info" layoutPanel="panel_row4_col1_grp3">
-            <param name="search">`xen_index` `xd5_ica` InputSessionBandwidth OutputSessionBandwidth LatencySessionAverage InputSessionCompression OutputSessionCompression UserName!="" user!="_Server Total" [search index=xendt sourcetype="citrixxd*:sessions" $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name user ] | eval SessionBandwidth=InputSessionBandwidth+OutputSessionBandwidth | search SessionBandwidth&gt;0 | timechart span=5m max(SessionBandwidth) as MaxSessionBandwidth min(SessionBandwidth) as MinSessionBandwidth median(SessionBandwidth) as "AvgSessionBandwidth" Max(LatencySessionAverage) as "LatencySessionAverage" | eval AvgSessionBandwidth = round(AvgSessionBandwidth,2) | where MaxSessionBandwidth&gt;0 | sort - _time</param>
-            <module name="JobProgressIndicator"></module>
+            <param name="search">`xenapp_index` `xa_ica` InputSessionBandwidth OutputSessionBandwidth LatencySessionAverage InputSessionCompression OutputSessionCompression UserName!="" user!="_Server Total" [search `xenapp_index` `xa_sessions_sourcetype` $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name user ] | eval SessionBandwidth=InputSessionBandwidth+OutputSessionBandwidth | search SessionBandwidth&gt;0 | timechart span=5m max(SessionBandwidth) as MaxSessionBandwidth min(SessionBandwidth) as MinSessionBandwidth median(SessionBandwidth) as "AvgSessionBandwidth" Max(LatencySessionAverage) as "LatencySessionAverage" | eval AvgSessionBandwidth = round(AvgSessionBandwidth,2) | where MaxSessionBandwidth&gt;0 | sort - _time</param>
+            <module name="JobProgressIndicator"/>
             <module name="ViewRedirectorLink">
               <param name="viewTarget">flashtimeline</param>
               <param name="label">Session Counters</param>
@@ -84,7 +85,7 @@
                 <param name="chart">line</param>
                 <param name="chart.stackMode">none</param>
                 <param name="legend.placement">bottom</param>
-                <module name="FlashChart">
+                <module name="JSChart">
                   <param name="width">100%</param>
                   <module name="ConvertToDrilldownSearch">
                     <module name="ViewRedirector">
@@ -100,7 +101,7 @@
                 <param name="chart">line</param>
                 <param name="chart.stackMode">none</param>
                 <param name="legend.placement">bottom</param>
-                <module name="FlashChart">
+                <module name="JSChart">
                   <param name="width">100%</param>
                   <module name="ConvertToDrilldownSearch">
                     <module name="ViewRedirector">
@@ -132,39 +133,39 @@
             <!-- End Switcher -->
           </module>
           <module name="HiddenSearch" layoutPanel="panel_row4_col1_grp1">
-            <param name="search">index=xendt sourcetype=CitrixXD*:Sessions $user$ $vm_name$ | head 1 | lookup xd5_desktops vm_name OUTPUT DesktopGroupName HostingServerName CatalogName ControllerDNSName | fillnull DesktopGroupName HostingServerName CatalogName ControllerDNSName value="Unknown" | eval c_type = substr(DeviceId,0,3) | eval client_dvc_type = case(c_type == "iOS", "Apple iOS",c_type == "iPa", "iPad",c_type == "roi", "Android",c_type == "WI_","Windows Desktop Receiver",DeviceId == ClientName,"Desktop Receiver") | convert timeformat="%m/%d/%Y %H:%M:%S" mktime(StartTime) as st | eval dur = _time - st | convert timeformat="%m/%d/%Y %H:%M:%S" mktime(BrokeringTime) as bt | convert timeformat="%m/%d/%Y %H:%M:%S" mktime(SessionStateChangeTime) as sest | eval load_time = sest - bt | eval load_time=if(SessionState=="Active",load_time,0) | fillnull load_time | rename dur as Duration| rename client_dvc_type as EndpointType | rename load_time as LoadTime | head 1 | table SessionState SessionStateChangeTime StartTime Duration LoadTime UserName ClientName EndpointType ClientAddress Protocol ClientVersion LaunchedViaIP ConnectedViaIP | transpose</param>
+            <param name="search">`xenapp_index` `xa_sessions_sourcetype` $user$ $vm_name$ | head 1 | lookup xa_servers vm_name OUTPUT DesktopGroupName HostingServerName CatalogName ControllerDNSName | fillnull DesktopGroupName HostingServerName CatalogName ControllerDNSName value="Unknown" | eval c_type = substr(DeviceId,0,3) | eval client_dvc_type = case(c_type == "iOS", "Apple iOS",c_type == "iPa", "iPad",c_type == "roi", "Android",c_type == "WI_","Windows Desktop Receiver",DeviceId == ClientName,"Desktop Receiver") | convert timeformat="%m/%d/%Y %H:%M:%S" mktime(StartTime) as st | eval dur = _time - st | convert timeformat="%m/%d/%Y %H:%M:%S" mktime(BrokeringTime) as bt | convert timeformat="%m/%d/%Y %H:%M:%S" mktime(SessionStateChangeTime) as sest | eval load_time = sest - bt | eval load_time=if(SessionState=="Active",load_time,0) | fillnull load_time | rename dur as Duration| rename client_dvc_type as EndpointType | rename load_time as LoadTime | head 1 | table SessionState SessionStateChangeTime StartTime Duration LoadTime UserName ClientName EndpointType ClientAddress Protocol ClientVersion LaunchedViaIP ConnectedViaIP | transpose</param>
             <module name="ViewRedirectorLink">
               <param name="viewTarget">flashtimeline</param>
               <param name="label">Session Details</param>
             </module>
-            <module name="JobProgressIndicator"></module>
+            <module name="JobProgressIndicator"/>
             <module name="SimpleResultsTable" group="Session Information" layoutPanel="panel_row4_col1_grp1">
               <param name="displayMenu">true</param>
               <param name="count">100</param>
             </module>
           </module>
           <module name="HiddenSearch" layoutPanel="panel_row4_col1_grp2">
-            <param name="search">`xen_index` `xd5_desktops_sourcetype` [search index=xendt sourcetype="citrixxd*:sessions" $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name ]| head 1 | table MachineName PowerState InMaintenanceMode DesktopGroupName CatalogName OSType IPAddress AgentVersion HostingServerName HypervisorConnectionName HostedMachineName LastDeregistrationReason LastDeregistrationTime LastDeregistrationReason | transpose</param>
+            <param name="search">`xenapp_index` `xd5_desktops_sourcetype` [search `xenapp_index` `xa_sessions_sourcetype` $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name ]| head 1 | table MachineName PowerState InMaintenanceMode DesktopGroupName CatalogName OSType IPAddress AgentVersion HostingServerName HypervisorConnectionName HostedMachineName LastDeregistrationReason LastDeregistrationTime LastDeregistrationReason | transpose</param>
             <module name="ViewRedirectorLink">
               <param name="viewTarget">flashtimeline</param>
               <param name="label">Desktop Details</param>
             </module>
-            <module name="JobProgressIndicator"></module>
+            <module name="JobProgressIndicator"/>
             <module name="SimpleResultsTable" group="Desktop Details" layoutPanel="panel_row4_col1_grp2">
               <param name="displayMenu">true</param>
               <param name="count">150</param>
             </module>
           </module>
           <module name="HiddenSearch" layoutPanel="panel_row6_col1" group="% CPU">
-            <param name="search">`perfmon_cpu` [search index=xendt sourcetype="citrixxd*:sessions" $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name ] | stats last(Value) as Value by _time vm_name</param>
-            <module name="JobProgressIndicator"></module>
+            <param name="search">`perfmon_cpu` [search `xenapp_index` `xa_sessions_sourcetype` $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name ] | stats last(Value) as Value by _time vm_name</param>
+            <module name="JobProgressIndicator"/>
             <module name="HiddenPostProcess" layoutPanel="panel_row6_col1" group="% CPU Utilization">
               <param name="search">| timechart max(Value) as "Max % CPU" avg(Value) as "Avg % CPU" min(Value) as "Min % CPU"</param>
               <module name="HiddenChartFormatter">
                 <param name="chart">line</param>
                 <param name="chart.stackMode">none</param>
                 <param name="legend.placement">bottom</param>
-                <module name="FlashChart">
+                <module name="JSChart">
                   <param name="width">100%</param>
                 </module>
               </module>
@@ -180,15 +181,15 @@
             </module>
           </module>
           <module name="HiddenSearch" layoutPanel="panel_row6_col2" group="Available Memory in Megabytes">
-            <param name="search">`perfmon_mem` [search index=xendt sourcetype="citrixxd*:sessions" $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name ] | stats first(Value) as Value by _time vm_name</param>
-            <module name="JobProgressIndicator"></module>
+            <param name="search">`perfmon_mem` [search `xenapp_index` `xa_sessions_sourcetype` $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name ] | stats first(Value) as Value by _time vm_name</param>
+            <module name="JobProgressIndicator"/>
             <module name="HiddenPostProcess" layoutPanel="panel_row6_col2" group="Available Memory in Megabytes">
               <param name="search">| eval Value=Value/1024/1024 | timechart max(Value) as MaxMBFree avg(Value) as AvgMBFree min(Value) as MinMBFree | eval MaxMBFree= round(MaxMBFree,2) | eval AvgMBFree= round(AvgMBFree,2) | eval MinMBFree= round(MinMBFree,2)</param>
               <module name="HiddenChartFormatter">
                 <param name="chart">line</param>
                 <param name="chart.stackMode">none</param>
                 <param name="legend.placement">bottom</param>
-                <module name="FlashChart">
+                <module name="JSChart">
                   <param name="width">100%</param>
                 </module>
               </module>
@@ -204,15 +205,15 @@
             </module>
           </module>
           <module name="HiddenSearch" layoutPanel="panel_row6_col3" group="Disk Transfers/Sec">
-            <param name="search">counter="Disk Transfers/Sec" `perfmon_logdisk` object=LogicalDisk [search index=xendt sourcetype="citrixxd*:sessions" $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name ] | stats first(Value) as Value by _time vm_name</param>
-            <module name="JobProgressIndicator"></module>
+            <param name="search">counter="Disk Transfers/Sec" `perfmon_logdisk` object=LogicalDisk [search `xenapp_index` `xa_sessions_sourcetype` $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name ] | stats first(Value) as Value by _time vm_name</param>
+            <module name="JobProgressIndicator"/>
             <module name="HiddenPostProcess" layoutPanel="panel_row6_col3" group="Disk Transfers/Sec">
               <param name="search">| timechart max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min Disk Transfers/Sec" | rename max as "Max Disk Transfers/Sec" | rename avg as "Avg Disk Transfers/Sec"</param>
               <module name="HiddenChartFormatter">
                 <param name="chart">line</param>
                 <param name="chart.stackMode">none</param>
                 <param name="legend.placement">bottom</param>
-                <module name="FlashChart">
+                <module name="JSChart">
                   <param name="width">100%</param>
                 </module>
               </module>
@@ -228,7 +229,7 @@
             </module>
           </module>
           <module name="HiddenSearch" layoutPanel="panel_row7_col1" group="Windows WinEvent Log">
-            <param name="search">`win_index` Type=Error sourcetype="WinEventLog:*" [search index=xendt sourcetype="citrixxd*:sessions" $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name ] |stats values(SourceName) as "Source(s)" values(Message) as "Message(s)" by Type vm_name | head 10 | sort - count</param>
+            <param name="search">`win_index` Type=Error sourcetype="WinEventLog:*" [search `xenapp_index` `xa_sessions_sourcetype` $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name ] |stats values(SourceName) as "Source(s)" values(Message) as "Message(s)" by Type vm_name | head 10 | sort - count</param>
             <module name="SimpleResultsTable">
               <param name="drilldown">row</param>
               <param name="entityName">results</param>
@@ -241,7 +242,7 @@
             </module>
           </module>
           <module name="HiddenSearch" layoutPanel="panel_row8_col1_grp1" group="View Reports">
-            <param name="search">`xen_index` [search index=xendt sourcetype="citrixxd*:sessions" $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name ] | head 1 | eval Report="View Installed Applications" | stats first(Report) as Report by vm_name</param>
+            <param name="search">`xenapp_index` [search `xenapp_index` `xa_sessions_sourcetype` $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name ] | head 1 | eval Report="View Installed Applications" | stats first(Report) as Report by vm_name</param>
             <module name="SimpleResultsTable" layoutPanel="panel_row8_col1_grp1">
               <param name="displayMenu">true</param>
               <param name="count">100</param>
@@ -269,7 +270,7 @@
             </module>
           </module>
           <module name="HiddenSearch" layoutPanel="panel_row8_col1_grp2" group="View Reports">
-            <param name="search">`xen_index` [search index=xendt sourcetype="citrixxd*:sessions" $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name ] | head 1 | eval Report="View Running Procesess" | stats first(Report) as Report by vm_name</param>
+            <param name="search">`xenapp_index` [search `xenapp_index` `xa_sessions_sourcetype` $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name ] | head 1 | eval Report="View Running Procesess" | stats first(Report) as Report by vm_name</param>
             <module name="SimpleResultsTable" layoutPanel="panel_row8_col1_grp2">
               <param name="displayMenu">true</param>
               <param name="count">100</param>
@@ -297,7 +298,7 @@
             </module>
           </module>
           <module name="HiddenSearch" layoutPanel="panel_row8_col1_grp3" group="View Reports">
-            <param name="search">`xen_index` [search index=xendt sourcetype="citrixxd*:sessions" $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name ] | head 1 | eval Report="View Bios" | stats first(Report) as Report by vm_name</param>
+            <param name="search">`xenapp_index` [search `xenapp_index` `xa_sessions_sourcetype` $user$ $vm_name$ | stats first(vm_name) as vm_name by user | head 1 | fields + vm_name ] | head 1 | eval Report="View Bios" | stats first(Report) as Report by vm_name</param>
             <module name="SimpleResultsTable" layoutPanel="panel_row8_col1_grp3">
               <param name="displayMenu">true</param>
               <param name="count">100</param>

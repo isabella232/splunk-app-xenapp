@@ -1,7 +1,8 @@
+<?xml version="1.0"?>
 <view template="dashboard.html" stylesheet="dashboard2.css">
   <label>Desktop Performance</label>
-  <module name="AccountBar" layoutPanel="appHeader" />
-  <module name="AppBar" layoutPanel="navigationHeader" />
+  <module name="AccountBar" layoutPanel="appHeader"/>
+  <module name="AppBar" layoutPanel="navigationHeader"/>
   <module name="Message" layoutPanel="messaging">
     <param name="filter">*</param>
     <param name="clearOnJobDispatch">False</param>
@@ -28,7 +29,7 @@
       <param name="replacementMap">
         <param name="arg">
           <param name="HostingServerName">
-            <param name="value"></param>
+            <param name="value"/>
           </param>
         </param>
       </param>
@@ -36,7 +37,7 @@
         <param name="name">stringreplace</param>
         <param name="arg">
           <param name="HostingServerName">
-            <param name="default"></param>
+            <param name="default"/>
             <param name="prefix">HostingServerName="</param>
             <param name="suffix">"</param>
             <param name="fillOnEmpty">false</param>
@@ -49,7 +50,7 @@
         <param name="replacementMap">
           <param name="arg">
             <param name="vm_name">
-              <param name="value"></param>
+              <param name="value"/>
             </param>
           </param>
         </param>
@@ -57,7 +58,7 @@
           <param name="name">stringreplace</param>
           <param name="arg">
             <param name="catalog_name">
-              <param name="default"></param>
+              <param name="default"/>
               <param name="prefix">catalog_name="</param>
               <param name="suffix">"</param>
               <param name="fillOnEmpty">false</param>
@@ -70,7 +71,7 @@
           <param name="replacementMap">
             <param name="arg">
               <param name="vm_name">
-                <param name="value"></param>
+                <param name="value"/>
               </param>
             </param>
           </param>
@@ -78,7 +79,7 @@
             <param name="name">stringreplace</param>
             <param name="arg">
               <param name="vm_name">
-                <param name="default"></param>
+                <param name="default"/>
                 <param name="prefix">vm_name="</param>
                 <param name="suffix">"</param>
                 <param name="fillOnEmpty">false</param>
@@ -100,7 +101,7 @@
               <param name="viewTarget">flashtimeline</param>
               <param name="label">View Full Report</param>
             </module>
-            <module name="JobProgressIndicator"></module>
+            <module name="JobProgressIndicator"/>
             <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp1" group="% CPU Utilization">
               <param name="search">search counter="% Processor Time" counter="% Processor Time" | stats min(Value) as Value | eval Value=round(Value,2) | `usrexp_cpu`| eval usrexp="usrexp"+usrexp</param>
               <module name="SingleValue">
