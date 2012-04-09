@@ -21,7 +21,7 @@
     <param name="selected">first 24 Hours</param>
     <param name="searchWhenChanged">True</param>
     <module name="HiddenSearch" layoutPanel="panel_row1_col1" autoRun="True">
-      <param name="search">`xenapp_index` `xa_sessions_sourcetype` Protocol!="console" State!="Listening" | dedup SessionUID | fields ClientVersion, ClientAddress, ClientName, LogOnTime, SessionUID, SessionId, AccountName, ServerName, FarmName | eval ep_LogOnTime=strptime(LogOnTime,"%m/%d/%Y %H:%M:%S")</param>
+      <param name="search">`xenapp_index` `xa_sessions_sourcetype` Protocol!="console" State!="Listening" | dedup SessionUID | fields ClientVersion, ClientAddress, ClientName, ClientProductId, LogOnTime, SessionUID, SessionId, AccountName, ServerName, FarmName | eval ep_LogOnTime=strptime(LogOnTime,"%m/%d/%Y %H:%M:%S")</param>
       <module name="ViewRedirectorLink" layoutPanel="panel_row1_col1">
         <param name="viewTarget">flashtimeline</param>
         <param name="label">View Full Report</param>
@@ -167,7 +167,7 @@
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row7_col2" group="Top Device Type" autoRun="True">
-        <param name="search">| eval client_dvc_type = case(c_type == "mob", "Apple iPhone",c_type == "iPa", "iPad",c_type == "roi", "Android",ClientName == ClientName,"Desktop Receiver") | stats dc(SessionUID) as Count by client_dvc_type</param>
+        <param name="search">| `ica_get_devicetype` | stats dc(SessionUID) as Count by DeviceType</param>
         <module name="SimpleResultsTable" layoutPanel="panel_row7_col2">
           <param name="displayMenu">true</param>
           <param name="count">100</param>
