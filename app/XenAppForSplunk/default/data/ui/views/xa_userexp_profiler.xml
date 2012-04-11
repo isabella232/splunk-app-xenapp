@@ -15,7 +15,7 @@
     <param name="label">User Experience</param>
   </module>
   <module name="StaticContentSample" layoutPanel="panel_row1_col1">
-    <param name="text">This Report allows you to profile and score a users Citirx App session. A user experience score of 1 (lowest) - 5 (highest) is assigned to various the various components monitored as part of that VDI session. To get started, enter a username, desktop hostname and select a time range below.</param>
+    <param name="text">This report allows you to profile and score a users Citirx XenApp session. A user experience score of 1 (lowest) - 5 (highest) is assigned to various the various components monitored as part of that session. To get started, enter a username, desktop hostname and select a time range below.</param>
   </module>
   <module name="ServerSideInclude" layoutPanel="panel_row1_col1">
     <param name="src">usrexp_key.html</param>
