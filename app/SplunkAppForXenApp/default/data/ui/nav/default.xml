@@ -7,6 +7,8 @@
   <view name="alert_monitor"/>
   <collection label="Reports">
     <view name="flashtimeline"/>
+    <view name="user_list"/>
+    <view name="vm_list"/>
     <divider/>
     <collection label="License Info">
       <view name="citrix_licensing"/>
