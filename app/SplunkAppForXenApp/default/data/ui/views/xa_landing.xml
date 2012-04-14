@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<view template="dashboard.html" stylesheet="dashboard2.css">
+  <label>Environment</label>
+  <module name="AccountBar" layoutPanel="appHeader"/>
+  <module name="AppBar" layoutPanel="navigationHeader"/>
+  <module name="Message" layoutPanel="messaging">
+    <param name="filter">*</param>
+    <param name="clearOnJobDispatch">False</param>
+    <param name="maxSize">1</param>
+  </module>
+  <module name="TitleBar" layoutPanel="viewHeader">
+    <param name="actionsMenuFilter">dashboard</param>
+  </module>
+  <!--
+        Global index summary counts
+    -->
+  <module name="GenericHeader" layoutPanel="panel_row1_col1">
+    <param name="label">Splunk for Citrix XenApp</param>
+  </module>
+  <module name="StaticContentSample" layoutPanel="panel_row1_col1">
+    <param name="text">This report provides details about the XenApp Farms in your environment. Adjust the time range for this report by changing the timerange picker. You can filter this view by entering values in the fields below and pressing enter.</param>
+  </module>
+  <module name="TimeRangePicker" layoutPanel="panel_row1_col1">
+    <param name="default">Last 24 Hours</param>
+    <param name="searchWhenChanged">True</param>
+    <module name="ExtendedFieldSearch" layoutPanel="panel_row2_col1_grp1">
+      <param name="label">Farm:</param>
+      <param name="field">FarmName</param>
+      <param name="replacementMap">
+        <param name="arg">
+          <param name="FarmName">
+            <param name="value"/>
+          </param>
+        </param>
+      </param>
+      <param name="intention">
+        <param name="name">stringreplace</param>
+        <param name="arg">
+          <param name="FarmName">
+            <param name="default"/>
+            <param name="prefix">FarmName="</param>
+            <param name="suffix">"</param>
+            <param name="fillOnEmpty">false</param>
+          </param>
+        </param>
+      </param>
+      <module name="ExtendedFieldSearch" layoutPanel="panel_row2_col1_grp2">
+        <param name="label">Zone Name:</param>
+        <param name="field">ZoneName</param>
+        <param name="replacementMap">
+          <param name="arg">
+            <param name="ZoneName">
+              <param name="value"/>
+            </param>
+          </param>
+        </param>
+        <param name="intention">
+          <param name="name">stringreplace</param>
+          <param name="arg">
+            <param name="ZoneName">
+              <param name="default"/>
+              <param name="prefix">ZoneName="</param>
+              <param name="suffix">"</param>
+              <param name="fillOnEmpty">false</param>
+            </param>
+          </param>
+        </param>
+        <module name="HiddenSearch" layoutPanel="panel_row3_col1" autoRun="True">
+          <param name="search">`xenapp_index` `xa_farm_sourcetype` $ZoneName$ $FarmName$ | stats first(Servers) as Servers first(SessionCount) as Sessions first(Users) as Users by FarmName</param>
+          <module name="ViewRedirectorLink">
+            <param name="viewTarget">flashtimeline</param>
+            <param name="label">View Farm Data</param>
+          </module>
+          <module name="JobProgressIndicator"/>
+          <module name="SimpleResultsTable">
+            <param name="displayMenu">true</param>
+            <param name="count">100</param>
+            <param name="drilldown">all</param>
+            <param name="entityName">results</param>
+            <param name="displayRowNumbers">False</param>
+          </module>
+        </module>
+        <module name="HiddenSearch" layoutPanel="panel_row4_col1" autoRun="True" group="Server Alerts">
+          <param name="search">`xenapp_alerts` $FarmName$ $ZoneName$ | eval MachineName=lower(vm_name) | rename alert_name as Alert | stats count as Number by Alert</param>
+          <module name="ViewRedirectorLink">
+            <param name="viewTarget">flashtimeline</param>
+            <param name="label">View Alert Data</param>
+          </module>
+          <module name="JobProgressIndicator"/>
+          <module name="SimpleResultsTable">
+            <param name="displayMenu">true</param>
+            <param name="count">100</param>
+            <param name="drilldown">all</param>
+            <param name="entityName">results</param>
+            <param name="displayRowNumbers">False</param>
+          </module>
+        </module>
+        <module name="HiddenSearch" layoutPanel="panel_row4_col2" autoRun="True" group="Errors by Server">
+          <param name="search">`win_index` Type=error | stats count as Count by host,SourceName | sort -Count | rename host as Server | rename SourceName as Source</param>
+          <module name="ViewRedirectorLink">
+            <param name="viewTarget">flashtimeline</param>
+            <param name="label">View Error Data</param>
+          </module>
+          <module name="JobProgressIndicator"/>
+          <module name="SimpleResultsTable">
+            <param name="displayMenu">true</param>
+            <param name="count">100</param>
+            <param name="drilldown">all</param>
+            <param name="entityName">results</param>
+            <param name="displayRowNumbers">False</param>
+          </module>
+        </module>
+        <module name="HiddenSearch" layoutPanel="panel_row4_col3" autoRun="True" group="Zone Info">
+          <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | lookup xa_zone_farm ServerName | stats first(ServerName) as ServerName first(LogOnTime) as LogOnTime first(ZoneName) as ZoneName first(AccountName) as AccountName first(FarmName) as FarmName by SessionUID | stats dc(SessionUID) as Sessions dc(AccountName) as Users by ZoneName, FarmName | strcat Sessions "(" Users ")" Session(User) | table ZoneName Session(User) FarmName</param>
+          <module name="ViewRedirectorLink">
+            <param name="viewTarget">flashtimeline</param>
+            <param name="label">View Zone Data</param>
+          </module>
+          <module name="JobProgressIndicator"/>
+          <module name="SimpleResultsTable">
+            <param name="displayMenu">true</param>
+            <param name="count">100</param>
+            <param name="drilldown">all</param>
+            <param name="entityName">results</param>
+            <param name="displayRowNumbers">False</param>
+          </module>
+          <module name="HiddenSearch" layoutPanel="panel_row5_col1" autoRun="True" group="Sessions over Time">
+            <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | timechart dc(SessionUID) as Sessions by FarmName | eval Sessions=if(Sessions=="0",blank,Sessions)</param>
+            <module name="ViewRedirectorLink">
+              <param name="viewTarget">flashtimeline</param>
+              <param name="label">View Session Data</param>
+            </module>
+            <module name="JobProgressIndicator"/>
+            <module name="HiddenChartFormatter">
+              <param name="chart">line</param>
+              <param name="chart.nullValueMode">connect</param>
+              <param name="legend.placement">bottom</param>
+              <param name="primaryAxisTitle.text">Sessions</param>
+              <module name="JSChart"/>
+            </module>
+          </module>
+          <module name="HiddenSearch" layoutPanel="panel_row5_col2" autoRun="True" group="Users Over Time">
+            <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | timechart dc(AccountName) as Users by FarmName | eval Users=if(Users=="0",blank,Users)</param>
+            <module name="ViewRedirectorLink">
+              <param name="viewTarget">flashtimeline</param>
+              <param name="label">View User Data</param>
+            </module>
+            <module name="JobProgressIndicator"/>
+            <module name="HiddenChartFormatter">
+              <param name="chart">line</param>
+              <param name="legend.placement">bottom</param>
+              <param name="chart.nullValueMode">connect</param>
+              <param name="primaryAxisTitle.text">Users</param>
+              <module name="JSChart"/>
+            </module>
+          </module>
+        </module>
+      </module>
+    </module>
+  </module>
+</view>

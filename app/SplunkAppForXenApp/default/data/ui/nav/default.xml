@@ -1,0 +1,24 @@
+<nav>
+  <view name="xa_landing" default="true" />
+  <view name="xa_deployment"/>
+  <view name="xa_userexp_profiler"/>
+  <view name="xa_perf_overview"/>
+  <view name="client_device_report"/>
+  <collection label="Reports">
+    <view name="flashtimeline"/>
+    <divider/>
+    <collection label="License Info">
+      <view name="citrix_licensing"/>
+    </collection>
+    <collection label="User Experience Alerts">
+      <saved source="all" match="USER EXP - " view="flashtimeline"/>
+    </collection>
+    <collection label="Views">
+      <view source="unclassified"/>
+      <a href="/manager/search/data/ui/views">Manage Views</a>
+    </collection>
+    <collection label="Searches &amp; Reports">
+      <saved source="all" view="flashtimeline"/>
+    </collection>
+  </collection>
+</nav>
