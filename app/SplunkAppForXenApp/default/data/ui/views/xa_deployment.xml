@@ -15,7 +15,7 @@
     <param name="label">Citrix Xen Application Sessions</param>
   </module>
   <module name="StaticContentSample" layoutPanel="panel_row1_col1">
-    <param name="text">This report provides details about the Citrix XenApp sessions in your environment. Adjust the time range for this report by changing the timerange picker. You can filter this view by entering values in the fields below and pressing enter. Click on a panel to drill into the session details for that element.</param>
+    <param name="text">This report provides details about the Citrix XenApp sessions in your environment. Adjust the time range for this report by changing the timerange picker. Filter this view by entering values in the fields below and pressing Enter. Click on a panel to drill into the session details for that element.</param>
   </module>
   <module name="TimeRangePicker" layoutPanel="panel_row1_col1" autoRun="True">
     <param name="default">Last 24 Hours</param>
