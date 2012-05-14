@@ -48,7 +48,6 @@
           <param name="label">View Full Report</param>
         </module>
         <module name="JobProgressIndicator"/>
-        
         <!--% CPU Utilization-->
         <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp1" group="% CPU Utilization">
           <param name="search">search counter="% Processor Time" counter="% Processor Time" | stats min(Value) as Value | eval Value=round(Value,2) | `usrexp_cpu`| eval usrexp="usrexp"+usrexp</param>
@@ -178,7 +177,6 @@
             </module>
           </module>
         </module>
-        
         <!--Available Memory-->
         <module name="HiddenPostProcess" layoutPanel="panel_row5_col1_grp1" group="Available Memory in Megabytes" autoRun="True">
           <param name="search">search object="Memory" | eval Value = Value/1024/1024 | stats min(Value) as Value | eval Value=round(Value,2) | `usrexp_mem`| eval usrexp="usrexp"+usrexp</param>
@@ -308,7 +306,6 @@
             </module>
           </module>
         </module>
-        
         <!--Top Disk Transfers/Sec-->
         <module name="HiddenPostProcess" layoutPanel="panel_row7_col1_grp1" group="Top Disk Transfers/Sec">
           <param name="search">search object=LogicalDisk counter="Disk Transfers/Sec" | stats min(Value) as Value | eval Value=round(Value,2) | `usrexp_io`| eval usrexp="usrexp"+usrexp</param>
@@ -438,7 +435,6 @@
             </module>
           </module>
         </module>
-      
         <!--End-->
       </module>
     </module>

@@ -40,7 +40,7 @@
       <param name="search">| stats max(mem) as bits by process_name| `bits2mb` | rename bits to "Memory in MB"| rename process_name as Process | sort - "Memory in MB" | head 10</param>
       <module name="HiddenChartFormatter">
         <param name="chart">bar</param>
-        <module name="FlashChart">
+        <module name="JSChart">
           <param name="width">100%</param>
         </module>
       </module>
@@ -53,7 +53,7 @@
       <param name="search">search process_name!=idle cpu!="" | stats max(cpu) as "%CPU" by process_name | rename process_name as Process | sort - "%CPU" | head 10</param>
       <module name="HiddenChartFormatter">
         <param name="chart">bar</param>
-        <module name="FlashChart">
+        <module name="JSChart">
           <param name="width">100%</param>
         </module>
       </module>
@@ -66,7 +66,7 @@
       <param name="search">search iowrite!="" | stats avg(iowrite) as "Avg I/O Write Operations" by process_name | rename process_name as Process | sort - "Avg I/O Write Operations" | head 10</param>
       <module name="HiddenChartFormatter">
         <param name="chart">bar</param>
-        <module name="FlashChart">
+        <module name="JSChart">
           <param name="width">100%</param>
         </module>
       </module>
@@ -79,7 +79,7 @@
       <param name="search">search ioread!="" | stats avg(ioread) as "Avg I/O Read Operations" by process_name | rename process_name as Process | sort - "Avg I/O Read Operations" | head 10</param>
       <module name="HiddenChartFormatter">
         <param name="chart">bar</param>
-        <module name="FlashChart">
+        <module name="JSChart">
           <param name="width">100%</param>
         </module>
       </module>
