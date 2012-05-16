@@ -84,24 +84,6 @@
             <param name="drilldown">row</param>
             <param name="entityName">results</param>
             <param name="displayRowNumbers">False</param>
-            <module name="HiddenSearch">
-              <param name="search">`perfmon_cpu` $vm_name$ | table vm_name _time Value</param>
-              <module name="ConvertToIntention">
-                <param name="intention">
-                  <param name="name">stringreplace</param>
-                  <param name="arg">
-                    <param name="vm_name">
-                      <param name="prefix">vm_name=</param>
-                      <param name="fillOnEmpty">True</param>
-                      <param name="value">$click.value$</param>
-                    </param>
-                  </param>
-                </param>
-                <module name="ViewRedirector">
-                  <param name="viewTarget">cpu_util_drilldown</param>
-                </module>
-              </module>
-            </module>
             <module name="ConvertToDrilldownSearch">
               <module name="ViewRedirector">
                 <param name="viewTarget">flashtimeline</param>
@@ -151,25 +133,6 @@
             <param name="drilldown">row</param>
             <param name="entityName">results</param>
             <param name="displayRowNumbers">False</param>
-            <module name="HiddenSearch">
-              <param name="search">`perfmon_cpu` | eval ServerName=host | lookup xa_zone_farm ServerName OUTPUT ZoneName FarmName | stats last(Value) as Value by _time ServerName ZoneName FarmName</param>
-              <module name="ConvertToIntention">
-                <param name="intention">
-                  <param name="name">stringreplace</param>
-                  <param name="arg">
-                    <param name="CatalogName">
-                      <param name="prefix">ZoneName="</param>
-                      <param name="suffix">"</param>
-                      <param name="fillOnEmpty">True</param>
-                      <param name="value">$click.value$</param>
-                    </param>
-                  </param>
-                </param>
-                <module name="ViewRedirector">
-                  <param name="viewTarget">cpu_util_drilldown</param>
-                </module>
-              </module>
-            </module>
             <module name="ConvertToDrilldownSearch">
               <module name="ViewRedirector">
                 <param name="viewTarget">flashtimeline</param>
@@ -213,24 +176,6 @@
             <param name="drilldown">row</param>
             <param name="entityName">results</param>
             <param name="displayRowNumbers">False</param>
-            <module name="HiddenSearch">
-              <param name="search">`perfmon_mem` $vm_name$ | table vm_name _time Value</param>
-              <module name="ConvertToIntention">
-                <param name="intention">
-                  <param name="name">stringreplace</param>
-                  <param name="arg">
-                    <param name="vm_name">
-                      <param name="prefix">vm_name=</param>
-                      <param name="fillOnEmpty">True</param>
-                      <param name="value">$click.value$</param>
-                    </param>
-                  </param>
-                </param>
-                <module name="ViewRedirector">
-                  <param name="viewTarget">mem_util_drilldown</param>
-                </module>
-              </module>
-            </module>
             <module name="ConvertToDrilldownSearch">
               <module name="ViewRedirector">
                 <param name="viewTarget">flashtimeline</param>
@@ -246,25 +191,6 @@
             <param name="drilldown">row</param>
             <param name="entityName">results</param>
             <param name="displayRowNumbers">False</param>
-            <module name="HiddenSearch">
-              <param name="search">`perfmon_mem` | `perfmon_desktop_lookup`| search * $DesktopGroupName$ | stats last(Value) as Value by _time vm_name</param>
-              <module name="ConvertToIntention">
-                <param name="intention">
-                  <param name="name">stringreplace</param>
-                  <param name="arg">
-                    <param name="DesktopGroupName">
-                      <param name="prefix">DesktopGroupName="</param>
-                      <param name="suffix">"</param>
-                      <param name="fillOnEmpty">True</param>
-                      <param name="value">$click.value$</param>
-                    </param>
-                  </param>
-                </param>
-                <module name="ViewRedirector">
-                  <param name="viewTarget">mem_util_drilldown</param>
-                </module>
-              </module>
-            </module>
             <module name="ConvertToDrilldownSearch">
               <module name="ViewRedirector">
                 <param name="viewTarget">flashtimeline</param>
@@ -280,25 +206,6 @@
             <param name="drilldown">row</param>
             <param name="entityName">results</param>
             <param name="displayRowNumbers">False</param>
-            <module name="HiddenSearch">
-              <param name="search">`perfmon_mem` | `perfmon_desktop_lookup`| search * $CatalogName$ | stats last(Value) as Value by _time vm_name</param>
-              <module name="ConvertToIntention">
-                <param name="intention">
-                  <param name="name">stringreplace</param>
-                  <param name="arg">
-                    <param name="CatalogName">
-                      <param name="prefix">CatalogName="</param>
-                      <param name="suffix">"</param>
-                      <param name="fillOnEmpty">True</param>
-                      <param name="value">$click.value$</param>
-                    </param>
-                  </param>
-                </param>
-                <module name="ViewRedirector">
-                  <param name="viewTarget">mem_util_drilldown</param>
-                </module>
-              </module>
-            </module>
             <module name="ConvertToDrilldownSearch">
               <module name="ViewRedirector">
                 <param name="viewTarget">flashtimeline</param>
@@ -342,24 +249,6 @@
             <param name="drilldown">row</param>
             <param name="entityName">results</param>
             <param name="displayRowNumbers">False</param>
-            <module name="HiddenSearch">
-              <param name="search">`perfmon_mem` $vm_name$ | table vm_name _time Value</param>
-              <module name="ConvertToIntention">
-                <param name="intention">
-                  <param name="name">stringreplace</param>
-                  <param name="arg">
-                    <param name="vm_name">
-                      <param name="prefix">vm_name=</param>
-                      <param name="fillOnEmpty">True</param>
-                      <param name="value">$click.value$</param>
-                    </param>
-                  </param>
-                </param>
-                <module name="ViewRedirector">
-                  <param name="viewTarget">mem_util_drilldown</param>
-                </module>
-              </module>
-            </module>
             <module name="ConvertToDrilldownSearch">
               <module name="ViewRedirector">
                 <param name="viewTarget">flashtimeline</param>
@@ -375,25 +264,6 @@
             <param name="drilldown">row</param>
             <param name="entityName">results</param>
             <param name="displayRowNumbers">False</param>
-            <module name="HiddenSearch">
-              <param name="search">`perfmon_mem` $vm_name$ | `perfmon_desktop_lookup`| search * $DesktopGroupName$ | table vm_name _time Value</param>
-              <module name="ConvertToIntention">
-                <param name="intention">
-                  <param name="name">stringreplace</param>
-                  <param name="arg">
-                    <param name="DesktopGroupName">
-                      <param name="prefix">DesktopGroupName="</param>
-                      <param name="suffix">"</param>
-                      <param name="fillOnEmpty">True</param>
-                      <param name="value">$click.value$</param>
-                    </param>
-                  </param>
-                </param>
-                <module name="ViewRedirector">
-                  <param name="viewTarget">mem_util_drilldown</param>
-                </module>
-              </module>
-            </module>
             <module name="ConvertToDrilldownSearch">
               <module name="ViewRedirector">
                 <param name="viewTarget">flashtimeline</param>
@@ -409,25 +279,6 @@
             <param name="drilldown">row</param>
             <param name="entityName">results</param>
             <param name="displayRowNumbers">False</param>
-            <module name="HiddenSearch">
-              <param name="search">`perfmon_mem` $vm_name$ | `perfmon_desktop_lookup`| search * $CatalogName$ | table vm_name _time Value</param>
-              <module name="ConvertToIntention">
-                <param name="intention">
-                  <param name="name">stringreplace</param>
-                  <param name="arg">
-                    <param name="CatalogName">
-                      <param name="prefix">CatalogName="</param>
-                      <param name="suffix">"</param>
-                      <param name="fillOnEmpty">True</param>
-                      <param name="value">$click.value$</param>
-                    </param>
-                  </param>
-                </param>
-                <module name="ViewRedirector">
-                  <param name="viewTarget">mem_util_drilldown</param>
-                </module>
-              </module>
-            </module>
             <module name="ConvertToDrilldownSearch">
               <module name="ViewRedirector">
                 <param name="viewTarget">flashtimeline</param>
