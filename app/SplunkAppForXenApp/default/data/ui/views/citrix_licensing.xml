@@ -49,7 +49,7 @@
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row2_col1_grp3" group="License Stats" autoRun="True">
-        <param name="search">| stats first(Available) as Available first(InUse) as InUse by Product | stats sum(InUse) as TotalInUse sum(Available) as TotalAvailable | eval pctUsed=( TotalInUse/TotalAvailable ) * 100 | eval count=round(pctUsed,2) | eval classvalue="session"</param>
+        <param name="search">| stats first(Available) as Available first(InUse) as InUse by Product | stats sum(InUse) as TotalInUse sum(Available) as TotalAvailable | eval pctUsed=( TotalInUse/TotalAvailable ) * 100 | eval count=round(pctUsed,2) | eval classvalue="percent"</param>
         <module name="SingleValue">
           <param name="field">count</param>
           <param name="classField">classvalue</param>

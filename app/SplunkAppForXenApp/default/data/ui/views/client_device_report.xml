@@ -63,9 +63,6 @@
             <param name="chart">pie</param>
             <module name="JSChart">
               <param name="height">200px</param>
-              <module name="HiddenSearch">
-                <param name="search">`get_clients_and_devices` | `get_top_clientversion`</param>
-              </module>
             </module>
           </module>
         </module>
@@ -75,9 +72,6 @@
             <param name="chart">pie</param>
             <module name="JSChart">
               <param name="height">200px</param>
-              <module name="HiddenSearch">
-                <param name="search">`get_clients_and_devices` | `get_top_devicetype`</param>
-              </module>
             </module>
           </module>
         </module>
@@ -89,9 +83,6 @@
             <param name="drilldown">all</param>
             <param name="entityName">results</param>
             <param name="displayRowNumbers">False</param>
-            <module name="HiddenSearch">
-              <param name="search">`get_clients_and_devices` | `get_client_and_devices_report`</param>
-            </module>
           </module>
         </module>
       </module>

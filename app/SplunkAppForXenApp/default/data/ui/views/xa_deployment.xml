@@ -28,7 +28,7 @@
       </module>
       <module name="JobProgressIndicator"/>
       <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp1" group="Session Stats" autoRun="True">
-        <param name="search">| stats dc(SessionUID) as Sessions| eval range="Sessions"</param>
+        <param name="search">| stats dc(SessionUID) as Sessions | eval range="session"</param>
         <module name="SingleValue">
           <param name="field">Sessions</param>
           <param name="classField">range</param>
@@ -37,7 +37,7 @@
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp2" group="Session Stats" autoRun="True">
-        <param name="search">| stats dc(AccountName) as AccountName | eval range="AccountName"</param>
+        <param name="search">| stats dc(AccountName) as AccountName | eval range="user"</param>
         <module name="SingleValue">
           <param name="field">AccountName</param>
           <param name="classField">range</param>
@@ -46,7 +46,7 @@
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp3" group="Session Stats" autoRun="True">
-        <param name="search">| stats dc(ServerName) as ServerName | eval range="ServerName"</param>
+        <param name="search">| stats dc(ServerName) as ServerName | eval range="server"</param>
         <module name="SingleValue">
           <param name="field">ServerName</param>
           <param name="classField">range</param>

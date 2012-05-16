@@ -816,7 +816,6 @@ background-image: none;
 }
 
 
-
 .SingleValue .user{
     background-image:url(Crystal_Clear_app_Login_Manager.png);
 }
@@ -827,22 +826,38 @@ background-image: none;
 
 .SingleValue .vmsreporting{
     background-image:url(ctxapp1.png);
-
 }
 
 .SingleValue .session{
     background-image:url(ctxapp1.png);
-
 }
 
-.SingleValue .ica{
+.SingleValue .server{
+    background-image:url(server.png);
 }
 
+.SingleValue .device{
+    background-image:url(devices.png);
+}
+
+.SingleValue .receiver{
+    background-image:url(citrixreceiver.png);
+}
+
+.SingleValue .hdx{
+    background-image:url(hdx.png);
+}
 
 .SingleValue .winerr{
+    background-image:url(usrexp1.png);
 }
 
 .SingleValue .winwarn{
+    background-image:url(usrexp2.png);
+}
+
+.SingleValue .percent{
+    background-image:url(percent.png);
 }
 
 .SingleValue .speedometer{
@@ -891,12 +906,6 @@ background-image:url(usrexp4.png);
 .SingleValue .usrexp5{
 background-image:url(usrexp5.png);
 }
-
-
-
-
-
-
 
 /* SimpleResultsTable */
 .SimpleResultsTable table.enableMouseover tr td.d {
