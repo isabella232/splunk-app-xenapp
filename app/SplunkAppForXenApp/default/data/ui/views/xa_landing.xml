@@ -18,7 +18,7 @@
     <param name="label">Splunk for Citrix XenApp</param>
   </module>
   <module name="StaticContentSample" layoutPanel="panel_row1_col1">
-    <param name="text">This report provides details about the XenApp Farms in your environment. Adjust the time range for this report by changing the timerange picker. You can filter this view by entering values in the fields below and pressing enter.</param>
+    <param name="text">This report provides details about the XenApp Farms in your environment. Adjust the time range for this report by changing the timerange picker. Filter this view by entering values in the fields below and pressing Enter.</param>
   </module>
   <module name="TimeRangePicker" layoutPanel="panel_row1_col1">
     <param name="default">Last 24 Hours</param>
