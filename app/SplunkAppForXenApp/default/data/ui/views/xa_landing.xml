@@ -96,7 +96,7 @@
           </module>
         </module>
         <module name="HiddenSearch" layoutPanel="panel_row4_col2" autoRun="True" group="Errors by Server">
-          <param name="search">`win_index` Type=error | stats count as Count by host,SourceName | sort -Count | rename host as Server | rename SourceName as Source</param>
+          <param name="search">`win_index` Type=error | stats count as Count by host,SourceName | sort -Count  | head 5 | rename host as Server | rename SourceName as Source</param>
           <module name="ViewRedirectorLink">
             <param name="viewTarget">flashtimeline</param>
             <param name="label">View Error Data</param>
