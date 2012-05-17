@@ -81,7 +81,7 @@
           </module>
         </module>
         <module name="HiddenSearch" layoutPanel="panel_row4_col1" autoRun="True" group="Server Alerts">
-          <param name="search">`xenapp_alerts` $FarmName$ $ZoneName$ | eval MachineName=lower(vm_name) | rename alert_name as Alert | stats count as Number by Alert</param>
+          <param name="search">`xenapp_alerts` $FarmName$ $ZoneName$ | eval MachineName=lower(vm_name) | rename alert_name as Alert | stats count as Number sparkline as Overtime by Alert</param>
           <module name="ViewRedirectorLink">
             <param name="viewTarget">flashtimeline</param>
             <param name="label">View Alert Data</param>

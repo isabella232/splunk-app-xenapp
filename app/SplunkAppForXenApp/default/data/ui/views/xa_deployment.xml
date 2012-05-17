@@ -54,8 +54,9 @@
           <param name="format">count</param>
         </module>
       </module>
-      <module name="HiddenPostProcess" layoutPanel="panel_row6_col1" group="Top Users" autoRun="True">
-        <param name="search">top AccountName | rename AccountName as User | fields User, count</param>
+      <module name="HiddenPostProcess" layoutPanel="panel_row6_col1" group="Top 10 Users" autoRun="True">
+        <!--<param name="search">top AccountName | rename AccountName as User | fields User, count</param>-->
+        <param name="search">rename AccountName as User | stats sparkline as Overtime count by User | fields User count Overtime | sort -desc | head 10</param>
         <module name="SimpleResultsTable" layoutPanel="panel_row6_col1">
           <param name="displayMenu">true</param>
           <param name="count">100</param>
@@ -82,8 +83,9 @@
           </module>
         </module>
       </module>
-      <module name="HiddenPostProcess" layoutPanel="panel_row6_col2" group="Top Client IP" autoRun="True">
-        <param name="search">top ClientAddress | fields ClientAddress, count</param>
+      <module name="HiddenPostProcess" layoutPanel="panel_row6_col2" group="Top 10 Client IP" autoRun="True">
+        <!--<param name="search">top ClientAddress | fields ClientAddress, count</param>-->
+        <param name="search">`fill_clientaddress` | stats sparkline as Overtime count by ClientAddress | fields ClientAddress count Overtime | sort -count | head 10</param>
         <module name="SimpleResultsTable" layoutPanel="panel_row6_col2">
           <param name="displayMenu">true</param>
           <param name="count">100</param>
@@ -110,8 +112,9 @@
           </module>
         </module>
       </module>
-      <module name="HiddenPostProcess" layoutPanel="panel_row6_col3" group="Top Server" autoRun="True">
-        <param name="search">top ServerName | fields ServerName, count</param>
+      <module name="HiddenPostProcess" layoutPanel="panel_row6_col3" group="Top 10 Server" autoRun="True">
+        <!--<param name="search">top ServerName | fields ServerName, count</param>-->
+        <param name="search">stats sparkline as Overtime count by ServerName | fields ServerName count Overtime | sort -count | head 10</param>
         <module name="SimpleResultsTable" layoutPanel="panel_row6_col3">
           <param name="displayMenu">true</param>
           <param name="count">100</param>
@@ -132,14 +135,14 @@
                 </param>
               </param>
               <module name="ViewRedirector">
-                <param name="viewTarget">xd5_session_info</param>
+                <param name="viewTarget">flashtimeline</param>
               </module>
             </module>
           </module>
         </module>
       </module>
-      <module name="HiddenPostProcess" layoutPanel="panel_row7_col1" group="Top Broker" autoRun="True">
-        <param name="search">top ServerName | fields ServerName, count</param>
+      <module name="HiddenPostProcess" layoutPanel="panel_row7_col1" group="Top Farms" autoRun="True">
+        <param name="search">| stats sparkline as Overtime count by FarmName | fields FarmName count Overtime | sort -count</param>
         <module name="SimpleResultsTable" layoutPanel="panel_row7_col1">
           <param name="displayMenu">true</param>
           <param name="count">100</param>
@@ -160,14 +163,15 @@
                 </param>
               </param>
               <module name="ViewRedirector">
-                <param name="viewTarget">xd5_session_info</param>
+                <param name="viewTarget">flashtimeline</param>
               </module>
             </module>
           </module>
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row7_col2" group="Top Device Type" autoRun="True">
-        <param name="search">| `get_ica_devicetype` | stats dc(SessionUID) as Count by DeviceType</param>
+        <!--<param name="search">| `get_ica_devicetype` | stats dc(SessionUID) as Count by DeviceType</param>-->
+        <param name="search">`get_ica_devicetype` | stats sparkline as Overtime dc(SessionUID) as count by DeviceType | fields DeviceType count Overtime | sort -count</param>
         <module name="SimpleResultsTable" layoutPanel="panel_row7_col2">
           <param name="displayMenu">true</param>
           <param name="count">100</param>
@@ -188,14 +192,15 @@
                 </param>
               </param>
               <module name="ViewRedirector">
-                <param name="viewTarget">xd5_session_info</param>
+                <param name="viewTarget">flashtimeline</param>
               </module>
             </module>
           </module>
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row7_col3" group="Top Client Version" autoRun="True">
-        <param name="search">top ClientVersion | fields ClientVersion, count</param>
+        <!--<param name="search">top ClientVersion | fields ClientVersion, count</param>-->
+        <param name="search">`fill_clientversion` | stats sparkline as Overtime count by ClientVersion | fields ClientVersion count Overtime | sort -count</param>
         <module name="SimpleResultsTable" layoutPanel="panel_row7_col3">
           <param name="displayMenu">true</param>
           <param name="count">100</param>
@@ -203,7 +208,7 @@
           <param name="entityName">results</param>
           <param name="displayRowNumbers">False</param>
           <module name="HiddenSearch">
-            <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` $ClientVersion$ | dedup SessionUID </param>
+            <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | dedup SessionUID </param>
             <module name="ConvertToIntention">
               <param name="intention">
                 <param name="name">stringreplace</param>
@@ -216,7 +221,7 @@
                 </param>
               </param>
               <module name="ViewRedirector">
-                <param name="viewTarget">xd5_session_info</param>
+                <param name="viewTarget">flashtimeline</param>
               </module>
             </module>
           </module>
