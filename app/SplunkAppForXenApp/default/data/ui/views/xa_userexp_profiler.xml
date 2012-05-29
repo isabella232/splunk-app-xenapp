@@ -72,7 +72,7 @@
           <param name="allowSoftSubmit">False</param>
           <param name="label">Submit</param>
           <module name="HiddenSearch" layoutPanel="panel_row4_col1" >
-            <param name="search">`xenapp_index` `xa_ica` $user$ $host$ | eval SessionBandwidth=InputSessionBandwidth+OutputSessionBandwidth |  search SessionBandwidth&gt;0 | timechart span=1m max(SessionBandwidth) as MaxSessionBandwidth min(SessionBandwidth) as MinSessionBandwidth median(SessionBandwidth) as "AvgSessionBandwidth"  Max(LatencySessionAverage) as "LatencySessionAverage" | eval AvgSessionBandwidth = round(AvgSessionBandwidth,2) |  where MaxSessionBandwidth&gt;0 | sort - _time</param>
+            <param name="search">`xenapp_index` `xa_ica` $user$ $host$ | eval SessionBandwidth=InputSessionBandwidth+OutputSessionBandwidth |  search SessionBandwidth&gt;=0 | timechart span=1m max(SessionBandwidth) as MaxSessionBandwidth min(SessionBandwidth) as MinSessionBandwidth median(SessionBandwidth) as "AvgSessionBandwidth"  Max(LatencySessionAverage) as "LatencySessionAverage" | eval AvgSessionBandwidth = round(AvgSessionBandwidth,2) |  where MaxSessionBandwidth&gt;=0 | sort - _time</param>
             <module name="JobProgressIndicator"/>
             <module name="ViewRedirectorLink">
               <param name="viewTarget">flashtimeline</param>
