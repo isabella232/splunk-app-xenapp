@@ -3,6 +3,7 @@
   <label>Environment</label>
   <module name="AccountBar" layoutPanel="appHeader"/>
   <module name="AppBar" layoutPanel="navigationHeader"/>
+  <module name="SideviewUtils" layoutPanel="appHeader" />
   <module name="Message" layoutPanel="messaging">
     <param name="filter">*</param>
     <param name="clearOnJobDispatch">False</param>
@@ -65,6 +66,7 @@
             </param>
           </param>
         </param>
+        
         <module name="HiddenSearch" layoutPanel="panel_row3_col1" autoRun="True">
           <param name="search">`xenapp_index` `xa_farm_sourcetype` $ZoneName$ $FarmName$ | stats first(Servers) as Servers first(SessionCount) as Sessions first(Users) as Users by FarmName</param>
           <module name="ViewRedirectorLink">
@@ -78,8 +80,14 @@
             <param name="drilldown">all</param>
             <param name="entityName">results</param>
             <param name="displayRowNumbers">False</param>
+            <module name="Redirector">
+              <param name="url">farm_status</param>
+              <param name="arg.FarmName">$click.fields.FarmName$</param>
+              <param name="arg.autoRun">True</param>
+            </module>
           </module>
         </module>
+        
         <module name="HiddenSearch" layoutPanel="panel_row4_col1" autoRun="True" group="Server Alerts">
           <param name="search">`xenapp_alerts` $FarmName$ $ZoneName$ | eval MachineName=lower(vm_name) | rename alert_name as Alert | stats count as Number sparkline as Overtime by Alert</param>
           <module name="ViewRedirectorLink">
@@ -95,6 +103,7 @@
             <param name="displayRowNumbers">False</param>
           </module>
         </module>
+        
         <module name="HiddenSearch" layoutPanel="panel_row4_col2" autoRun="True" group="Errors by Server">
           <param name="search">`win_index` Type=error | stats count as Count by host,SourceName | sort -Count  | head 5 | rename host as Server | rename SourceName as Source</param>
           <module name="ViewRedirectorLink">
@@ -110,6 +119,7 @@
             <param name="displayRowNumbers">False</param>
           </module>
         </module>
+        
         <module name="HiddenSearch" layoutPanel="panel_row4_col3" autoRun="True" group="Zone Info">
           <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | lookup xa_zone_farm ServerName | stats first(ServerName) as ServerName first(LogOnTime) as LogOnTime first(ZoneName) as ZoneName first(AccountName) as AccountName first(FarmName) as FarmName by SessionUID | stats dc(SessionUID) as Sessions dc(AccountName) as Users by ZoneName, FarmName | strcat Sessions "(" Users ")" Session(User) | table ZoneName Session(User) FarmName</param>
           <module name="ViewRedirectorLink">
@@ -124,6 +134,7 @@
             <param name="entityName">results</param>
             <param name="displayRowNumbers">False</param>
           </module>
+          
           <module name="HiddenSearch" layoutPanel="panel_row5_col1" autoRun="True" group="Sessions over Time">
             <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | timechart dc(SessionUID) as Sessions by FarmName | eval Sessions=if(Sessions=="0",blank,Sessions)</param>
             <module name="ViewRedirectorLink">
@@ -139,6 +150,7 @@
               <module name="JSChart"/>
             </module>
           </module>
+          
           <module name="HiddenSearch" layoutPanel="panel_row5_col2" autoRun="True" group="Users Over Time">
             <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | timechart dc(AccountName) as Users by FarmName | eval Users=if(Users=="0",blank,Users)</param>
             <module name="ViewRedirectorLink">
@@ -154,6 +166,7 @@
               <module name="JSChart"/>
             </module>
           </module>
+          
         </module>
       </module>
     </module>

@@ -20,7 +20,7 @@
 			<param name="searchWhenChanged">true</param>
 
 			<module name="Search">
-				<param name="search"><![CDATA[ | inputlookup xa_zone_farm | eval ServerName=upper(ServerName) | stats count by ServerName | table ServerName ]]></param>
+				<param name="search"><![CDATA[ | inputlookup xa_zone_farm | search ServerName="$ServerName$" |eval ServerName=upper(ServerName) | stats count by ServerName | table ServerName ]]></param>
 				<module name="Pulldown" layoutPanel="panel_row1_col1_grp3">
 					<param name="name">host</param>
 					<param name="size">1</param>
