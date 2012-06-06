@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<view template="dashboard.html" stylesheet="dashboard2.css">
+  <label>User Experience Monitor</label>
+  <module name="AccountBar" layoutPanel="appHeader"/>
+  <module name="AppBar" layoutPanel="navigationHeader"/>
+  <module name="Message" layoutPanel="messaging">
+    <param name="filter">*</param>
+    <param name="clearOnJobDispatch">False</param>
+    <param name="maxSize">1</param>
+  </module>
+  <module name="TitleBar" layoutPanel="viewHeader">
+    <param name="actionsMenuFilter">dashboard</param>
+  </module>
+  <!--
+        Global index summary counts
+    -->
+  <module name="GenericHeader" layoutPanel="panel_row1_col1">
+    <param name="label">User Experience Alert Details</param>
+  </module>
+  <module name="StaticContentSample" layoutPanel="panel_row1_col1">
+    <param name="text">This report provides User Experience Alert details for the selected entity.  Clicking on an alert on the table at the bottom will bring you to the VDI session details for that alert. To view the entire result set or  for this report or manipulate the data further, click on the View Full Report link below.</param>
+  </module>
+  <module name="HiddenSearch" layoutPanel="panel_row1_col1" autoRun="True">
+    <param name="search">`xenapp_alerts` | stats count by _time entity alert_name Value user ServerName</param>
+    <module name="HiddenPostProcess" layoutPanel="panel_row1_col1" autoRun="True">
+      <param name="search">| stats values(entity) as entity first(_time) as f last(_time) as l | convert ctime(l)  as l| convert ctime(f)  as f | eval message = entity + " From: " + l + " to " + f |  eval range="vmsreporting"</param>
+      <module name="SingleValue">
+        <param name="field">message</param>
+        <param name="beforeLabel">User Experience Alert Details For: </param>
+        <param name="classField">range</param>
+        <param name="format">count</param>
+      </module>
+    </module>
+    <module name="ViewRedirectorLink" layoutPanel="panel_row1_col1">
+      <param name="viewTarget">flashtimeline</param>
+      <param name="label">View Full Report</param>
+    </module>
+    <module name="JobProgressIndicator"/>
+    <module name="HiddenPostProcess" layoutPanel="panel_row4_col1" group="Alerts Fired" autoRun="True">
+      <param name="search">| stats count </param>
+      <module name="SingleValue">
+        <param name="field">count</param>
+        <param name="afterLabel">Alerts</param>
+        <param name="format">count</param>
+      </module>
+    </module>
+    <module name="HiddenPostProcess" layoutPanel="panel_row4_col2" group="Affected Users" autoRun="True">
+      <param name="search">| stats dc(UserName) as users | eval range="user"</param>
+      <module name="SingleValue">
+        <param name="field">users</param>
+        <param name="classField">range</param>
+        <param name="afterLabel">Users</param>
+        <param name="format">count</param>
+      </module>
+    </module>
+    <module name="HiddenPostProcess" layoutPanel="panel_row4_col3" group="Affected Servers" autoRun="True">
+      <param name="search">| stats dc(ServerName) as vms | eval range="session"</param>
+      <module name="SingleValue">
+        <param name="field">vms</param>
+        <param name="classField">range</param>
+        <param name="afterLabel">Servers</param>
+        <param name="format">count</param>
+      </module>
+    </module>
+    <module name="HiddenPostProcess" layoutPanel="panel_row8_col1" group="Alert Details" autoRun="True">
+      <param name="search">eval time=_time | convert ctime(time) | stats values(time) as "Alert Time(s)"  values(Value) as "Value(s)" values(UserName) as "Affected User(s)" by ServerName alert_name</param>
+      <module name="SimpleResultsTable" layoutPanel="panel_row8_col1">
+        <param name="displayMenu">true</param>
+        <param name="count">100</param>
+        <param name="drilldown">all</param>
+        <param name="entityName">results</param>
+        <param name="displayRowNumbers">False</param>
+      </module>
+    </module>
+  </module>
+</view>

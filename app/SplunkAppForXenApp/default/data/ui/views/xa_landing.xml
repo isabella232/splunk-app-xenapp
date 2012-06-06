@@ -101,6 +101,25 @@
             <param name="drilldown">all</param>
             <param name="entityName">results</param>
             <param name="displayRowNumbers">False</param>
+            <module name="HiddenSearch">
+              <param name="search">`xenapp_alerts` $Alert$ | eval entity=alert_name | table _time alert_name ServerName UserName entity </param>
+              <module name="ConvertToIntention">
+                <param name="intention">
+                  <param name="name">stringreplace</param>
+                  <param name="arg">
+                    <param name="Alert">
+                      <param name="prefix">alert_name="</param>
+                      <param name="suffix">"</param>
+                      <param name="fillOnEmpty">True</param>
+                      <param name="value">$click.value$</param>
+                    </param>
+                  </param>
+                </param>
+                <module name="ViewRedirector">
+                  <param name="viewTarget">alert_monitor_drilldown</param>
+                </module>
+              </module>
+            </module>
           </module>
         </module>
         

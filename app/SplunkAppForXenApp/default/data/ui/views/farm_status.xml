@@ -81,16 +81,8 @@
 								<module name="SimpleResultsTable">
 									<param name="displayMenu">true</param>
 									<param name="count">100</param>
-									<param name="drilldown">row</param>
-									<module name="Redirector">
-										<param name="url">flashtimeline</param>
-										<param name="arg.autoRun">True</param>
-										<param name="arg.q"><![CDATA[ `win_index` sourcetype="WinEventLog:*" host="$host$" Type="$click.cell0.value$" EventCode="$click.cell1.value$" LogName="$click.cell2.value$" ]]></param>
-										<param name="arg.earliest">$search.timeRange.earliest$</param>
-										<param name="arg.latest">$search.timeRange.latest$</param>
-									</module>
 								</module>
-							</module>	
+							</module>
 						</module> <!-- Search -->
 					</module> <!-- GenericHeader -->
 
