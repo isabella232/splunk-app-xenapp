@@ -12,7 +12,9 @@
 	</module>
 
 	<module name="TitleBar" layoutPanel="viewHeader"/>
+
 	<module name="GenericHeader" layoutPanel="panel_row1_col1_grp1"><param name="label">Server Status</param></module>
+
 	<module name="URLLoader" layoutPanel="panel_row1_col1" autoRun="true">
 
 		<module name="TimeRangePicker" layoutPanel="panel_row1_col1_grp2">
@@ -20,34 +22,23 @@
 			<param name="searchWhenChanged">true</param>
 
 			<module name="Search">
-				<param name="search"><![CDATA[ | inputlookup xa_zone_farm | eval ServerName=upper(ServerName) | stats count by ServerName | table ServerName ]]></param>
+				<param name="search"><![CDATA[ `xenapp_index` `xa_farm_sourcetype` | stats count by FarmName | eval FarmName=upper(FarmName) | table FarmName | sort FarmName ]]></param>
 				<module name="Pulldown" layoutPanel="panel_row1_col1_grp3">
 					<param name="name">host</param>
 					<param name="size">1</param>
 					<param name="width">300px</param>
 					<param name="staticFieldsToDisplay"></param>
-					<param name="label">Server Name:</param>
+					<param name="label">Farm Name:</param>
 					<param name="searchFieldsToDisplay">
 						<list>
-							<param name="label">ServerName</param>
-							<param name="value">ServerName</param>
+							<param name="label">FarmName</param>
+							<param name="value">FarmName</param>
 						</list>
 					</param>
 
-					<module name="GenericHeader" layoutPanel="panel_row2_col1">
-						<param name="label">OS Data</param>
+					<module name="Search" layoutPanel="panel_row2_col1">
 						<module name="Search">
-							<param name="search"><![CDATA[ `xenapp_index` `xa_server_sourcetype` ServerName="$host$" | stats first(OSVersion) as OSVersion first(OSServicePack) as ServicePack first(IPAddresses) as IP first(Is64Bit) as Is64Bit by ServerName | Transpose]]></param>
-							<module name="SimpleResultsTable">
-								<param name="drilldown">row</param>
-							</module> <!-- SimpleResultsTable -->
-						</module> <!-- Search -->
-					</module> <!-- Search -->
-
-					<module name="GenericHeader" layoutPanel="panel_row2_col1">
-						<param name="label">Citrix Data</param>
-						<module name="Search">
-							<param name="search"><![CDATA[ `xenapp_index` `xa_server_sourcetype` ServerName="$host$" | stats first(SessionCount) as Sessions first(LogOnsEnabled) as LogonEnabled first(CitrixProductName) as Product first(CitrixEdition) as Edition first(CitrixInstallDate) as InstallDate first(FarmName) as FarmName first(ZoneName) as ZoneName first(ElectionPreference) as ElectionPreference by ServerName | Transpose]]></param>
+							<param name="search"><![CDATA[ `xenapp_index` `xa_server_sourcetype` ServerName="$host$" | stats first(LogOnsEnabled) as LogonEnabled first(OSVersion) as OS first(OSServicePack) as ServicePack first(CitrixVersion) as Version first(CitrixEdition) as Edition first(CitrixInstallDate) as InstallDate first(ZoneName) as ZoneName first(FarmName) as FarmName by ServerName ]]></param>
 							<module name="SimpleResultsTable">
 								<param name="drilldown">row</param>
 							</module> <!-- SimpleResultsTable -->
