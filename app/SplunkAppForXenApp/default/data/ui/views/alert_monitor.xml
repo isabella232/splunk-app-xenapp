@@ -151,7 +151,7 @@
                     <param name="label">View Full Report</param>
                   </module>
                   <module name="JobProgressIndicator"/>
-                  <module name="HiddenPostProcess" group="Alerts by Severity" layoutPanel="panel_row3_col1" autoRun="True">
+                  <module name="HiddenPostProcess" layoutPanel="panel_row3_col1" group="Alerts by Severity" autoRun="True">
                     <param name="search">`alerts_count_by_severity`</param>
                     <module name="HiddenChartFormatter">
                       <param name="chart">column</param>
@@ -160,14 +160,14 @@
                       <module name="JSChart"></module>
                     </module>
                   </module>
-                  <module name="HiddenPostProcess" layoutPanel="panel_row3_col2" group="Top Severity" autoRun="True">
+                  <module name="HiddenPostProcess" layoutPanel="panel_row3_col2" group="Top Severity"       autoRun="True">
                     <param name="search">`alerts_top_severity`</param>
                     <module name="HiddenChartFormatter">
                       <param name="chart">pie</param>
                       <module name="JSChart">
-                        <param name="height">200px</param>
+                        <!--<param name="height">200px</param>-->
                         <!--<module name="HiddenSearch">-->
-                        <!--  <param name="search">`get_alerts`</param>-->
+                        <!--  <param name="search">`get_alerts` | search $Severity$ | eval entity=Severity | table _time alert_name entity Severity UserName Value ServerName</param>-->
                         <!--  <module name="ConvertToIntention">-->
                         <!--    <param name="intention">-->
                         <!--      <param name="name">stringreplace</param>-->
@@ -181,23 +181,43 @@
                         <!--      </param>-->
                         <!--    </param>-->
                         <!--    <module name="ViewRedirector">-->
-                        <!--      <param name="viewTarget">vdi_session_monitor_drilldown</param>-->
+                        <!--      <param name="viewTarget">alert_monitor_drilldown</param>-->
                         <!--    </module>-->
                         <!--  </module>-->
                         <!--</module>-->
                       </module>
                     </module>
                   </module>
-                  <module name="HiddenPostProcess" group="Alerts by Type" layoutPanel="panel_row3_col3" autoRun="True">
+                  <module name="HiddenPostProcess" layoutPanel="panel_row3_col3" group="Alerts by Type"     autoRun="True">
                     <param name="search">`alerts_count_alertname`</param>
                     <module name="HiddenChartFormatter">
                       <param name="chart">column</param>
                       <param name="chart.stackMode">stacked</param>
                       <param name="legend.placement">bottom</param>
-                      <module name="JSChart"></module>
+                      <module name="JSChart">
+                        <module name="HiddenSearch">
+                          <param name="search"> `get_alerts` | search $alert_name$ | eval entity=alert_name | table _time alert_name entity Severity user Value ServerName</param>
+                          <module name="ConvertToIntention">
+                            <param name="intention">
+                              <param name="name">stringreplace</param>
+                              <param name="arg">
+                                <param name="alert_name">
+                                  <param name="prefix">alert_name="</param>
+                                  <param name="suffix">"</param>
+                                  <param name="fillOnEmpty">True</param>
+                                  <param name="value">$click.alert_Name$</param>
+                                </param>
+                              </param>
+                            </param>
+                            <module name="ViewRedirector">
+                              <param name="viewTarget">alert_monitor_drilldown</param>
+                            </module>
+                          </module>
+                        </module>
+                      </module>
                     </module>
                   </module>
-                  <module name="HiddenPostProcess" layoutPanel="panel_row4_col1" group="Alerts Fired" autoRun="True">
+                  <module name="HiddenPostProcess" layoutPanel="panel_row4_col1" group="Alerts Fired"       autoRun="True">
                     <param name="search">`stats_count`</param>
                     <module name="SingleValue">
                       <param name="field">count</param>
@@ -206,7 +226,7 @@
                       <param name="format">count</param>
                     </module>
                   </module>
-                  <module name="HiddenPostProcess" layoutPanel="panel_row4_col2" group="Affected Users" autoRun="True">
+                  <module name="HiddenPostProcess" layoutPanel="panel_row4_col2" group="Affected Users"     autoRun="True">
                     <param name="search">`dc_user_range`</param>
                     <module name="SingleValue">
                       <param name="field">users</param>
@@ -215,7 +235,7 @@
                       <param name="format">count</param>
                     </module>
                   </module>
-                  <module name="HiddenPostProcess" layoutPanel="panel_row4_col3" group="Affected Hosts" autoRun="True">
+                  <module name="HiddenPostProcess" layoutPanel="panel_row4_col3" group="Affected Hosts"     autoRun="True">
                     <param name="search">`dc_servername_range`</param>
                     <module name="SingleValue">
                       <param name="field">hosts</param>
@@ -224,85 +244,85 @@
                       <param name="format">count</param>
                     </module>
                   </module>
-                  <module name="HiddenPostProcess" layoutPanel="panel_row7_col1" group="Top Users" autoRun="True">
+                  <module name="HiddenPostProcess" layoutPanel="panel_row5_col1" group="Top Users"          autoRun="True">
                     <param name="search">`alerts_top_users`</param>
                     <module name="HiddenChartFormatter">
                       <param name="chart">pie</param>
                       <module name="JSChart">
                         <param name="height">200px</param>
-                        <!--<module name="HiddenSearch">-->
-                        <!--  <param name="search"> `xendesktop_alerts` $user$ | eval entity=user | lookup xd5_usrexp usrexp OUTPUT Severity | stats count by _time alert_name entity  Severity user Value vm_name</param>-->
-                        <!--  <module name="ConvertToIntention">-->
-                        <!--    <param name="intention">-->
-                        <!--      <param name="name">stringreplace</param>-->
-                        <!--      <param name="arg">-->
-                        <!--        <param name="user">-->
-                        <!--          <param name="prefix">user=</param>-->
-                        <!--          <param name="fillOnEmpty">True</param>-->
-                        <!--          <param name="value">$click.value$</param>-->
-                        <!--        </param>-->
-                        <!--      </param>-->
-                        <!--    </param>-->
-                        <!--    <module name="ViewRedirector">-->
-                        <!--      <param name="viewTarget">vdi_session_monitor_drilldown</param>-->
-                        <!--    </module>-->
-                        <!--  </module>-->
-                        <!--</module>-->
+                        <module name="HiddenSearch">
+                          <param name="search"> `get_alerts` | search $UserName$ | eval entity=UserName | table _time alert_name entity Severity UserName Value ServerName</param>
+                          <module name="ConvertToIntention">
+                            <param name="intention">
+                              <param name="name">stringreplace</param>
+                              <param name="arg">
+                                <param name="UserName">
+                                  <param name="prefix">UserName=</param>
+                                  <param name="fillOnEmpty">True</param>
+                                  <param name="value">$click.value$</param>
+                                </param>
+                              </param>
+                            </param>
+                            <module name="ViewRedirector">
+                              <param name="viewTarget">alert_monitor_drilldown</param>
+                            </module>
+                          </module>
+                        </module>
                       </module>
                     </module>
                   </module>
-                  <module name="HiddenPostProcess" layoutPanel="panel_row7_col2" group="Top Alerts" autoRun="True">
+                  <module name="HiddenPostProcess" layoutPanel="panel_row5_col2" group="Top Alerts"         autoRun="True">
                     <param name="search">`alerts_top_alertname`</param>
                     <module name="HiddenChartFormatter">
                       <param name="chart">pie</param>
                       <module name="JSChart">
                         <param name="height">200px</param>
-                        <!--<module name="HiddenSearch">-->
-                        <!--  <param name="search"> `xendesktop_alerts` $alert_name$ | eval entity=alert_name | lookup xd5_usrexp usrexp OUTPUT Severity | stats count by _time alert_name entity Severity user Value vm_name</param>-->
-                        <!--  <module name="ConvertToIntention">-->
-                        <!--    <param name="intention">-->
-                        <!--      <param name="name">stringreplace</param>-->
-                        <!--      <param name="arg">-->
-                        <!--        <param name="alert_name">-->
-                        <!--          <param name="prefix">alert_name="</param>-->
-                        <!--          <param name="suffix">"</param>-->
-                        <!--          <param name="fillOnEmpty">True</param>-->
-                        <!--          <param name="value">$click.value$</param>-->
-                        <!--        </param>-->
-                        <!--      </param>-->
-                        <!--    </param>-->
-                        <!--    <module name="ViewRedirector">-->
-                        <!--      <param name="viewTarget">vdi_session_monitor_drilldown</param>-->
-                        <!--    </module>-->
-                        <!--  </module>-->
-                        <!--</module>-->
+                        <module name="HiddenSearch">-->
+                          <param name="search"> `get_alerts` | search $alert_name$ | eval entity=alert_name | table _time alert_name entity Severity user Value ServerName</param>
+                          <module name="ConvertToIntention">
+                            <param name="intention">
+                              <param name="name">stringreplace</param>
+                              <param name="arg">
+                                <param name="alert_name">
+                                  <param name="prefix">alert_name="</param>
+                                  <param name="suffix">"</param>
+                                  <param name="fillOnEmpty">True</param>
+                                  <param name="value">$click.value$</param>
+                                </param>
+                              </param>
+                            </param>
+                            <module name="ViewRedirector">
+                              <param name="viewTarget">alert_monitor_drilldown</param>
+                            </module>
+                          </module>
+                        </module>
                       </module>
                     </module>
                   </module>
-                  <module name="HiddenPostProcess" layoutPanel="panel_row7_col3" group="Top Hosts" autoRun="True">
+                  <module name="HiddenPostProcess" layoutPanel="panel_row5_col3" group="Top Hosts"          autoRun="True">
                     <param name="search">`alerts_top_hosts`</param>
                     <module name="HiddenChartFormatter">
                       <param name="chart">pie</param>
                       <module name="JSChart">
                         <param name="height">200px</param>
-                        <!--<module name="HiddenSearch">-->
-                        <!--  <param name="search"> `xendesktop_alerts` $vm_name$ | eval entity=vm_name | lookup xd5_usrexp usrexp OUTPUT Severity | stats count by _time alert_name Severity user Value vm_name</param>-->
-                        <!--  <module name="ConvertToIntention">-->
-                        <!--    <param name="intention">-->
-                        <!--      <param name="name">stringreplace</param>-->
-                        <!--      <param name="arg">-->
-                        <!--        <param name="vm_name">-->
-                        <!--          <param name="prefix">vm_name=</param>-->
-                        <!--          <param name="fillOnEmpty">True</param>-->
-                        <!--          <param name="value">$click.value$</param>-->
-                        <!--        </param>-->
-                        <!--      </param>-->
-                        <!--    </param>-->
-                        <!--    <module name="ViewRedirector">-->
-                        <!--      <param name="viewTarget">vdi_session_monitor_drilldown</param>-->
-                        <!--    </module>-->
-                        <!--  </module>-->
-                        <!--</module>-->
+                        <module name="HiddenSearch">
+                          <param name="search"> `get_alerts` | search $ServerName$ | eval entity=ServerName | table _time alert_name entity Severity user Value ServerName</param>
+                          <module name="ConvertToIntention">
+                            <param name="intention">
+                              <param name="name">stringreplace</param>
+                              <param name="arg">
+                                <param name="ServerName">
+                                  <param name="prefix">ServerName=</param>
+                                  <param name="fillOnEmpty">True</param>
+                                  <param name="value">$click.value$</param>
+                                </param>
+                              </param>
+                            </param>
+                            <module name="ViewRedirector">
+                              <param name="viewTarget">alert_monitor_drilldown</param>
+                            </module>
+                          </module>
+                        </module>
                       </module>
                     </module>
                   </module>
