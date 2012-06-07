@@ -139,28 +139,23 @@
           </module>
         </module>
         
-        <module name="HiddenSearch" layoutPanel="panel_row5_col1" autoRun="True">
-          <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | table _time SessionUID ServerName AccountName ZoneName FarmName </param>
+        <module name="HiddenSearch" layoutPanel="panel_row4_col3" autoRun="True" group="Zone Info">
+          <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | lookup xa_zone_farm ServerName | stats first(ServerName) as ServerName first(LogOnTime) as LogOnTime first(ZoneName) as ZoneName first(AccountName) as AccountName first(FarmName) as FarmName by SessionUID | stats dc(SessionUID) as Sessions dc(AccountName) as Users by ZoneName, FarmName | strcat Sessions "(" Users ")" Session(User) | table ZoneName Session(User) FarmName</param>
+          <module name="ViewRedirectorLink">
+            <param name="viewTarget">flashtimeline</param>
+            <param name="label">View Zone Data</param>
+          </module>
           <module name="JobProgressIndicator"/>
-          
-          <module name="HiddenPostProcess" layoutPanel="panel_row4_col3" autoRun="True" group="Zone Info">
-            <param name="search">lookup xa_zone_farm ServerName | stats dc(SessionUID) as Sessions dc(AccountName) as Users by ZoneName, FarmName | strcat Sessions "(" Users ")" Session(User) | table ZoneName Session(User) FarmName</param>
-            <module name="ViewRedirectorLink">
-              <param name="viewTarget">flashtimeline</param>
-              <param name="label">View Zone Data</param>
-            </module>
-            <module name="JobProgressIndicator"/>
-            <module name="SimpleResultsTable">
-              <param name="displayMenu">true</param>
-              <param name="count">100</param>
-              <param name="drilldown">all</param>
-              <param name="entityName">results</param>
-              <param name="displayRowNumbers">False</param>
-            </module>
+          <module name="SimpleResultsTable">
+            <param name="displayMenu">true</param>
+            <param name="count">100</param>
+            <param name="drilldown">all</param>
+            <param name="entityName">results</param>
+            <param name="displayRowNumbers">False</param>
           </module>
           
-          <module name="HiddenPostProcess" layoutPanel="panel_row5_col1" autoRun="True" group="Sessions over Time">
-            <param name="search"> timechart dc(SessionUID) as Sessions by FarmName | eval Sessions=if(Sessions=="0",blank,Sessions) </param>
+          <module name="HiddenSearch" layoutPanel="panel_row5_col1" autoRun="True" group="Sessions over Time">
+            <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | timechart dc(SessionUID) as Sessions by FarmName | eval Sessions=if(Sessions=="0",blank,Sessions)</param>
             <module name="ViewRedirectorLink">
               <param name="viewTarget">flashtimeline</param>
               <param name="label">View Session Data</param>
@@ -175,8 +170,8 @@
             </module>
           </module>
           
-          <module name="HiddenPostProcess" layoutPanel="panel_row5_col2" autoRun="True" group="Users Over Time">
-            <param name="search"> timechart dc(AccountName) as Users by FarmName | eval Users=if(Users=="0",blank,Users) </param>
+          <module name="HiddenSearch" layoutPanel="panel_row5_col2" autoRun="True" group="Users Over Time">
+            <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | timechart dc(AccountName) as Users by FarmName | eval Users=if(Users=="0",blank,Users)</param>
             <module name="ViewRedirectorLink">
               <param name="viewTarget">flashtimeline</param>
               <param name="label">View User Data</param>
