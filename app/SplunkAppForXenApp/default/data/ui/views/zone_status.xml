@@ -75,7 +75,7 @@
                     <module name="GenericHeader" layoutPanel="panel_row3_col1">
                         <param name="label">Applications</param>
                         <module name="Search">
-                            <param name="search"><![CDATA[ `xenapp_index` `xa_application_sourcetype` | lookup xa_zone_farm FarmName | search ZoneName="$ZoneName$" | stats first(DisplayName) as DisplayName first(Description) as Description first(ApplicationType) as Type first(FolderPath) as FolderPath by BrowserName ]]></param>
+                            <param name="search"><![CDATA[ `xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | lookup xa_zone_farm ServerName | search ZoneName="$ZoneName$" | `get_ica_devicetype` | stats first(_time) as Time first(UserName) as User first(BrowserName) as Application first(ServerName) as Server first(ClientVersion) as ClientVersion first(DeviceType) as DeviceType first(ClientType) as ClientType by SessionUID | fields - SessionUID | sort - Application ]]></param>
                             <module name="Pager">
                                 <param name="entityName">results</param>
                                 <module name="SimpleResultsTable">
