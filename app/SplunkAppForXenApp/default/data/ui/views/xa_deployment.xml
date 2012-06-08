@@ -3,6 +3,7 @@
   <label>Session Statistics</label>
   <module name="AccountBar" layoutPanel="appHeader"/>
   <module name="AppBar" layoutPanel="navigationHeader"/>
+  <module name="SideviewUtils" layoutPanel="appHeader" />
   <module name="Message" layoutPanel="messaging">
     <param name="filter">*</param>
     <param name="clearOnJobDispatch">False</param>
@@ -21,7 +22,7 @@
     <param name="default">Last 24 Hours</param>
     <param name="searchWhenChanged">True</param>
     <module name="HiddenSearch" layoutPanel="panel_row1_col1" autoRun="True">
-      <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | dedup SessionUID | `fill_clientversion`| fields ClientVersion, ClientIPV4,ClientAddress, ClientName, ClientProductId, LogOnTime, SessionUID, SessionId, AccountName, ServerName, FarmName</param>
+      <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | dedup SessionUID | `fill_clientversion`| fields ClientVersion, ClientIPV4,ClientAddress, ClientName, ClientProductId, LogOnTime, SessionUID, SessionId, AccountName, UserName, ServerName, FarmName</param>
       <module name="ViewRedirectorLink" layoutPanel="panel_row1_col1">
         <param name="viewTarget">flashtimeline</param>
         <param name="label">View Full Report</param>
@@ -55,37 +56,24 @@
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row6_col1" group="Top 10 Users" autoRun="True">
-        <!--<param name="search">top AccountName | rename AccountName as User | fields User, count</param>-->
-        <param name="search">rename AccountName as User | stats sparkline as Overtime count by User | fields User count Overtime | sort -desc | head 10</param>
+        <param name="search"> stats sparkline as Overtime count by UserName | fields UserName count Overtime | sort -desc | head 10 </param>
         <module name="SimpleResultsTable" layoutPanel="panel_row6_col1">
           <param name="displayMenu">true</param>
           <param name="count">100</param>
           <param name="drilldown">row</param>
           <param name="entityName">results</param>
           <param name="displayRowNumbers">False</param>
-          <module name="HiddenSearch">
-            <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` $AccountName$  | dedup SessionUID </param>
-            <module name="ConvertToIntention">
-              <param name="intention">
-                <param name="name">stringreplace</param>
-                <param name="arg">
-                  <param name="AccountName">
-                    <param name="prefix">AccountName=</param>
-                    <param name="fillOnEmpty">True</param>
-                    <param name="value">$click.value$</param>
-                  </param>
-                </param>
-              </param>
-              <module name="ViewRedirector">
-                <param name="viewTarget">flashtimeline</param>
-              </module>
-            </module>
-          </module>
+          <module name="Redirector">
+              <param name="url">user_status</param>
+              <param name="arg.autoRun">True</param>
+              <param name="arg.UserName">$click.fields.UserName$</param>
+              <param name="arg.earliest">$search.timeRange.earliest$</param>
+              <param name="arg.latest">$search.timeRange.latest$</param>
+          </module> <!-- Redirector#Drill Down -->
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row6_col2" group="Top 10 Client IP" autoRun="True">
-        <!--<param name="search">top ClientAddress | fields ClientAddress, count</param>-->
-        <param name="search">`fill_clientaddress` | eval ClientAddress=ClientIPV4 | stats sparkline as Overtime count by ClientAddress | fields ClientAddress count Overtime | sort -count | head 10</param>
+        <param name="search">eval ClientAddress=ClientIPV4 | `fill_clientaddress` | stats sparkline as Overtime count by ClientAddress | fields ClientAddress count Overtime | sort -count | head 10</param>
         <module name="SimpleResultsTable" layoutPanel="panel_row6_col2">
           <param name="displayMenu">true</param>
           <param name="count">100</param>
@@ -93,7 +81,7 @@
           <param name="entityName">results</param>
           <param name="displayRowNumbers">False</param>
           <module name="HiddenSearch">
-            <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | eval ClientAddress=ClientIPV4 | search $ClientAddress$  | dedup SessionUID </param>
+            <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | eval ClientAddress=ClientIPV4 | `fill_clientaddress` | search $ClientAddress$  | dedup SessionUID </param>
             <module name="ConvertToIntention">
               <param name="intention">
                 <param name="name">stringreplace</param>
@@ -121,24 +109,13 @@
           <param name="drilldown">row</param>
           <param name="entityName">results</param>
           <param name="displayRowNumbers">False</param>
-          <module name="HiddenSearch">
-            <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` $ServerName$  | dedup SessionUID</param>
-            <module name="ConvertToIntention">
-              <param name="intention">
-                <param name="name">stringreplace</param>
-                <param name="arg">
-                  <param name="ServerName">
-                    <param name="prefix">ServerName=</param>
-                    <param name="fillOnEmpty">True</param>
-                    <param name="value">$click.value$</param>
-                  </param>
-                </param>
-              </param>
-              <module name="ViewRedirector">
-                <param name="viewTarget">flashtimeline</param>
-              </module>
-            </module>
-          </module>
+          <module name="Redirector">
+              <param name="url">server_status</param>
+              <param name="arg.autoRun">True</param>
+              <param name="arg.ServerName">$click.fields.ServerName$</param>
+              <param name="arg.earliest">$search.timeRange.earliest$</param>
+              <param name="arg.latest">$search.timeRange.latest$</param>
+          </module> <!-- Redirector#Drill Down -->
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row7_col1" group="Top Farms" autoRun="True">
@@ -149,24 +126,11 @@
           <param name="drilldown">row</param>
           <param name="entityName">results</param>
           <param name="displayRowNumbers">False</param>
-          <module name="HiddenSearch">
-            <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` $ServerName$  | dedup SessionUID</param>
-            <module name="ConvertToIntention">
-              <param name="intention">
-                <param name="name">stringreplace</param>
-                <param name="arg">
-                  <param name="ServerName">
-                    <param name="prefix">ServerName=</param>
-                    <param name="fillOnEmpty">True</param>
-                    <param name="value">$click.value$</param>
-                  </param>
-                </param>
-              </param>
-              <module name="ViewRedirector">
-                <param name="viewTarget">flashtimeline</param>
-              </module>
+          <module name="Redirector">
+                <param name="url">farm_status</param>
+                <param name="arg.FarmName">$click.fields.FarmName$</param>
+                <param name="arg.autoRun">True</param>
             </module>
-          </module>
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row7_col2" group="Top Device Type" autoRun="True">

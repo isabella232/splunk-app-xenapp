@@ -136,13 +136,22 @@
             <param name="drilldown">all</param>
             <param name="entityName">results</param>
             <param name="displayRowNumbers">False</param>
+            <module name="Redirector">
+                <param name="url">event_viewer</param>
+                <param name="arg.ServerName">$click.fields.Server$</param>
+                <param name="arg.SourceName">$click.fields.Source$</param>
+                <param name="arg.Type">"Error"</param>
+                <param name="arg.autoRun">True</param>
+                <param name="arg.latest">$search.timeRange.latest$</param>
+                <param name="arg.earliest">$search.timeRange.earliest$</param>
+            </module>
           </module>
         </module>
         
         <module name="HiddenSearch" layoutPanel="panel_row5_col1" autoRun="True">
           <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | table _time SessionUID ServerName AccountName ZoneName FarmName </param>
           <module name="JobProgressIndicator"/>
-          
+
           <module name="HiddenPostProcess" layoutPanel="panel_row4_col3" autoRun="True" group="Zone Info">
             <param name="search">lookup xa_zone_farm ServerName | stats dc(SessionUID) as Sessions dc(AccountName) as Users by ZoneName, FarmName | strcat Sessions "(" Users ")" Session(User) | table ZoneName Session(User) FarmName</param>
             <module name="ViewRedirectorLink">
@@ -163,7 +172,7 @@
             </module>
             </module>
           </module>
-          
+
           <module name="HiddenPostProcess" layoutPanel="panel_row5_col1" autoRun="True" group="Sessions over Time">
             <param name="search"> timechart dc(SessionUID) as Sessions by FarmName | eval Sessions=if(Sessions=="0",blank,Sessions) </param>
             <module name="ViewRedirectorLink">
