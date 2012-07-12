@@ -1,0 +1,18 @@
+#
+# Standard default.meta file for a new application
+#
+# Copyright (C) 2011 Splunk, Inc.
+# All Rights Reserved
+#
+[]
+access = read : [ * ], write : [ admin ]
+
+[props]
+export = system
+
+[transforms]
+export = system
+
+[viewstates]
+access = read : [ * ], write : [ * ]
+export = system
