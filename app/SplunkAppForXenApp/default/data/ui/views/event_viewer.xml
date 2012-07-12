@@ -28,49 +28,58 @@
         <module name="TextField" layoutPanel="panel_row2_col1_grp1">
             <param name="name">ServerName</param>
             <param name="label">Server Name</param>
-
+            
             <module name="TextField" layoutPanel="panel_row2_col1_grp2">
-                <param name="name">EventCode</param>
-                <param name="label">Event Code</param>
+                <param name="name">LogName</param>
+                <param name="label">Log Name</param>
 
                 <module name="TextField" layoutPanel="panel_row2_col1_grp3">
-                    <param name="name">SourceName</param>
-                    <param name="label">Source Name</param>
-
-                        <module name="TextField" layoutPanel="panel_row2_col1_grp4">
-                            <param name="name">Type</param>
-                            <param name="label">Type</param>
-
-                            <module name="Search" layoutPanel="panel_row3_col1" group="Windows Events" autoRun="true">
-                                <param name="search">index="xenapp_winevents" sourcetype="WinEventLog:*" $ServerName$ |
-                                                  search $EventCode$ $SourceName$ $Type$ |
-                                                  fields host, Type, SourceName, EventCode, TaskCategory, Message |
-                                                  eval ServerName=host |
-                                                  eval Time=strftime(_time, "%Y-%m-%d %H:%M:%S") |
-                                                  table Message, Time, ServerName, Type, SourceName, EventCode, TaskCategory</param>
-                                <param name="groupLabel">Windows Events</param>
-                                <module name="StaticContentSample" layoutPanel="panel_row3_col1">
-                                    <param name="text">&lt;img src="/static/app/SplunkAppForXenApp/info.gif" class="info_icon" /&gt; Click on a row below to view more details about the event.</param>
-                                </module>
-                                <module name="JobProgressIndicator"/>
-                                <module name="Paginator" layoutPanel="panel_row3_col1">
-                                    <param name="count">10</param>
-                                    <param name="entityName">results</param>
-                                    <module name="SimpleResultsTable">
-                                        <param name="displayMenu">true</param>
-                                        <param name="drilldown">row</param>
-                                        <param name="displayRowNumbers">False</param>
-                                      <module name="NullModule"/>
+                    <param name="name">EventCode</param>
+                    <param name="label">Event Code</param>
+    
+                    <module name="TextField" layoutPanel="panel_row2_col1_grp4">
+                        <param name="name">SourceName</param>
+                        <param name="label">Source Name</param>
+    
+                            <module name="TextField" layoutPanel="panel_row2_col1_grp5">
+                                <param name="name">Type</param>
+                                <param name="label">Type</param>
+    
+                                <module name="Search" layoutPanel="panel_row3_col1" group="Windows Events" autoRun="true">
+                                    <param name="search">index="xenapp_winevents" sourcetype="WinEventLog:*" $ServerName$ |
+                                                      search $EventCode$ $SourceName$ $Type$ $LogName$ |
+                                                      fields host, LogName, Type, SourceName, EventCode, TaskCategory, Message |
+                                                      eval ServerName=host |
+                                                      eval Time=strftime(_time, "%Y-%m-%d %H:%M:%S") |
+                                                      table Message, Time, ServerName, LogName, Type, SourceName, EventCode, TaskCategory</param>
+                                    
+                                    <param name="groupLabel">Windows Events</param>
+                                    
+                                    <module name="StaticContentSample" layoutPanel="panel_row3_col1">
+                                        <param name="text">&lt;img src="/static/app/SplunkAppForXenApp/info.gif" class="info_icon" /&gt; Click on a row below to view more details about the event.</param>
                                     </module>
-                                    <module name="ViewRedirectorLink">
-                                      <param name="viewTarget">flashtimeline</param>
+                                    
+                                    <module name="JobProgressIndicator"/>
+                                    
+                                    <module name="Paginator" layoutPanel="panel_row3_col1">
+                                        <param name="count">10</param>
+                                        <param name="entityName">results</param>
+                                        <module name="SimpleResultsTable">
+                                            <param name="displayMenu">true</param>
+                                            <param name="drilldown">row</param>
+                                            <param name="displayRowNumbers">False</param>
+                                          <module name="NullModule"/>
+                                        </module>
+                                        <module name="ViewRedirectorLink">
+                                          <param name="viewTarget">flashtimeline</param>
+                                        </module>
+                                        <module name="StaticContentSample" layoutPanel="panel_row4_col1">
+                                            <param name="text">&lt;div id="evtMsg" style="white-space: pre;"&gt;&lt;/div&gt;</param>
+                                        </module>
                                     </module>
-                                    <module name="StaticContentSample" layoutPanel="panel_row4_col1">
-                                        <param name="text">&lt;div id="evtMsg" style="white-space: pre;"&gt;&lt;/div&gt;</param>
-                                    </module>
+                                    
                                 </module>
                             </module>
-                            
                         </module>
                     </module>
                 </module>
