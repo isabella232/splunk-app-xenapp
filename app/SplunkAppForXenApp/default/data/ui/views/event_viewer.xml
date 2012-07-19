@@ -19,31 +19,35 @@
       <param name="level">warn</param>
     </module>
   
-    <module name="URLLoader" layoutPanel="panel_row1_col1" autoRun="true">
+    <module name="URLLoader" layoutPanel="viewHeader" autoRun="true">
     
-    <module name="TimeRangePicker" layoutPanel="panel_row1_col1">
+    <module name="TimeRangePicker" layoutPanel="viewHeader">
       <param name="default">Last 1 Hours</param>
       <param name="searchWhenChanged">True</param>
       
-        <module name="TextField" layoutPanel="panel_row2_col1_grp1">
+        <module name="TextField" layoutPanel="viewHeader">
             <param name="name">ServerName</param>
-            <param name="label">Server Name</param>
+            <param name="label">Server Name:</param>
             
-            <module name="TextField" layoutPanel="panel_row2_col1_grp2">
+            <module name="TextField" layoutPanel="viewHeader">
                 <param name="name">LogName</param>
-                <param name="label">Log Name</param>
+                <param name="label">Log Name:</param>
 
-                <module name="TextField" layoutPanel="panel_row2_col1_grp3">
+                <module name="TextField" layoutPanel="viewHeader">
                     <param name="name">EventCode</param>
-                    <param name="label">Event Code</param>
+                    <param name="label">Event Code:</param>
     
-                    <module name="TextField" layoutPanel="panel_row2_col1_grp4">
+                    <module name="TextField" layoutPanel="viewHeader">
                         <param name="name">SourceName</param>
-                        <param name="label">Source Name</param>
+                        <param name="label">Source Name:</param>
     
-                            <module name="TextField" layoutPanel="panel_row2_col1_grp5">
+                            <module name="TextField" layoutPanel="viewHeader">
                                 <param name="name">Type</param>
-                                <param name="label">Type</param>
+                                <param name="label">Type:</param>
+                                
+                                <module name="SubmitButton" layoutpanel="viewHeader">
+                                	<param name="allowSoftSubmit">False</param>
+                                	<param name="label">Submit</param>
     
                                 <module name="Search" layoutPanel="panel_row3_col1" group="Windows Events" autoRun="true">
                                     <param name="search">index="xenapp_winevents" sourcetype="WinEventLog:*" $ServerName$ |
@@ -51,7 +55,7 @@
                                                       fields host, LogName, Type, SourceName, EventCode, TaskCategory, Message |
                                                       eval ServerName=host |
                                                       eval Time=strftime(_time, "%Y-%m-%d %H:%M:%S") |
-                                                      table Message, Time, ServerName, LogName, Type, SourceName, EventCode, TaskCategory</param>
+                                                      table Message, Time, ServerName, LogName, Type, SourceName, EventCode, TaskCategory | rename ServerName as "Server Name" LogName as "Log Name" SourceName as "Source Name" EventCode as "Event Code" TaskCategory as "Task Category"</param>
                                     
                                     <param name="groupLabel">Windows Events</param>
                                     
@@ -75,9 +79,11 @@
                                         </module>
                                         <module name="StaticContentSample" layoutPanel="panel_row4_col1">
                                             <param name="text">&lt;div id="evtMsg" style="white-space: pre;"&gt;&lt;/div&gt;</param>
+                                        	<module name="JobProgressIndicator" layoutpanel="panel_row4_col1"/>
                                         </module>
                                     </module>
                                     
+                                </module>
                                 </module>
                             </module>
                         </module>
