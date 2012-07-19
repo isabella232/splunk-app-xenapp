@@ -11,16 +11,16 @@
   <module name="TitleBar" layoutPanel="viewHeader">
     <param name="actionsMenuFilter">dashboard</param>
   </module>
-  <module name="GenericHeader" layoutPanel="panel_row1_col1">
+ <!-- <module name="GenericHeader" layoutPanel="panel_row1_col1">
     <param name="label">Server System Resources</param>
-  </module>
-  <module name="StaticContentSample" layoutPanel="panel_row1_col1">
+  </module> -->
+  <module name="StaticContentSample" layoutPanel="viewHeader">
     <param name="text">This dashboard provides a high level overview of resource usage by XenApp Server. Filter this view by entering a new XenApp Server name and pressing Enter. To view the entire result set for this report or manipulate the data further, click View Full Report.</param>
   </module>
-  <module name="TimeRangePicker" layoutPanel="panel_row1_col1" autoRun="True">
+  <module name="TimeRangePicker" layoutPanel="viewHeader" autoRun="True">
     <param name="default">Last 24 Hours</param>
     <param name="searchWhenChanged">True</param>
-    <module name="ExtendedFieldSearch" layoutPanel="panel_row2_col1_grp1">
+    <module name="ExtendedFieldSearch" layoutPanel="viewHeader">
       <param name="label">XenApp Server:</param>
       <param name="field">Server</param>
       <param name="replacementMap">
@@ -41,13 +41,16 @@
           </param>
         </param>
       </param>
-      <module name="HiddenSearch" layoutPanel="panel_row1_col1" autoRun="True">
+      <module name="SubmitButton" layoutPanel="viewHeader">
+    	<param name="allowSoftSubmit">False</param>
+    	<param name="label">Submit</param>
+      <module name="HiddenSearch" layoutPanel="viewHeader" autoRun="True">
         <param name="search">`perfmon_brief` | eval ServerName=host | lookup xa_zone_farm ServerName OUTPUT ZoneName FarmName | search FarmName="*" ZoneName="*" | stats median(Value) as Value by counter object ServerName FarmName ZoneName</param>
-        <module name="ViewRedirectorLink" layoutPanel="panel_row1_col1">
+        <module name="ViewRedirectorLink" layoutPanel="viewHeader">
           <param name="viewTarget">flashtimeline</param>
           <param name="label">View Full Report</param>
         </module>
-        <module name="JobProgressIndicator"/>
+        <module name="JobProgressIndicator" layoutPanel="viewHeader"/>
         <!--% CPU Utilization-->
         <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp1" group="% CPU Utilization">
           <param name="search">search counter="% Processor Time" counter="% Processor Time" | stats min(Value) as Value | eval Value=round(Value,2) | `usrexp_cpu`| eval usrexp="usrexp"+usrexp</param>
@@ -77,7 +80,7 @@
           </module>
         </module>
         <module name="HiddenPostProcess" layoutPanel="panel_row4_col1_grp1" group="Top CPU % Utilization" autoRun="True">
-          <param name="search">| search counter="% Processor Time" | stats max(Value) as Value by ServerName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg % CPU" | head 10</param>
+          <param name="search">| search counter="% Processor Time" | stats max(Value) as Value by ServerName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. % CPU" ServerName as "Server Name" | head 10</param>
           <module name="SimpleResultsTable" layoutPanel="panel_row4_col1_grp1">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
@@ -92,7 +95,7 @@
           </module>
         </module>
         <module name="HiddenPostProcess" layoutPanel="panel_row4_col1_grp2" group="Top CPU % Utilization" autoRun="True">
-          <param name="search">| search counter="% Processor Time" | stats avg(Value) as Value by FarmName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg % CPU" | head 10</param>
+          <param name="search">| search counter="% Processor Time" | stats avg(Value) as Value by FarmName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. % CPU" FarmName as "Farm Name" | head 10</param>
           <module name="SimpleResultsTable" layoutPanel="panel_row4_col1_grp2">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
@@ -107,7 +110,7 @@
           </module>
         </module>
         <module name="HiddenPostProcess" layoutPanel="panel_row4_col1_grp3" group="Top CPU % Utilization" autoRun="True">
-          <param name="search">| search counter="% Processor Time" | stats avg(Value) as Value by ZoneName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg % CPU" | head 10</param>
+          <param name="search">| search counter="% Processor Time" | stats avg(Value) as Value by ZoneName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. % CPU" ZoneName as "Zone Name" | head 10</param>
           <module name="SimpleResultsTable" layoutPanel="panel_row4_col1_grp3">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
@@ -150,7 +153,7 @@
           </module>
         </module>
         <module name="HiddenPostProcess" layoutPanel="panel_row6_col1_grp1" group="Lowest Available Memory in Megabytes" autoRun="True">
-          <param name="search">search object="Memory" | eval Value = Value/1024/1024 | stats avg(Value) as Value by ServerName | eval Value=round(Value,2) | sort + Value | rename Value as "Avg MB Free" | head 10</param>
+          <param name="search">search object="Memory" | eval Value = Value/1024/1024 | stats avg(Value) as Value by ServerName | eval Value=round(Value,2) | sort + Value | rename Value as "Avg. MB Free" ServerName as "Server Name" | head 10</param>
           <module name="SimpleResultsTable" layoutPanel="panel_row6_col1_grp1">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
@@ -165,7 +168,7 @@
           </module>
         </module>
         <module name="HiddenPostProcess" layoutPanel="panel_row6_col1_grp2" group="Lowest Available Memory in Megabytes" autoRun="True">
-          <param name="search">search object="Memory" | eval Value = Value/1024/1024 | stats avg(Value) as Value by FarmName | eval Value=round(Value,2) | sort + Value | rename Value as "Avg MB Free" | head 10</param>
+          <param name="search">search object="Memory" | eval Value = Value/1024/1024 | stats avg(Value) as Value by FarmName | eval Value=round(Value,2) | sort + Value | rename Value as "Avg. MB Free" FarmName as "Farm Name" | head 10</param>
           <module name="SimpleResultsTable" layoutPanel="panel_row6_col1_grp2">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
@@ -180,7 +183,7 @@
           </module>
         </module>
         <module name="HiddenPostProcess" layoutPanel="panel_row6_col1_grp3" group="Lowest Available Memory in Megabytes" autoRun="True">
-          <param name="search">search object="Memory" | eval Value = Value/1024/1024 | stats avg(Value) as Value by ZoneName | eval Value=round(Value,2) | sort + Value | rename Value as "Avg MB Free" | head 10</param>
+          <param name="search">search object="Memory" | eval Value = Value/1024/1024 | stats avg(Value) as Value by ZoneName | eval Value=round(Value,2) | sort + Value | rename Value as "Avg. MB Free" ZoneName as "Zone Name"| head 10</param>
           <module name="SimpleResultsTable" layoutPanel="panel_row6_col1_grp3">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
@@ -223,7 +226,7 @@
           </module>
         </module>
         <module name="HiddenPostProcess" layoutPanel="panel_row8_col1_grp1" group="Disk Transfers/Sec" autoRun="True">
-          <param name="search">search object=LogicalDisk counter="Disk Transfers/Sec" | stats avg(Value) as Value by ServerName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. Disk Transfers" | head 10</param>
+          <param name="search">search object=LogicalDisk counter="Disk Transfers/Sec" | stats avg(Value) as Value by ServerName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. Disk Transfer Rate" ServerName as "Server Name" | head 10</param>
           <module name="SimpleResultsTable" layoutPanel="panel_row8_col1_grp1">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
@@ -238,7 +241,7 @@
           </module>
         </module>
         <module name="HiddenPostProcess" layoutPanel="panel_row8_col1_grp2" group="Disk Transfers/Sec" autoRun="True">
-          <param name="search">search object=LogicalDisk counter="Disk Transfers/Sec" | stats avg(Value) as Value by FarmName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. Disk Transfers" | head 10</param>
+          <param name="search">search object=LogicalDisk counter="Disk Transfers/Sec" | stats avg(Value) as Value by FarmName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. Disk Transfer Rate" FarmName as "Farm Name" | head 10</param>
           <module name="SimpleResultsTable" layoutPanel="panel_row8_col1_grp2">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
@@ -253,7 +256,7 @@
           </module>
         </module>
         <module name="HiddenPostProcess" layoutPanel="panel_row8_col1_grp3" group="Disk Transfers/Sec" autoRun="True">
-          <param name="search">search object=LogicalDisk counter="Disk Transfers/Sec" | stats avg(Value) as Value by ZoneName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. Disk Transfers" | head 10</param>
+          <param name="search">search object=LogicalDisk counter="Disk Transfers/Sec" | stats avg(Value) as Value by ZoneName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. Disk Transfer Rate" ZoneName as "Zone Name" | head 10</param>
           <module name="SimpleResultsTable" layoutPanel="panel_row8_col1_grp3">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
@@ -268,6 +271,7 @@
           </module>
         </module>
         <!--End-->
+      </module>
       </module>
     </module>
   </module>
