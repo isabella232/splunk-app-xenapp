@@ -23,19 +23,23 @@ body, td {
 input, textarea, select {
     font-family:Arial,Helvetica,sans-serif;
     font-size:12px;
+    background-color: #eee;
+    border: none;
     color: #333;
+    box-shadow: none !important;
+    border-radius: 5px;
 }
 
 /* monospaced font */
 .splFont-mono {
-    font-family: Consolas,Monaco,Courier New,monospace;
+    font-family: Consolas,Monaco,"Courier New",monospace;
 }
 
 /* font colors not covered by above */
 h2,h4 {
 color:#000;
 }
-. .default .event {
+.default .event {
 color:#333333;
 }
 
@@ -46,6 +50,11 @@ color:#999999;
 .fieldValuePopup table td, .fieldValuePopup table th {
 color: #333;
 }
+
+a {
+	color: #00598C;
+}
+
 
 
 
@@ -75,12 +84,14 @@ Black logo, green > for IE6, transparent against white
 */
 
 .appLogo {
-    height: 43px; 
-    width: 350px; 
+    height: 45px; 
+    width: 274px; 
     background-image: url(appLogo.png);
+    background-size: 274px 45px;
     background-repeat: no-repeat;
-    margin-bottom: 5px;
+    margin: 5px 0;
 }
+
 
 /* the name of your app. line height can be adjusted to fix alignment issues w/ the logo. color is the color of the text. if your logo has the name in it, then you can set this to "display:none;  */
 
@@ -90,51 +101,62 @@ Black logo, green > for IE6, transparent against white
     display:none;
 }
 
+.appHeaderWrapper a.help, a.help:hover {
+	background: none;
+	border-bottom: none !important;
+}
+
+.appHeaderWrapper a.help:hover {
+	text-decoration: underline !important;
+}
 
 /* background-color and/or image of your app */
 .appHeaderWrapper {
-background: none none;
+	background: none;
 
    /* background-color: #002563;*/
- background-image: none;
+   	background-image: none;
     background-repeat: repeat-x;
     background-position: top left;
     border-bottom-style: solid;
     border-bottom-width: 0px;
 }
 
-.appHeader { background: #FFF; } 
+.appHeader {
+	background: #80807C;
+} 
 
-/* color of top-right text */
-.appHeaderWrapper {
-    color: #999;
-}
-/* color of top-right links */
-.appHeaderWrapper a {
-    color:#000;
-}
 
-/* app menu arrows; see arrows section, below, for more info */
-
-.appHeaderWrapper .splIcon-triangle-3-s {
-    background-position: -67px -367px;
-}
 
 
 /* loader background */
 #loading {
-    background-color: #12498b;
+    background-color: #80807C;
+    color: #fff;
 }
 
+.AccountBar a{
+	color: #ddd;
+}
+
+.AccountBar a:hover {
+	color: #fff;
+	text-decoration: none;
+}
+
+.JobProgressIndicator .splBarGraphBar {
+	background-color: #6d7e56;
+}
+
+.graphLoading {
+	clear: left;
+	padding-top: 5px;
+}
 
 /* link colors 
 ---------------------------------*/
 a, .EventsViewer .default .showinline {
-    color: #004f82;
-}
-
-a.disabled {
-    color: ;
+    color: #00598C;
 }
 
 /* neutral link colors */
@@ -142,7 +164,11 @@ div.FlashTimeline a,
 div.FlashTimeline a:visited,
 .JobStatus a,
 .LinkSwitcher ul li.selected a {
-    color: #004f82;
+}
+
+.LinkSwitcher {
+    background-color: #EEEEEE;
+    padding: 10px !important;
 }
 
 
@@ -163,11 +189,14 @@ background-image: url(overlay_whiteridge_28.png);
 */
 
 .splHeader-navigation {
-    background-image: url("/static/img/skins/default/overlay_topgradient_white.png");
-    background-position: 0 -7px;
-    background-repeat: repeat-x;
+    background-image: none;
     _background-image: none;
-    background-color: #545454;
+    background-color: #6B6B6A;
+    margin: 0 8px;
+}
+
+div.AppBar {
+	background-color: #6B6B6A;
 }
 
 /*--- some space to the right of the nav items ---*/
@@ -177,13 +206,13 @@ ul.appBarNav li {
 
 /*--- the default state ---*/
 ul.appBarNav li a, ul.appBarNav li a:active, ul.appBarNav li a:visited  {
-    color: #fff;
+    color: #E9E8E4;
 }
 
 /*--- the hover state ---*/
 ul.appBarNav li.hasMenu a:hover, ul.appBarNav li a:hover {
-    color: #fff;
-    background-color: #12498b;
+    color: #E9E8E4;
+    background-color: #6d7e56;
     background-image: none;
     background-repeat: repeat-x;
     _background-image: none;   /* for IE6 */
@@ -191,8 +220,8 @@ ul.appBarNav li.hasMenu a:hover, ul.appBarNav li a:hover {
 
 /*--- the open state ---*/
 ul.appBarNav li a.menuOpen {
-    color: #fff;
-    background-color: #12498b;
+    color: #E9E8E4;
+    background-color: #78A22F;
     background-image: none;
     background-repeat: repeat-x;
     _background-image: none;   /* for IE6 */
@@ -201,7 +230,7 @@ ul.appBarNav li a.menuOpen {
 /*--- link color ---*/
 ul.appBarNav li.hasMenu a:hover, ul.appBarNav li a.menuOpen {
     color: #fff;
-    }
+}
 
 /* to change arrows, see Menu section, below */
 
@@ -209,6 +238,12 @@ ul.appBarNav li.hasMenu a:hover, ul.appBarNav li a.menuOpen {
 /* auxiliary text and links */
 .AppBar .auxLinks a {
     color: #FFF;
+}
+
+.AppBar .auxLinks a:hover {
+    color: #FFF;
+    border-bottom: 1px dotted #fff;
+    text-decoration: none;
 }
 .AppBar .auxLinks span {
     color: #ccc;
@@ -219,26 +254,27 @@ ul.appBarNav li.hasMenu a:hover, ul.appBarNav li a.menuOpen {
 
 /* primary menu */
 .splMenu-primary ul {
-    background-color: #545454;
+    background-color: #6B6B6A;
     border-color: #CCC;
 }
 .splMenu-primary, .splMenu-primary a, .splMenu-primary a:visited, .splMenu-primary a:hover {
-    color: #fff;
+    color: #E9E8E4;
 }
 
 .splMenu-primary li:hover {
-    background-color: #12498b;
+    background-color: #6d7e56;
 }
 .splMenu-primary a:hover {
-    color: #FFF;   
+    color: #E9E8E4;   
 }
 
 /* secondary menu, used for apps pulldown */
 .splMenu-secondary ul {
-    background-color: #545454;
+    background-color: #6b6b6a;
+    border-color: #ccc;
 }
 .splMenu-secondary, .splMenu-secondary a {
-    color: #FFF;
+    color: #E9E8E4;
 }
 
 /* disabled elements */
@@ -246,10 +282,10 @@ ul.appBarNav li.hasMenu a:hover, ul.appBarNav li a.menuOpen {
     color: #666;
 }   
 .splMenu-secondary li:hover {
-    background-color: #12498b;
+    background-color: #6d7e56;
 }
 .splMenu-secondary a:hover {
-    color: #fff;   
+    color: #e9e8e4;   
 }
 
 /* actions menu open state */
@@ -304,8 +340,9 @@ ul.appBarNav li.hasMenu a.menuOpen span.splIcon-triangle-2-s {
 
 
 /* turn black arrows white */
-.splIcon-triangle-4-s {
-    background-position: -67px -364px;
+
+.splIcon-triangle-3-s {
+	background-position: -27px -367px !important;
 }
 
 
@@ -340,7 +377,7 @@ body, .splBackground-default,
 /* primary background - applies to search controls and primary action panels */
 .viewHeader, .mainSearchControls, .splSearchControls-inline, .SearchBar .saHelpWrapper,
 .popupContent  {
-    background-color: #FFF;
+    background-color: #e1e1d9;
 }
 
 /* secondary background - sidebar, other panels */
@@ -349,13 +386,67 @@ body, .splBackground-default,
     background-color: #EEE;
 }
 
-.TimeRangePicker .timeRangeActivatorWrapper {
-    background-color: ;
-}
-
 /* Specific overrides */
 .layoutCellInner .ResultsHeader .splHeader, .layoutCellInner .ResultsHeader .splHeader-secondary {
     background: transparent none;
+}
+
+.splView-flashtimeline .ResultsHeader .splHeader-primary {
+	background-color: #eee;
+	border-top: none;
+	background-image: none;
+}
+
+.FlashTimeline {
+	background-image: none;
+}
+
+.graphArea .MessageList {
+    padding-bottom: 15px;
+}
+
+.splView-flashtimeline .ResultsHeader .splHeader-primary h2 {
+	border-left: 1px solid #eee;
+}
+
+.ButtonSwitcher ul {
+	margin: 0;
+}
+
+.exportBtn {
+	margin-top: -3px;
+}
+
+.resultsOptionsActivator {
+	margin-top: -3px;
+}
+
+.DisableRequiredFieldsButton {
+	background-color: #eee;
+	background-image: none;
+	border-bottom-left-radius: 6px;
+}
+
+div.mainSearchControls, div.pageControls {
+	border-bottom: 1px solid #eee;
+	border-left: 1px solid #eee;
+	border-bottom-left-radius: 6px;
+	border-top: none;
+}
+
+div.withSidebar div.sidebarExpanded .FieldPicker {
+	border-top: none;
+}
+
+div.sidebarCollapsed .sidebarControl {
+	border-top: none;
+	border-radius: 0 0 0 6px;
+	background-image: none;
+	background-color: #eee;
+}
+
+.layoutCellInner {
+	margin: 10px 10px 0 0;
 }
 
 /* Specific overrides */
@@ -365,17 +456,83 @@ body, .splBackground-default,
 
 /* dashboard background color */
 body.splTemplate-dashboard {
-    background-color: #EEE;
+    background-color: #fff;
 }
 
 /* dashboard containers */
 .dashboardCell {
-    background-color: #fbfbfb; 
-    background-image:url(overlay_topgradient.png);
-    background-repeat:repeat-x;
+    background-color: #fff; 
+	background-image: url("../../../img/skins/default/overlay_reversegradientridge_28.png");
+	background-position: 0 -7%;
+	background-size: 20px 50%;
+	background-repeat:repeat-x;
     -moz-box-shadow: none;
+    box-shadow: none;
+    border: 1px solid #e9eaea;
     -webkit-box-shadow: none;
     _background-image: none;   /* for IE6 */
+}
+/*
+.splHeader-dashboard {
+	height: 20px !;
+	border-bottom: 1px solid #6B6B6A;
+}
+*/
+.dashboardCell .SplunkModule {
+	padding: 10px 5px;
+}
+
+.dashboardCell .splHeader h2 {
+	color: #6b6b6a;
+	padding: 8px;
+	margin: 0;
+}
+
+.dashboardContent .ViewRedirectorLink {
+	float: right;
+	padding: 0 5px 0 0;
+}
+
+.viewHeader .ViewRedirectorLink a {
+    float: left;
+	padding-bottom: 5px;
+	position: relative;
+	top: 10px;
+}
+
+
+.SimpleResultsTable .empty_results, .empty_results {
+    background-color: transparent;
+    height: 10px;
+    margin: 0;
+}
+
+.dashboardContent {
+	clear: both;
+	overflow: hidden;
+	position: relative;
+}
+
+.panel_row1_col .dashboardContent {
+	border: none !important;
+	background-color: transparent;
+	padding-top: 20px;
+}
+
+.dashboardContent .JobProgressIndicator .barGraphWrapper {
+	padding: 25px 10px 0;
+}
+
+.dashboardContent .ViewRedirectorLink a {
+	padding: 10px 10px 0 0;
+}
+
+.resultStatusMessage {
+	color: #6b6b6a;
+}
+
+div.layoutCell {
+	background-color: #fff;
 }
 
 /* headers 
@@ -390,10 +547,13 @@ body.splTemplate-dashboard {
 .splHeader-primary,
 .TitleBar .splHeader, 
 .FieldPickerPopup .splHeader-primary {
-    background-color: #FBFBFB;
-	background-image:url(overlay_reversegradient_28.png);
+    background: #fff;
 	background-repeat:repeat-x;
 	_background-image: none;
+}
+
+.splHeader-primary {
+	border-top: none !important;
 }
 
 /* secondary (i.e. sidebar) header background color + overlay */
@@ -410,9 +570,28 @@ _background-image: none;
     background-image: url(overlay_topInnerShadow_35.png);
 }
 
+.splView-flashtimeline .JobStatus {
+	background-color: transparent;
+	background-image: none;
+	border-bottom: none;
+	margin: 0 10px;
+}
+
 .TitleBar .splHeader {
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
+    border: none;
+}
+
+.splHeader h2 {
+	color: #394345;
+}
+
+.output .splHeader {
+	float: left;
+	margin-left: -20px;
+}
+
+.TitleBar .actionsMenu {
+	color: #394345;
 }
 
 /* borders 
@@ -463,14 +642,36 @@ border-color: #CCC;
 
 /* search button color; background-position of 0 0 is black, -40px 0 is white */
 input.searchButton {
-    background-color: #12498b;
-    background-position:-40px 0;   
+    background-color: #6d7e56;
+    border-color: #6d7e56;
+    border-left-color: #94aa76 !important;  
+}
+
+input.searchButton:hover {
+	background-color: #78A22F;
+	border-color: #78A22F;
 }
 
 /* search assistant */
 
 .SearchBar .assistantActivator {
-background-color: #545454;
+background-color: #6d7e56;
+}
+
+.SearchBar .assistantWrapperEnabled {
+	border-top-color: #6d7e56;
+}
+
+.SearchBar .assistantInnerHelpOnly {
+	background-color: #eee;
+}
+
+.splFont-mono {
+	color: #6d7e56;
+}
+
+.SearchBar textarea {
+	color: #333;
 }
 
 /* search asst. arrow closed */
@@ -491,14 +692,35 @@ black > background-position:-67px -386px;
 background-position:-27px -386px;
 }
 
+.SearchBar textarea {
+	background: none;
+}
 
 
 .splSearchControls-inline {
     background-image: none;
+    padding: 0 10px;
+    margin-top: 15px;
 }
 
 .SearchBar .searchFieldWrapperInner {
-border-color: #545454;
+	border-color: #6d7e56;
+}
+
+table.mainSearchControlsTable .SearchBar .searchFieldWrapper {
+	border-color: #6d7e56;
+	background-color: #6d7e56;
+}
+
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper {
+    background-color: #6d7e56;
+    border-color: #6d7e56;
+    color: #Eee;
+}
+
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:hover, table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:focus, table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:hover {
+	background-color: #78a22f;
+	border-color: #78a22f;
 }
 
 /* Flash line and charts 
@@ -512,9 +734,24 @@ border-color: #545454;
   controls and and font color get screened via an alpha layer, so should probably be set to all black or white, depending on main background
 */
 div.FlashChart {
-    background-color: #fbfbfb;
-    border-left-color:#000;
-    color: #000;
+   /* background-color: transparent; */
+  /*  border-left-color:#000; */
+   /* color: #000; */
+   border-radius: 0;
+   padding: 0 !important;
+}
+
+div.FlashWrapperContainer object {
+	border: 1px solid #eee;
+}
+
+/*.highcharts-placeholder {
+	background-color: #eee;
+}
+*/
+
+.highcharts-container {
+	border: 1px solid #eee;
 }
 
 /* flash timeline specific */
@@ -526,21 +763,45 @@ div.FlashChart {
 controls and and font color get screened via an alpha layer, so should probably be set to all black or white, depending on main background
 */
 div.FlashTimeline {
-    background-color: #fbfbfb;
-    border-left-color: #000;
-    color: #000;
+    background-color: #eee;
+   /* border-left-color: #000; */
+  /*  color: #000; */
     /* the color of the histogram bar. border-right-color = fill */
-    border-right-color: #417eb0; 
+    border-right-color: #6d7e56;
+    margin: 0 20px;
+    border-radius: 6px 6px 0 0;
+}
+
+.resultsArea {
+	margin: 0 20px;
+}
+
+div.FlashTimeline .controlLinks {
+	background-color: #eee;
+	background-image: url('../../../img/skins/default/overlay_reversegradient_light_28.png');
+	border-radius: 6px 6px 0 0;
+}
+
+div.FlashTimeline .bucketSize {
+	color: #6b6b6a;
+}
+
+div.FlashTimeline span.linLogLabel{
+	color: #6b6b6a;
+}
+
+div.FlashTimeline a.linLogToggle .splIcon-triangle-4-s {
+    background-position: -7px -367px;
 }
 
 /* popup bar chart; should be same color as flash timeline */
 .splBarGraphBar {
-background-color: #12498b;
+background-color: #6d7e56;
 }
 
 /* background of bar graph */
 .splBarGraph {
-background:#FFFFFF;
+background:#eee;
 }
 
 
@@ -549,21 +810,60 @@ background:#FFFFFF;
 ---------------------------------*/
 
 .splButton-primary {
-    background-color: #12498b;   
-    color: ;
-    background-image: url(overlay_softgradient_28.png); 
+    background-color: #6d7e56;   
+    color: #fff !important;
+    border: none;
+    padding: 1px 5px;
 }
+
+.viewHeader .SubmitButton {
+	margin-top: 5px;	
+	float: left;
+}
+
 .splButton-primary:hover {
-    background-color: #1554a1;   
-    background-image: url(overlay_softgradient_28.png); 
+    background-color: #78a22f;   
+    color: #fff;
 }
+
+.splButton-primary:focus {
+	background-color: #78a22f;   
+    color: #fff;
+}
+
 .splButton-secondary {
-    background-color: #80a9ca;
-    background-image: url(overlay_softgradient_28.png); 
+    background-color: #80807c;
+    color: #fff;
+    border-color: #80807c;
 }
+
 .splButton-secondary:hover {
-    background-color: #8fbde3;  
-    background-image: url(overlay_softgradient_28.png);  
+    background-color: #6b6b6a;  
+}
+
+.splButton-tertiary {
+	background-color: #6d7e56;
+	border-color: #6d7e56;
+}
+
+.splButton-tertiary:hover, .splButton-tertiary:focus {
+	background-color: #78a22f;
+}
+
+.splButtonGroup .splButton-tertiary {
+	border-left-color: #94aa76;
+}
+
+.splButtonGroup .splButton-tertiary:first-child {
+	border-left-color: #94aa76;
+}
+
+.JobStatus .jobActions, .JobStatus .nextSteps {
+	padding: 2px 10px 0 0;
+}
+
+.JobStatus .jobActions {
+	padding-top: 2px;
 }
 
 /* form elements
@@ -586,21 +886,10 @@ p.fieldsetHelpText {
 
 /*-- disabled and read-only form elements --*/
 
-label.disabledLabel {
-    color: ;
-}
-select option[disabled] {
-    color: ;
-}
-input.readonly {
-    background-color: ;
-}
-
 
 input[disabled]{
 background-color: transparent;
 border-color: transparent;
-color: ;
 }
 
 /* Icons 
@@ -626,14 +915,8 @@ background-image: url(splIcons.gif);
 
 
 /*-- switchers that use icons  --*/
-
-.ButtonSwitcher ul li.selected, .ButtonSwitcher ul li.selected:hover,
-.EventsViewer .default .actions,
-div.FlashTimeline a.logScaleSelected span, div.FlashTimeline a.linScaleSelected span  {
-   /*
- border: 1px solid #12498b;
-    background-color: #12498b;
-*/
+.ButtonSwitcher ul li.selected:hover, .ButtonSwitch ul li.selected:focus{
+   background-color: #222;
 }
 
 .ButtonSwitcher ul li, .Paginator a, .Paginator .disabled:hover {
@@ -649,11 +932,10 @@ div.FlashTimeline a.logScaleSelected span, div.FlashTimeline a.linScaleSelected 
 /*-- paginator uses similar styles --*/
 
 .Paginator .active a, .Paginator .active a:hover {
-  /*
-  background-color: #12498b;
-    border-color: #12498b;
-  
-*/  color: #fff;
+	background-color: #7f7f7c;
+    color: #ddd;
+    box-shadow: none;
+    border: none;
 }
 
 /*-- arrow icons --*/
@@ -685,29 +967,49 @@ div.FlashTimeline a.logScaleSelected span, div.FlashTimeline a.linScaleSelected 
 background-position:-27px -360px;
 }
 
-.FieldPickerPopup .fpFieldListContainerOuter th.headerSortUp span {
+		.FieldPickerPopup .fpFieldListContainerOuter th.headerSortUp span {
 background-position:-27px -379px;
 }
 
+.FieldPickerPopup .fpAddTermCell span.splIcon-arrow-e {
+	background-color: #6d7e56;
+}
+
+.FieldPickerPopup .fpSelectedFields span.splIcon-arrow-w {
+	background-color: #79a330;
+}
+
+/* info icon
+---------------------------------*/
+
+.info_icon {
+	position: relative;
+	top: 2px;
+}
 
 /* highlight colors 
 ---------------------------------*/
 /*-- event items --*/
 .EventsViewer .default .a, .EventsViewer .default .h, .EventsViewer .default .fields .v:hover, .EventsViewer .default .fields .tg:hover {
-	/* background-color: #f2cb3f; */
+	background-color: rgba(109,126,86,0.34);
 }
 
 /*-- row highlighting for tables --*/
 table.splTable tr:hover td {
-    background-color:#f2cb3f;
+    background-color: rgba(109,126,86,0.34);
 }
-.mouseoverHighlight, .mouseoverHightlight td {
-    background-color:#f2cb3f;
+
+.mouseoverHighlight, .mouseoverHighlight td {
+    background-color: rgba(121,163,48,0.4) !important;
+}
+
+.SimpleResultsTable table.splTable tr td.selected, .SimpleResultsTable table.splTable tr th.selected, .SimpleResultsTable table.splTable tr.selected td, .SimpleResultsTable table.splTable tr div.selected {
+	background-color: rgba(109,126,86,0.68)
 }
 
 /*-- matching search terms --*/
 .SimpleEventsViewer span.searchTermHighlight {
-    background-color:#f2d440;
+    background-color: #f2d440;
 }
 
 /* MultiFieldViewer + SuggestedFieldViewer, i.e. highlight in the fields sidebar */
@@ -715,12 +1017,12 @@ table.splTable tr:hover td {
 .MultiFieldViewer .fieldTabs .selected,
 .SuggestedFieldViewer .fieldTabs .mouseoverHighlight,
 .SuggestedFieldViewer .fieldTabs .selected {
-    background-color: #12498b;
+	background-color: rgba(109,126,86,0.34);
 }
 
 /* field picker popup hover row */
 .FieldPickerPopup .fpFieldList tbody tr:hover, .FieldPickerPopup .fpFieldList tbody tr.mouseoverHighlight {
-    background-color: #12498b;
+    background-color: rgba(109,126,86,0.34);
 }
 
 .FieldPickerPopup .fpFieldList tbody tr:hover td, .FieldPickerPopup .fpFieldList tbody tr.mouseoverHighlight td {
@@ -728,9 +1030,9 @@ table.splTable tr:hover td {
 }
 
 
-.fieldTabs a:hover {
+/*.fieldTabs a:hover {
     color: #fff;
-}
+} */
 
 
 
@@ -741,14 +1043,14 @@ table.splTable tr:hover td {
 }
 
 .ui-datepicker-links {
-    background-image: url(overlay_gradient.png) repeat-x 0 0;
+  /*  background-image: url(overlay_gradient.png) repeat-x 0 0; */
     _background-image: none;
 } 
 
 /* popups 
 ---------------------------------*/
 .splHeader-popup {
-    background-color: #000;
+   /* background-color: #000; */
     background-image: url(overlay_gradient.png);
     background-repeat: repeat-x;
     _background-image: none;
@@ -762,9 +1064,9 @@ table.splTable tr:hover td {
 
 /* modal overlay */
 .splOverlay, .splOverlay-white {
-    background-color: #000;    
+   /* background-color: #000;    
     opacity:0.8;
-    filter:alpha(opacity=80);
+    /*(filter:alpha(opacity=80);*/
 }
 .splOverlay-white {
     background-color:#FFF;  
@@ -775,142 +1077,239 @@ table.splTable tr:hover td {
 
 /* resize handle */
 .ui-resizable-s {
-background-color:#12498b !important;
+	background-color: rgba(128, 128, 124, 0.7);
+	margin-top: -3px;
 }
 
 /* loading image for jobs */
 .JobStatus .output .running h2,
 .JobStatus .output .runningReport h2,
 .JobStatus .output .finalizing h2 {
-background-image: url(loader.gif);
+background-image: url(../../../img/skins/default/loader.gif);
 }
 
+.output .running {
+	margin-left: 0px;
+}
 
 /* remove the gradient at top of event and results area */
 .EventsViewer, .SimpleResultsTableResults {
-background-image: none;
+/* background-image: none; */
 }
 
 
 
-
+element.style {
+	width: 100%;
+}
 
 
 /* Default Class Overloads */
 /* Default Class Overloads */
+
+.viewHeader{
+	padding: 10px 10px 0;
+}
+
+.viewHeader .StaticSelect {
+	float: left;
+	position: relative;
+    top: 3px;
+}
+
+.viewHeader .Pulldown {
+	padding-top: 10px;
+}
+
+.viewHeader .ExtendedFieldSearch, .TextField {
+	float: left;
+}
+
+.TextField {
+	margin-top: 7px;
+}
+
+.TimeRangePicker .timeRangeActivatorWrapper {
+	background-color: #ddd;
+}
+
+.viewHeader .TimeRangePicker {
+	float: left;
+	margin: 5px 0;
+}
+
+.viewHeader, .mainSearchControls, .splSearchControls-inline, .SearchBar .saHelpWrapper, .popupContent {
+	background-color: #fff;
+}
+
+.JobProgressIndicator .splBarGraphValue {
+	bottom: 22px;
+	float: right;
+	margin: -4px;
+}
+
 .SingleValueHolder {
-    background-color: #FFF;
-    -moz-border-radius: 0px;
-    -webkit-border-radius: 0px;
+    background-color: transparent;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: normal;
     -moz-box-shadow: none;
     background-repeat: no-repeat;
     _background-image: none;
-    text-align: left;
-    padding-left: 45px;
+    text-align: center;
+    box-shadow: none;
+    background-image: none;
+	width: 100% !important;
+	margin: 0 auto;
+    height: 45px;
+	min-width: 225px;
+    float: none;
 }
 
-.SingleValue .time{
-    background-image:url(48px-Crystal_Clear_app_xclock.png);    
+.SingleValueHolder span {
+	position: relative;
+	top: 25px;
 }
 
-
-.SingleValue .user{
-    background-image:url(Crystal_Clear_app_Login_Manager.png);
+.SingleValue .time {
+    background-image:url(times.png);
+    background-position: center top;    
 }
 
-.SingleValue .blank{
+.SingleValue .percent {
+	background-image: url(percents.png);
+	background-position: center top;
+}
+
+.SingleValue .alert {
+	background-image: url(alerts.png);
+	background-position: center top;
+}
+
+.SingleValue .type {
+	background-image: url(types.png);
+	background-position: center top;
+}
+
+.SingleValue .user {
+    background-image: url(user.png);
+    background-position: center top;
+    
+}
+
+.SingleValue .blank {
     background-image: none;
 }
 
-.SingleValue .vmsreporting{
-    background-image:url(ctxapp1.png);
+.SingleValue .vmsreporting {
+    background-image:url(vms.png);
+    background-position: center top;
+}
+
+.SingleValue .device {
+	background-image:url(devices.png);
+	background-position: center top;
 }
 
 .SingleValue .session{
-    background-image:url(ctxapp1.png);
+    background-image:url(sessions.png);
+    background-position: center top;
 }
 
-.SingleValue .server{
-    background-image:url(server.png);
+.SingleValue .server {
+    background-image:url(servers.png);
+    background-position: center top;
 }
 
-.SingleValue .device{
-    background-image:url(devices.png);
+
+.SingleValue .client{
+    background-image:url(client.png);
+    background-position: center top;
 }
 
-.SingleValue .receiver{
-    background-image:url(citrixreceiver.png);
-}
-
-.SingleValue .hdx{
-    background-image:url(hdx.png);
+.SingleValue .ica{
 }
 
 .SingleValue .winerr{
     background-image:url(usrexp1.png);
+    background-position: center top;
 }
 
 .SingleValue .winwarn{
     background-image:url(usrexp2.png);
-}
-
-.SingleValue .percent{
-    background-image:url(percent.png);
+    background-position: center top;
 }
 
 .SingleValue .speedometer{
     background-image:url(speedometer-icon.png);
+    background-position: center top;
 }
 
 .SingleValue .mem{
+	background-position: center top;
     background-image:url(drive-memory-ram.png);
+    background-position: center top;
 }
 
 .SingleValue .harddrive{
     background-image:url(hard_disk.png);
+    background-position: center top;
 }
 
 .SingleValue .network{
     background-image:url(remotedesktop.png);
+    background-position: center top;
 }
-
 
 .SingleValue .netup{
     background-image:url(NetUp.png);
+    background-position: center top;
 }
 
 
 .SingleValue .netdown{
     background-image:url(NetDown.png);
+    background-position: center top;
 }
 
 .SingleValue .usrexp1{
     background-image:url(usrexp1.png);
+    background-position: center top;
 }
 
 .SingleValue .usrexp2{
-background-image:url(usrexp2.png);
-
+    background-image:url(usrexp2.png);
+    background-position: center top;
 }
 
 .SingleValue .usrexp3{
-background-image:url(usrexp3.png);
+    background-image:url(usrexp3.png);
+    background-position: center top;
 }
 
 .SingleValue .usrexp4{
-background-image:url(usrexp4.png);
+    background-image:url(usrexp4.png);
+    background-position: center top;
 }
 
 .SingleValue .usrexp5{
-background-image:url(usrexp5.png);
+    background-image:url(usrexp5.png);
+    background-position: center top;
 }
+
 
 /* SimpleResultsTable */
 .SimpleResultsTable table.enableMouseover tr td.d {
     color:#004F82;
 }
+
+.SimpleResultsTable .simpleResultsTableWrapper { 
+	padding: 15px 15px 0;
+/*	background-color: #eee; */
+}
+
+
 
 /* jquery iphone switch */
 
@@ -922,10 +1321,41 @@ label.iPhoneCheckLabelOn {
 /* tighten up dashboard title displays */
 .NullModule { display: none; }
 
-.dashboardCell .FlashChart {
+.dashboardContent h3 {
+	margin-top: 0;
+}
+
+.dashboardContent .SimpleResultsHeader h3 {
+	padding: 10px;
+}
+
+.dashboardContent .SimpleResultsHeader {
+	padding: 0 !important;
+}
+
+.Paginator ul {
+	padding: 10px;
+}
+
+.pageControls .Paginator ul, .ResultsContainer ul {
+	padding: 0;
+}
+
+.splView-flashtimeline .ShowHideHeader {
+	border-top: none;
+}
+
+.LinkSwitcher {
 	background-color: transparent;
 }
 
-.dashboardContent h3 {
-	margin-top: 0;
+.JobStatus .output .complete{
+	padding-left: 20px;
+}
+
+.splLastRefreshed b {
+	position: relative;
+	top: 8px;
+	right: 10px;
+	color: #eee;
 }
