@@ -225,30 +225,30 @@
                       </module>
                     </module>
                   </module>
-                  <module name="HiddenPostProcess" layoutPanel="panel_row4_col1" group="Alerts Fired"       autoRun="True">
+                  <module name="HiddenPostProcess" layoutPanel="panel_row1_col1_grp1"        autoRun="True">
                     <param name="search">`stats_count` as alerts | eval range="alert"</param>
                     <module name="SingleValue">
                       <param name="field">alerts</param>
                       <param name="classField">range</param>
-                      <param name="afterLabel">Alerts</param>
+                      <param name="afterLabel">Alerts Fired</param>
                       <param name="format">count</param>
                     </module>
                   </module>
-                  <module name="HiddenPostProcess" layoutPanel="panel_row4_col2" group="Affected Users"     autoRun="True">
+                  <module name="HiddenPostProcess" layoutPanel="panel_row1_col1_grp2"      autoRun="True">
                     <param name="search">`dc_user_range`</param>
                     <module name="SingleValue">
                       <param name="field">users</param>
                       <param name="classField">range</param>
-                      <param name="afterLabel">Users</param>
+                      <param name="afterLabel">Affected Users</param>
                       <param name="format">count</param>
                     </module>
                   </module>
-                  <module name="HiddenPostProcess" layoutPanel="panel_row4_col3" group="Affected Hosts"     autoRun="True">
+                  <module name="HiddenPostProcess" layoutPanel="panel_row1_col1_grp3"      autoRun="True">
                     <param name="search">`dc_servername_range`</param>
                     <module name="SingleValue">
                       <param name="field">hosts</param>
                       <param name="classField">range</param>
-                      <param name="afterLabel">Hosts</param>
+                      <param name="afterLabel">Affected Hosts</param>
                       <param name="format">count</param>
                     </module>
                   </module>
