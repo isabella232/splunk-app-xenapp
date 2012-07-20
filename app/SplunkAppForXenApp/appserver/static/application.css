@@ -587,7 +587,10 @@ _background-image: none;
 
 .output .splHeader {
 	float: left;
-	margin-left: -20px;
+}
+
+.JobStatus .output .complete {
+    margin-left: -20px;
 }
 
 .TitleBar .actionsMenu {
@@ -806,10 +809,9 @@ background:#eee;
 /* JSChart
 ---------------------------------*/
 
-.highcharts-container rect {
-	rx: 5px;
-	ry: 5px;
-	fill: #fff;
+.highcharts-container {
+    background-color: #fff;
+    border-radius: 5px;
 }
 
 /* buttons 
@@ -1096,6 +1098,12 @@ table.splTable tr:hover td {
 .JobStatus .output .runningReport h2,
 .JobStatus .output .finalizing h2 {
 background-image: url(../../../img/skins/default/loader.gif);
+}
+
+/* paused message */
+
+.splHeader .paused {
+    margin-left: 20px;
 }
 
 .output .running {
