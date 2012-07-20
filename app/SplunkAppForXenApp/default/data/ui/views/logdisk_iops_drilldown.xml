@@ -13,18 +13,22 @@
   <!--
         Global index summary counts
     -->
-  <module name="GenericHeader" layoutPanel="panel_row1_col1">
+  <!--<module name="GenericHeader" layoutPanel="panel_row1_col1">
     <param name="label">Logical Disk Performance Counters</param>
-  </module>
-  <module name="StaticContentSample" layoutPanel="panel_row1_col1">
+  </module>-->
+  <module name="StaticContentSample" layoutPanel="viewHeader">
     <param name="text">This dashboard provides Windows PerfMon information regarding LogicalDisk utilization for the selected Desktop. Clicking on the hostname below will take you to a list of the running processes for that machine. To view the entire result set or for this report or manipulate the data further, click on the View Full Report link below.</param>
   </module>
-  <module name="TimeRangePicker" layoutPanel="panel_row1_col1" autoRun="True">
+  <module name="TimeRangePicker" layoutPanel="viewHeader" autoRun="True">
     <param name="selected">Last 24 Hours</param>
     <param name="searchWhenChanged">True</param>
-    <module name="HiddenSearch" layoutPanel="panel_row1_col1" autoRun="True">
+    <module name="HiddenSearch" layoutPanel="viewHeader" autoRun="True">
       <param name="search">`perfmon_logdisk` object=LogicalDisk | stats last(Value) as Value by counter vm_name _time</param>
-      <module name="HiddenPostProcess" layoutPanel="panel_row1_col1" autoRun="True">
+      <module name="ViewRedirectorLink" layoutPanel="viewHeader">
+        <param name="viewTarget">flashtimeline</param>
+        <param name="label">View Full Report</param>
+      </module>
+      <module name="HiddenPostProcess" layoutPanel="viewHeader" autoRun="True">
         <param name="search">| stats values(vm_name) as vm first(_time) as f last(_time) as l | convert ctime(l) as l| convert ctime(f) as f | eval message = vm + " From: " + l + " to " + f | eval range="vmsreporting"</param>
         <module name="SingleValue">
           <param name="field">message</param>
@@ -33,13 +37,9 @@
           <param name="format">count</param>
         </module>
       </module>
-      <module name="ViewRedirectorLink" layoutPanel="panel_row1_col1">
-        <param name="viewTarget">flashtimeline</param>
-        <param name="label">View Full Report</param>
-      </module>
       <module name="JobProgressIndicator"></module>
       <module name="HiddenPostProcess" layoutPanel="panel_row3_col1" group="% Free Space" autoRun="True">
-        <param name="search">| search counter="% Free Space" | stats max(Value) as max avg(Value) as avg min(Value) as min by vm_name | head 10 | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min % Free Space" | rename max as "Max % Free Space" | rename avg as "Avg % Free Space"</param>
+        <param name="search">| search counter="% Free Space" | stats max(Value) as max avg(Value) as avg min(Value) as min by vm_name | head 10 | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min.. % Free Space" max as "Max.. % Free Space" avg as "Avg. % Free Space"</param>
         <module name="SimpleResultsTable" layoutPanel="panel_row3_col1">
           <param name="displayMenu">true</param>
           <param name="count">100</param>
@@ -72,18 +72,19 @@
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row3_col2" group="% Free Space" autoRun="True">
-        <param name="search">| search counter="% Free Space" | timechart max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min % Free Space" | rename max as "Max % Free Space" | rename avg as "Avg % Free Space"</param>
+        <param name="search">| search counter="% Free Space" | timechart max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min. % Free Space" max as "Max. % Free Space" avg as "Avg. % Free Space"</param>
         <module name="HiddenChartFormatter">
           <param name="chart">area</param>
           <param name="chart.stackMode">none</param>
           <param name="legend.placement">bottom</param>
+          <param name="primaryAxisTitle.text">Time</param>
           <module name="FlashChart">
             <param name="width">100%</param>
           </module>
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row4_col1" group="Split IO/Sec" autoRun="True">
-        <param name="search">| search counter="Split IO/Sec" | stats max(Value) as max avg(Value) as avg min(Value) as min by vm_name | head 10 | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min Split IO/Sec" | rename max as "Max Split IO/Sec" | rename avg as "Avg Split IO/Sec"</param>
+        <param name="search">| search counter="Split IO/Sec" | stats max(Value) as max avg(Value) as avg min(Value) as min by vm_name | head 10 | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min. Split IO/Sec" max as "Max. Split IO/Sec" avg as "Avg. Split IO/Sec"</param>
         <module name="SimpleResultsTable" layoutPanel="panel_row4_col1">
           <param name="displayMenu">true</param>
           <param name="count">100</param>
@@ -116,18 +117,19 @@
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row4_col2" group="Split IO/Sec" autoRun="True">
-        <param name="search">| search counter="Split IO/Sec" | timechart max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min Split IO/Sec" | rename max as "Max Split IO/Sec" | rename avg as "Avg Split IO/Sec"</param>
+        <param name="search">| search counter="Split IO/Sec" | timechart max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min. Split IO/Sec" max as "Max. Split IO/Sec" avg as "Avg. Split IO/Sec"</param>
         <module name="HiddenChartFormatter">
           <param name="chart">area</param>
           <param name="chart.stackMode">none</param>
           <param name="legend.placement">bottom</param>
+          <param name="primaryAxisTitle.text">Time</param>
           <module name="FlashChart">
             <param name="width">100%</param>
           </module>
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row5_col1" group="Disk Transfers/Sec" autoRun="True">
-        <param name="search">| search counter="Disk Transfers/Sec" | stats max(Value) as max avg(Value) as avg min(Value) as min by vm_name | head 10 | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min Disk Transfers/Sec" | rename max as "Max Disk Transfers/Sec" | rename avg as "Avg Disk Transfers/Sec"</param>
+        <param name="search">| search counter="Disk Transfers/Sec" | stats max(Value) as max avg(Value) as avg min(Value) as min by vm_name | head 10 | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min. Disk Transfers/Sec" max as "Max. Disk Transfers/Sec" avg as "Avg. Disk Transfers/Sec"</param>
         <module name="SimpleResultsTable" layoutPanel="panel_row5_col1">
           <param name="displayMenu">true</param>
           <param name="count">100</param>
@@ -160,18 +162,19 @@
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row5_col2" group="Disk Transfers/Sec" autoRun="True">
-        <param name="search">| search counter="Disk Transfers/Sec" | timechart max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min Disk Transfers/Sec" | rename max as "Max Disk Transfers/Sec" | rename avg as "Avg Disk Transfers/Sec"</param>
+        <param name="search">| search counter="Disk Transfers/Sec" | timechart max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min. Disk Transfers/Sec" max as "Max. Disk Transfers/Sec" avg as "Avg. Disk Transfers/Sec"</param>
         <module name="HiddenChartFormatter">
           <param name="chart">area</param>
           <param name="chart.stackMode">none</param>
           <param name="legend.placement">bottom</param>
+          <param name="primaryAxisTitle.text">Time</param>
           <module name="FlashChart">
             <param name="width">100%</param>
           </module>
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row6_col1" group="Disk Bytes/Sec" autoRun="True">
-        <param name="search">| search counter="Disk Bytes/Sec" | stats max(Value) as max avg(Value) as avg min(Value) as min by vm_name | head 10 | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min Disk Bytes/Sec" | rename max as "Max Disk Bytes/Sec" | rename avg as "Avg Disk Bytes/Sec"</param>
+        <param name="search">| search counter="Disk Bytes/Sec" | stats max(Value) as max avg(Value) as avg min(Value) as min by vm_name | head 10 | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min. Disk Bytes/Sec" max as "Max. Disk Bytes/Sec" avg as "Avg. Disk Bytes/Sec"</param>
         <module name="SimpleResultsTable" layoutPanel="panel_row6_col1">
           <param name="displayMenu">true</param>
           <param name="count">100</param>
@@ -204,18 +207,19 @@
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row6_col2" group="Disk Bytes/Sec" autoRun="True">
-        <param name="search">| search counter="Disk Bytes/Sec" | timechart max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min Disk Bytes/Sec" | rename max as "Max Disk Bytes/Sec" | rename avg as "Avg Disk Bytes/Sec"</param>
+        <param name="search">| search counter="Disk Bytes/Sec" | timechart max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min. Disk Bytes/Sec" max as "Max. Disk Bytes/Sec" avg as "Avg. Disk Bytes/Sec"</param>
         <module name="HiddenChartFormatter">
           <param name="chart">area</param>
           <param name="chart.stackMode">none</param>
           <param name="legend.placement">bottom</param>
+          <param name="primaryAxisTitle.text">Time</param>
           <module name="FlashChart">
             <param name="width">100%</param>
           </module>
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row7_col1" group="Disk Reads/Sec" autoRun="True">
-        <param name="search">| search counter="Disk Reads/Sec" | stats max(Value) as max avg(Value) as avg min(Value) as min by vm_name | head 10 | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min Disk Reads/Sec" | rename max as "Max Disk Reads/Sec" | rename avg as "Avg Disk Reads/Sec"</param>
+        <param name="search">| search counter="Disk Reads/Sec" | stats max(Value) as max avg(Value) as avg min(Value) as min by vm_name | head 10 | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min. Disk Reads/Sec" max as "Max. Disk Reads/Sec" avg as "Avg. Disk Reads/Sec"</param>
         <module name="SimpleResultsTable" layoutPanel="panel_row7_col1">
           <param name="displayMenu">true</param>
           <param name="count">100</param>
@@ -248,18 +252,19 @@
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row7_col2" group="Disk Reads/Sec" autoRun="True">
-        <param name="search">| search counter="Disk Reads/Sec" | timechart max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min Disk Reads/Sec" | rename max as "Max Disk Reads/Sec" | rename avg as "Avg Disk Reads/Sec"</param>
+        <param name="search">| search counter="Disk Reads/Sec" | timechart max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min. Disk Reads/Sec" max as "Max. Disk Reads/Sec" avg as "Avg. Disk Reads/Sec"</param>
         <module name="HiddenChartFormatter">
           <param name="chart">area</param>
           <param name="chart.stackMode">none</param>
           <param name="legend.placement">bottom</param>
+          <param name="primaryAxisTitle.text">Time</param>
           <module name="FlashChart">
             <param name="width">100%</param>
           </module>
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row8_col1" group="Disk Writes/Sec" autoRun="True">
-        <param name="search">| search counter="Disk Writes/Sec" | stats max(Value) as max avg(Value) as avg min(Value) as min by vm_name | head 10 | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min Disk Writes/Sec" | rename max as "Max Disk Writes/Sec" | rename avg as "Avg. Disk Writes/Sec"</param>
+        <param name="search">| search counter="Disk Writes/Sec" | stats max(Value) as max avg(Value) as avg min(Value) as min by vm_name | head 10 | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min. Disk Writes/Sec" max as "Max. Disk Writes/Sec" avg as "Avg. Disk Writes/Sec"</param>
         <module name="SimpleResultsTable" layoutPanel="panel_row8_col1">
           <param name="displayMenu">true</param>
           <param name="count">100</param>
@@ -292,11 +297,12 @@
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row8_col2" group="Disk Writes/Sec" autoRun="True">
-        <param name="search">| search counter="Disk Writes/Sec" | timechart max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min Disk Writes/Sec" | rename max as "Max Disk Writes/Sec" | rename avg as "Avg Disk Writes/Sec"</param>
+        <param name="search">| search counter="Disk Writes/Sec" | timechart max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min. Disk Writes/Sec" max as "Max. Disk Writes/Sec" avg as "Avg. Disk Writes/Sec"</param>
         <module name="HiddenChartFormatter">
           <param name="chart">area</param>
           <param name="chart.stackMode">none</param>
           <param name="legend.placement">bottom</param>
+          <param name="primaryAxisTitle.text">Time</param>
           <module name="FlashChart">
             <param name="width">100%</param>
           </module>
