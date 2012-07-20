@@ -734,15 +734,14 @@ table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:hover,
   controls and and font color get screened via an alpha layer, so should probably be set to all black or white, depending on main background
 */
 div.FlashChart {
-   /* background-color: transparent; */
+    background-color: transparent; 
   /*  border-left-color:#000; */
    /* color: #000; */
-   border-radius: 0;
    padding: 0 !important;
 }
 
 div.FlashWrapperContainer object {
-	border: 1px solid #eee;
+	border-radius: 5px;
 }
 
 /*.highcharts-placeholder {
@@ -751,7 +750,7 @@ div.FlashWrapperContainer object {
 */
 
 .highcharts-container {
-	border: 1px solid #eee;
+	/* border: 1px solid #eee; */
 }
 
 /* flash timeline specific */
@@ -804,7 +803,14 @@ background-color: #6d7e56;
 background:#eee;
 }
 
+/* JSChart
+---------------------------------*/
 
+.highcharts-container rect {
+	rx: 5px;
+	ry: 5px;
+	fill: #fff;
+}
 
 /* buttons 
 ---------------------------------*/
@@ -1076,9 +1082,13 @@ table.splTable tr:hover td {
 ---------------------------------*/
 
 /* resize handle */
-.ui-resizable-s {
+.FlashChart .ui-resizable-s {
 	background-color: rgba(128, 128, 124, 0.7);
 	margin-top: -3px;
+}
+
+.JSChart .ui-resizable-s {
+	background-color: rgba(128, 128, 124, 0.7);
 }
 
 /* loading image for jobs */
@@ -1096,13 +1106,6 @@ background-image: url(../../../img/skins/default/loader.gif);
 .EventsViewer, .SimpleResultsTableResults {
 /* background-image: none; */
 }
-
-
-
-element.style {
-	width: 100%;
-}
-
 
 /* Default Class Overloads */
 /* Default Class Overloads */
