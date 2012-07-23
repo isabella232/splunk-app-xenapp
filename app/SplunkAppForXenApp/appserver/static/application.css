@@ -402,8 +402,9 @@ body, .splBackground-default,
 }
 
 .graphArea .MessageList {
-    padding-bottom: 15px;
+    padding: 10px 0;
 }
+
 
 .splView-flashtimeline .ResultsHeader .splHeader-primary h2 {
 	border-left: 1px solid #eee;
@@ -1118,8 +1119,12 @@ background-image: url(../../../img/skins/default/loader.gif);
 /* Default Class Overloads */
 /* Default Class Overloads */
 
+/* Viewheader organization
+-------------------------------*/
+
 .viewHeader{
-	padding: 10px 10px 0;
+	padding: 10px;
+	margin-top: 10px;
 }
 
 .viewHeader .StaticSelect {
