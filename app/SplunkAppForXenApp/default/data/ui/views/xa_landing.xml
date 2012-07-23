@@ -66,28 +66,30 @@
             </param>
           </param>
         </param>
-        
-        <module name="HiddenSearch" layoutPanel="panel_row3_col1" group="Farms" autoRun="True">
-          <param name="search">`xenapp_index` `xa_farm_sourcetype` $ZoneName$ $FarmName$ | stats first(Servers) as Servers first(SessionCount) as Sessions first(Users) as Users by FarmName | rename FarmName as "Farm Name"</param>
-          <module name="ViewRedirectorLink">
-            <param name="viewTarget">flashtimeline</param>
-            <param name="label">View Farm Data</param>
-          </module>
-          <module name="JobProgressIndicator"/>
-          <module name="SimpleResultsTable">
-            <param name="displayMenu">true</param>
-            <param name="count">100</param>
-            <param name="drilldown">all</param>
-            <param name="entityName">results</param>
-            <param name="displayRowNumbers">False</param>
-            <module name="Redirector">
-              <param name="url">farm_status</param>
-              <param name="arg.FarmName">$click.fields.FarmName$</param>
-              <param name="arg.autoRun">True</param>
+        <module name="SubmitButton" layoutPanel="viewHeader">
+          <param name="allowSoftSubmit">False</param>
+          <param name="label">Submit</param>
+          <module name="HiddenSearch" layoutPanel="panel_row3_col1" group="Farms" autoRun="True">
+            <param name="search">`xenapp_index` `xa_farm_sourcetype` $ZoneName$ $FarmName$ | stats first(Servers) as Servers first(SessionCount) as Sessions first(Users) as Users by FarmName | rename FarmName as "Farm Name"</param>
+            <module name="ViewRedirectorLink">
+              <param name="viewTarget">flashtimeline</param>
+              <param name="label">View Farm Data</param>
+            </module>
+            <module name="JobProgressIndicator"/>
+            <module name="SimpleResultsTable">
+              <param name="displayMenu">true</param>
+              <param name="count">100</param>
+              <param name="drilldown">all</param>
+              <param name="entityName">results</param>
+              <param name="displayRowNumbers">False</param>
+              <module name="Redirector">
+                <param name="url">farm_status</param>
+                <param name="arg.FarmName">$click.fields.FarmName$</param>
+                <param name="arg.autoRun">True</param>
+              </module>
             </module>
           </module>
         </module>
-        
         <module name="HiddenSearch" layoutPanel="panel_row4_col1" autoRun="True" group="Server Alerts">
           <param name="search">`xenapp_alerts` $FarmName$ $ZoneName$ | eval MachineName=lower(vm_name) | rename alert_name as Alert | stats count as Number sparkline as "Over Time" by Alert</param>
           <module name="ViewRedirectorLink">
