@@ -15,7 +15,7 @@
     <param name="label">Server System Resources</param>
   </module> -->
   <module name="StaticContentSample" layoutPanel="viewHeader">
-    <param name="text">This dashboard provides a high level overview of resource usage by XenApp Server. Filter this view by entering a new XenApp Server name and pressing Enter. To view the entire result set for this report or manipulate the data further, click View Full Report.</param>
+    <param name="text">This dashboard provides a high level overview of resource usage by XenApp Server. Filter this view by entering a new XenApp Server name and pressing Enter. To view the entire result set for this report or manipulate the data further, click View Full Report. To view tables with more details, click on the report summaries.</param>
   </module>
   <module name="TimeRangePicker" layoutPanel="viewHeader" autoRun="True">
     <param name="default">Last 24 Hours</param>
@@ -59,6 +59,29 @@
             <param name="classField">usrexp</param>
             <param name="format">count</param>
             <param name="beforeLabel">Min. CPU %:</param>
+<!--	    <module name="HiddenSearch">
+	      <param name="search">`perfmon_brief` | eval ServerName=host | lookup xa_zone_farm ServerName OUTPUT ZoneName FarmName | search FarmName="*" ZoneName="*" | stats median(Value) as Value by counter object ServerName FarmName ZoneName | search counter="% Processor Time" | stats max(Value) as Value by ServerName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. % CPU" ServerName as "Server Name" | head 10</param>
+	      <module name="ConvertToIntention">
+		<param name="intention">
+		  <param name="name">stringreplace</param>
+		  <param name="arg">
+		    <param name="value">$click.value$</param>
+		  </param>
+		</param>
+		<module name="SimpleResultsTable" layoutPanel="panel_row4_col1_grp1">
+		  <param name="displayMenu">true</param>
+		  <param name="count">100</param>
+		  <param name="drilldown">row</param>
+		  <param name="entityName">results</param>
+		  <param name="displayRowNumbers">False</param>
+		  <module name="ConvertToDrilldownSearch">
+		    <module name="ViewRedirector">
+		      <param name="viewTarget">flashtimeline</param>
+		    </module>
+		  </module>
+		</module>
+	      </module>
+	    </module>-->
           </module>
         </module>
         <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp2" group="% CPU Utilization">
@@ -79,9 +102,15 @@
             <param name="beforeLabel">Max. CPU %:</param>
           </module>
         </module>
-        <module name="HiddenPostProcess" layoutPanel="panel_row4_col1_grp1" group="Top CPU % Utilization" autoRun="True">
+        <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp1" group="Top CPU % Utilization" autoRun="True">
           <param name="search">| search counter="% Processor Time" | stats max(Value) as Value by ServerName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. % CPU" ServerName as "Server Name" | head 10</param>
-          <module name="SimpleResultsTable" layoutPanel="panel_row4_col1_grp1">
+	  <module name="TableView" layoutPanel="panel_row3_col1_grp1">
+	    <param name="fieldList">
+	      <param name="1">Server Name</param>
+	      <param name="2">Avg. % CPU</param>
+	    </param>
+	  </module>
+<!--          <module name="SimpleResultsTable" layoutPanel="panel_row4_col1_grp1">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
             <param name="drilldown">row</param>
@@ -92,11 +121,17 @@
                 <param name="viewTarget">flashtimeline</param>
               </module>
             </module>
-          </module>
+          </module>-->
         </module>
-        <module name="HiddenPostProcess" layoutPanel="panel_row4_col1_grp2" group="Top CPU % Utilization" autoRun="True">
+        <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp2" group="Top CPU % Utilization" autoRun="True">
           <param name="search">| search counter="% Processor Time" | stats avg(Value) as Value by FarmName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. % CPU" FarmName as "Farm Name" | head 10</param>
-          <module name="SimpleResultsTable" layoutPanel="panel_row4_col1_grp2">
+	  <module name="TableView" layoutPanel="panel_row3_col1_grp2">
+	    <param name="fieldList">
+	      <param name="1">Farm Name</param>
+	      <param name="2">Avg. % CPU</param>
+	    </param>
+	  </module>
+<!--          <module name="SimpleResultsTable" layoutPanel="panel_row3_col1_grp2">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
             <param name="drilldown">row</param>
@@ -107,11 +142,17 @@
                 <param name="viewTarget">flashtimeline</param>
               </module>
             </module>
-          </module>
+          </module>-->
         </module>
-        <module name="HiddenPostProcess" layoutPanel="panel_row4_col1_grp3" group="Top CPU % Utilization" autoRun="True">
+        <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp3" group="Top CPU % Utilization" autoRun="True">
           <param name="search">| search counter="% Processor Time" | stats avg(Value) as Value by ZoneName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. % CPU" ZoneName as "Zone Name" | head 10</param>
-          <module name="SimpleResultsTable" layoutPanel="panel_row4_col1_grp3">
+	  <module name="TableView" layoutPanel="panel_row3_col1_grp3">
+	    <param name="fieldList">
+	      <param name="1">Zone Name</param>
+	      <param name="2">Avg. % CPU</param>
+	    </param>
+	  </module>
+<!--          <module name="SimpleResultsTable" layoutPanel="panel_row3_col1_grp3">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
             <param name="drilldown">row</param>
@@ -122,7 +163,7 @@
                 <param name="viewTarget">flashtimeline</param>
               </module>
             </module>
-          </module>
+          </module>-->
         </module>
         <!--Available Memory-->
         <module name="HiddenPostProcess" layoutPanel="panel_row5_col1_grp1" group="Available Memory in Megabytes" autoRun="True">
@@ -152,9 +193,15 @@
             <param name="beforeLabel">Max. MB Free:</param>
           </module>
         </module>
-        <module name="HiddenPostProcess" layoutPanel="panel_row6_col1_grp1" group="Lowest Available Memory in Megabytes" autoRun="True">
+        <module name="HiddenPostProcess" layoutPanel="panel_row5_col1_grp1" group="Lowest Available Memory in Megabytes" autoRun="True">
           <param name="search">search object="Memory" | eval Value = Value/1024/1024 | stats avg(Value) as Value by ServerName | eval Value=round(Value,2) | sort + Value | rename Value as "Avg. MB Free" ServerName as "Server Name" | head 10</param>
-          <module name="SimpleResultsTable" layoutPanel="panel_row6_col1_grp1">
+	  <module name="TableView" layoutPanel="panel_row5_col1_grp1">
+	    <param name="fieldList">
+	      <param name="1">Server Name</param>
+	      <param name="2">Avg. MB Free</param>
+	    </param>
+	  </module>
+<!--          <module name="SimpleResultsTable" layoutPanel="panel_row6_col1_grp1">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
             <param name="drilldown">row</param>
@@ -165,11 +212,17 @@
                 <param name="viewTarget">flashtimeline</param>
               </module>
             </module>
-          </module>
+          </module>-->
         </module>
-        <module name="HiddenPostProcess" layoutPanel="panel_row6_col1_grp2" group="Lowest Available Memory in Megabytes" autoRun="True">
+        <module name="HiddenPostProcess" layoutPanel="panel_row5_col1_grp2" group="Lowest Available Memory in Megabytes" autoRun="True">
           <param name="search">search object="Memory" | eval Value = Value/1024/1024 | stats avg(Value) as Value by FarmName | eval Value=round(Value,2) | sort + Value | rename Value as "Avg. MB Free" FarmName as "Farm Name" | head 10</param>
-          <module name="SimpleResultsTable" layoutPanel="panel_row6_col1_grp2">
+	  <module name="TableView" layoutPanel="panel_row5_col1_grp2">
+	    <param name="fieldList">
+	      <param name="1">Farm Name</param>
+	      <param name="2">Avg. MB Free</param>
+	    </param>
+	  </module>
+<!--          <module name="SimpleResultsTable" layoutPanel="panel_row6_col1_grp2">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
             <param name="drilldown">row</param>
@@ -180,11 +233,17 @@
                 <param name="viewTarget">flashtimeline</param>
               </module>
             </module>
-          </module>
+          </module>-->
         </module>
-        <module name="HiddenPostProcess" layoutPanel="panel_row6_col1_grp3" group="Lowest Available Memory in Megabytes" autoRun="True">
+        <module name="HiddenPostProcess" layoutPanel="panel_row5_col1_grp3" group="Lowest Available Memory in Megabytes" autoRun="True">
           <param name="search">search object="Memory" | eval Value = Value/1024/1024 | stats avg(Value) as Value by ZoneName | eval Value=round(Value,2) | sort + Value | rename Value as "Avg. MB Free" ZoneName as "Zone Name"| head 10</param>
-          <module name="SimpleResultsTable" layoutPanel="panel_row6_col1_grp3">
+	  <module name="TableView" layoutPanel="panel_row5_col1_grp3">
+	    <param name="fieldList">
+	      <param name="1">Zone Name</param>
+	      <param name="2">Avg. MB Free</param>
+	    </param>
+	  </module>
+<!--          <module name="SimpleResultsTable" layoutPanel="panel_row6_col1_grp3">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
             <param name="drilldown">row</param>
@@ -195,7 +254,7 @@
                 <param name="viewTarget">flashtimeline</param>
               </module>
             </module>
-          </module>
+          </module>-->
         </module>
         <!--Top Disk Transfers/Sec-->
         <module name="HiddenPostProcess" layoutPanel="panel_row7_col1_grp1" group="Top Disk Transfers/Sec">
@@ -225,9 +284,15 @@
             <param name="beforeLabel">Max. Transfers/sec:</param>
           </module>
         </module>
-        <module name="HiddenPostProcess" layoutPanel="panel_row8_col1_grp1" group="Disk Transfers/Sec" autoRun="True">
+        <module name="HiddenPostProcess" layoutPanel="panel_row7_col1_grp1" group="Disk Transfers/Sec" autoRun="True">
           <param name="search">search object=LogicalDisk counter="Disk Transfers/Sec" | stats avg(Value) as Value by ServerName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. Disk Transfer Rate" ServerName as "Server Name" | head 10</param>
-          <module name="SimpleResultsTable" layoutPanel="panel_row8_col1_grp1">
+	  <module name="TableView" layoutPanel="panel_row7_col1_grp1">
+	    <param name="fieldList">
+	      <param name="1">Server Name</param>
+	      <param name="2">Avg. Disk Transfer Rate</param>
+	    </param>
+	  </module>
+<!--          <module name="SimpleResultsTable" layoutPanel="panel_row8_col1_grp1">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
             <param name="drilldown">row</param>
@@ -238,11 +303,17 @@
                 <param name="viewTarget">flashtimeline</param>
               </module>
             </module>
-          </module>
+          </module>-->
         </module>
-        <module name="HiddenPostProcess" layoutPanel="panel_row8_col1_grp2" group="Disk Transfers/Sec" autoRun="True">
+        <module name="HiddenPostProcess" layoutPanel="panel_row7_col1_grp2" group="Disk Transfers/Sec" autoRun="True">
           <param name="search">search object=LogicalDisk counter="Disk Transfers/Sec" | stats avg(Value) as Value by FarmName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. Disk Transfer Rate" FarmName as "Farm Name" | head 10</param>
-          <module name="SimpleResultsTable" layoutPanel="panel_row8_col1_grp2">
+	  <module name="TableView" layoutPanel="panel_row7_col1_grp2">
+	    <param name="fieldList">
+	      <param name="1">Farm Name</param>
+	      <param name="2">Avg. Disk Transfer Rate</param>
+	    </param>
+	  </module>
+<!--          <module name="SimpleResultsTable" layoutPanel="panel_row8_col1_grp2">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
             <param name="drilldown">row</param>
@@ -253,11 +324,17 @@
                 <param name="viewTarget">flashtimeline</param>
               </module>
             </module>
-          </module>
+          </module>-->
         </module>
-        <module name="HiddenPostProcess" layoutPanel="panel_row8_col1_grp3" group="Disk Transfers/Sec" autoRun="True">
+        <module name="HiddenPostProcess" layoutPanel="panel_row7_col1_grp3" group="Disk Transfers/Sec" autoRun="True">
           <param name="search">search object=LogicalDisk counter="Disk Transfers/Sec" | stats avg(Value) as Value by ZoneName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. Disk Transfer Rate" ZoneName as "Zone Name" | head 10</param>
-          <module name="SimpleResultsTable" layoutPanel="panel_row8_col1_grp3">
+	  <module name="TableView" layoutPanel="panel_row7_col1_grp3">
+	    <param name="fieldList">
+	      <param name="1">Zone Name</param>
+	      <param name="2">Avg. Disk Transfer Rate</param>
+	    </param>
+	  </module>
+<!--          <module name="SimpleResultsTable" layoutPanel="panel_row8_col1_grp3">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
             <param name="drilldown">row</param>
@@ -268,7 +345,7 @@
                 <param name="viewTarget">flashtimeline</param>
               </module>
             </module>
-          </module>
+          </module>-->
         </module>
         <!--End-->
       </module>

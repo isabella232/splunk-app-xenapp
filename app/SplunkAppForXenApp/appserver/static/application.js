@@ -271,4 +271,15 @@ switch (Splunk.util.getCurrentView()) {
         
         break;
     
+    case "xa_perf_overview":
+        $(document).ready(function() {
+            $(".panel_row3_col .TableView").hide();
+            $(".panel_row5_col .TableView").hide();
+            $(".panel_row7_col .TableView").hide();
+            $(".SingleValueHolder span").mouseover(function() { $(".SingleValueHolder span").css("cursor","pointer") });
+            $(".panel_row3_col .SingleValueHolder span").click(function() { $(".panel_row3_col .TableView").toggle() });
+            $(".panel_row5_col .SingleValueHolder span").click(function() { $(".panel_row5_col .TableView").toggle() });
+            $(".panel_row7_col .SingleValueHolder span").click(function() { $(".panel_row7_col .TableView").toggle() });
+        });
+        break;
 }
