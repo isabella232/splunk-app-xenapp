@@ -76,7 +76,15 @@
               <param name="label">View Farm Data</param>
             </module>
             <module name="JobProgressIndicator"/>
-            <module name="SimpleResultsTable">
+            <module name="TableView" layoutPanel="panel_row3_col1">
+              <param name="fieldList">
+                <param name="1">Farm Name</param>
+                <param name="2">Servers</param>
+                <param name="3">Sessions</param>
+                <param name="4">Users</param>
+              </param>
+            </module>
+<!--            <module name="SimpleResultsTable">
               <param name="displayMenu">true</param>
               <param name="count">100</param>
               <param name="drilldown">all</param>
@@ -87,7 +95,7 @@
                 <param name="arg.FarmName">$click.fields.FarmName$</param>
                 <param name="arg.autoRun">True</param>
               </module>
-            </module>
+            </module>-->
           </module>
         </module>
         <module name="HiddenSearch" layoutPanel="panel_row4_col1" autoRun="True" group="Server Alerts">
@@ -132,7 +140,14 @@
             <param name="label">View Error Data</param>
           </module>
           <module name="JobProgressIndicator"/>
-          <module name="SimpleResultsTable">
+          <module name="TableView">
+            <param name="fieldList">
+              <param name="1">Server</param>
+              <param name="2">Source</param>
+              <param name="3">Count</param>
+            </param>
+          </module>
+<!--          <module name="SimpleResultsTable">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
             <param name="drilldown">all</param>
@@ -147,7 +162,7 @@
                 <param name="arg.latest">$search.timeRange.latest$</param>
                 <param name="arg.earliest">$search.timeRange.earliest$</param>
             </module>
-          </module>
+          </module>-->
         </module>
         
         <module name="HiddenSearch" layoutPanel="panel_row5_col1" autoRun="True">
@@ -161,7 +176,14 @@
               <param name="label">View Zone Data</param>
             </module>
             <module name="JobProgressIndicator"/>
-            <module name="SimpleResultsTable">
+            <module name="TableView">
+              <param name="fieldList">
+                <param name="1">Zone Name</param>
+                <param name="2">Session(User)</param>
+                <param name="3">Farm Name</param>
+              </param>
+            </module>
+<!--            <module name="SimpleResultsTable">
               <param name="displayMenu">true</param>
               <param name="count">100</param>
               <param name="drilldown">all</param>
@@ -172,7 +194,7 @@
                 <param name="arg.ZoneName">$click.fields.ZoneName$</param>
                 <param name="arg.autoRun">True</param>
             </module>
-            </module>
+            </module>-->
           </module>
 
           <module name="HiddenPostProcess" layoutPanel="panel_row5_col1" autoRun="True" group="Sessions over Time">
