@@ -70,7 +70,7 @@
           <param name="allowSoftSubmit">False</param>
           <param name="label">Submit</param>
           <module name="HiddenSearch" layoutPanel="panel_row3_col1" group="Farms" autoRun="True">
-            <param name="search">`xenapp_index` `xa_farm_sourcetype` $ZoneName$ $FarmName$ | stats first(Servers) as Servers first(SessionCount) as Sessions first(Users) as Users by FarmName | rename FarmName as "Farm Name"</param>
+            <param name="search">`xenapp_index` `xa_farm_sourcetype` $ZoneName$ $FarmName$ | stats latest(Servers) as Servers latest(SessionCount) as Sessions latest(Users) as Users by FarmName earliest(*) as junk_* | `remove_junk` | rename FarmName as "Farm Name"</param>
             <module name="ViewRedirectorLink">
               <param name="viewTarget">flashtimeline</param>
               <param name="label">View Farm Data</param>

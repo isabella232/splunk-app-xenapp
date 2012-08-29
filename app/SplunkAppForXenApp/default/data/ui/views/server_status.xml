@@ -37,7 +37,7 @@
 					<module name="GenericHeader" layoutPanel="panel_row2_col1">
 						<param name="label">OS Data</param>
 						<module name="Search">
-							<param name="search"><![CDATA[ `xenapp_index` `xa_server_sourcetype` ServerName="$host$" | stats first(OSVersion) as OSVersion first(OSServicePack) as ServicePack first(IPAddresses) as IP first(Is64Bit) as Is64Bit by ServerName | Transpose]]></param>
+							<param name="search"><![CDATA[ `xenapp_index` `xa_server_sourcetype` ServerName="$host$" | stats latest(OSVersion) as OSVersion latest(OSServicePack) as ServicePack latest(IPAddresses) as IP latest(Is64Bit) as Is64Bit earliest(*) as junk_* by ServerName | `remove_junk` | Transpose]]></param>
 							<module name="SimpleResultsTable">
 								<param name="drilldown">row</param>
 							</module> <!-- SimpleResultsTable -->
@@ -47,7 +47,7 @@
 					<module name="GenericHeader" layoutPanel="panel_row2_col1">
 						<param name="label">Citrix Data</param>
 						<module name="Search">
-							<param name="search"><![CDATA[ `xenapp_index` `xa_server_sourcetype` ServerName="$host$" | stats first(SessionCount) as Sessions first(LogOnsEnabled) as LogonEnabled first(CitrixProductName) as Product first(CitrixEdition) as Edition first(CitrixInstallDate) as InstallDate first(FarmName) as FarmName first(ZoneName) as ZoneName first(ElectionPreference) as ElectionPreference by ServerName | Transpose]]></param>
+							<param name="search"><![CDATA[ `xenapp_index` `xa_server_sourcetype` ServerName="$host$" | stats latest(SessionCount) as Sessions latest(LogOnsEnabled) as LogonEnabled latest(CitrixProductName) as Product latest(CitrixEdition) as Edition latest(CitrixInstallDate) as InstallDate latest(FarmName) as FarmName latest(ZoneName) as ZoneName latest(ElectionPreference) as ElectionPreference earliest(*) as junk_* by ServerName | `remove_junk` | Transpose]]></param>
 							<module name="SimpleResultsTable">
 								<param name="drilldown">row</param>
 							</module> <!-- SimpleResultsTable -->

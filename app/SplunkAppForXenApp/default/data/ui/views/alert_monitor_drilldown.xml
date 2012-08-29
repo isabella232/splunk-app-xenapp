@@ -27,7 +27,7 @@
       <param name="label">View Full Report</param>
     </module>
     <module name="HiddenPostProcess" layoutPanel="viewHeader" autoRun="True">
-      <param name="search">| stats values(entity) as entity first(_time) as f last(_time) as l | convert ctime(l)  as l| convert ctime(f)  as f | eval message = entity + " From: " + l + " to " + f |  eval range="vmsreporting"</param>
+      <param name="search">| stats values(entity) as entity latest(_time) as f last(_time) as l earliest(_time) as junk__time | `remove_junk` | convert ctime(l)  as l| convert ctime(f)  as f | eval message = entity + " From: " + l + " to " + f |  eval range="vmsreporting"</param>
       <module name="SingleValue">
         <param name="field">message</param>
         <param name="beforeLabel">User Experience Alert Details For: </param>
@@ -64,7 +64,7 @@
       </module>
     </module>
     <module name="HiddenPostProcess" layoutPanel="panel_row8_col1" group="Alert Details" autoRun="True">
-      <param name="search">eval time=_time | convert ctime(time) | stats first(Severity) as Severity values(time) as "Alert Time(s)"  values(Value) as "Value(s)" values(UserName) as "Affected User(s)" by ServerName alert_name | rename ServerName as "Server Name" alert_name as "Alert Name"</param>
+      <param name="search">eval time=_time | convert ctime(time) | stats latest(Severity) as Severity earliest(Severity) as junk_Severity values(time) as "Alert Time(s)"  values(Value) as "Value(s)" values(UserName) as "Affected User(s)" by ServerName alert_name | `remove_junk` | rename ServerName as "Server Name" alert_name as "Alert Name"</param>
       <module name="SimpleResultsTable" layoutPanel="panel_row8_col1">
         <param name="displayMenu">true</param>
         <param name="count">100</param>

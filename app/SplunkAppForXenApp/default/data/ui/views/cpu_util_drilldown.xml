@@ -29,7 +29,7 @@
         <param name="label">View Full Report</param>
       </module>
       <module name="HiddenPostProcess" layoutPanel="viewHeader" autoRun="True">
-        <param name="search">| stats values(vm_name) as vm first(_time) as f last(_time) as l | convert ctime(l) as l| convert ctime(f) as f | eval message = vm + " From: " + l + " to " + f | eval range="vmsreporting"</param>
+        <param name="search">| stats values(vm_name) as vm latest(_time) as f last(_time) as l earliest(_time) as junk__time | `remove_junk` | convert ctime(l) as l| convert ctime(f) as f | eval message = vm + " From: " + l + " to " + f | eval range="vmsreporting"</param>
         <module name="SingleValue">
           <param name="field">message</param>
           <param name="beforeLabel">CPU Details For:</param>

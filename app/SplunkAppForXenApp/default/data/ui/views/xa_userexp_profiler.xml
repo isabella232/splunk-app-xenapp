@@ -137,7 +137,7 @@
             <!-- End Switcher -->
           </module>
           <module name="HiddenSearch" layoutPanel="panel_row6_col1" group="% CPU">
-            <param name="search">`perfmon_cpu` [search `xenapp_index` `xa_sessions_sourcetype` $user$ $host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] | bin _time span=1m | stats last(Value) as Value  by _time host  </param>
+            <param name="search">`perfmon_cpu` [search `xenapp_index` `xa_sessions_sourcetype` $user$ $host$ | stats latest(ServerName) as host earliest(ServerName) as junk_ServerName by UserName | `remove_junk` | head 1 | fields + host] | bin _time span=1m | stats last(Value) as Value  by _time host  </param>
             <module name="JobProgressIndicator"/>
             <module name="HiddenPostProcess" layoutPanel="panel_row6_col1" group="% CPU Utilization">
               <param name="search">| timechart span=1m max(Value) as "Max % CPU" avg(Value) as "Avg % CPU"  min(Value) as "Min % CPU" </param>
@@ -163,7 +163,7 @@
             </module>
           </module>
           <module name="HiddenSearch" layoutPanel="panel_row6_col2" group="Available Memory in Megabytes">
-            <param name="search">`perfmon_mem` [search `xenapp_index` `xa_sessions_sourcetype` $user$ $host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] |  bin _time span=1m  | stats first(Value) as Value  by _time host  </param>
+            <param name="search">`perfmon_mem` [search `xenapp_index` `xa_sessions_sourcetype` $user$ $host$ | stats latest(ServerName) as host by UserName | head 1 | fields + host] |  bin _time span=1m  | stats latest(Value) as Value earliest(*) as junk_* by _time host | `remove_junk` </param>
             <module name="JobProgressIndicator"/>
             <module name="HiddenPostProcess" layoutPanel="panel_row6_col2" group="Available Memory in Megabytes">
               <param name="search">| eval Value=Value/1024/1024 | timechart span=1m max(Value) as MaxMBFree avg(Value) as AvgMBFree min(Value) as MinMBFree | eval MaxMBFree= round(MaxMBFree,2) | eval AvgMBFree= round(AvgMBFree,2) | eval MinMBFree= round(MinMBFree,2)</param>
@@ -189,7 +189,7 @@
             </module>
           </module>
           <module name="HiddenSearch" layoutPanel="panel_row6_col3" group="Disk Transfers/Sec">
-            <param name="search">counter="Disk Transfers/Sec"  `perfmon_logdisk` object=LogicalDisk [search `xenapp_index` `xa_sessions_sourcetype` $user$ $host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] | stats first(Value) as Value  by _time host | bin _time span=1m </param>
+            <param name="search">counter="Disk Transfers/Sec"  `perfmon_logdisk` object=LogicalDisk [search `xenapp_index` `xa_sessions_sourcetype` $user$ $host$ | stats latest(ServerName) as host by UserName | head 1 | fields + host] | stats latest(Value) as Value earliest(*) as junk_* by _time host | `remove_junk` | bin _time span=1m </param>
             <module name="JobProgressIndicator"/>
             <module name="HiddenPostProcess" layoutPanel="panel_row6_col3" group="Disk Transfers/Sec">
               <param name="search">| timechart span=1m max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min Disk Transfers/Sec" | rename max as "Max Disk Transfers/Sec" | rename avg as "Avg Disk Transfers/Sec"</param>
@@ -215,7 +215,7 @@
             </module>
           </module>
           <module name="HiddenSearch" layoutPanel="panel_row7_col1" group="Windows WinEvent Log">
-            <param name="search">`win_index` Type=Error sourcetype="WinEventLog:*" [search `xenapp_index` `xa_sessions_sourcetype` $user$ $host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] |stats values(SourceName) as "Source(s)"   values(Message) as "Message(s)" by Type host | head 10 | sort - count | rename host as Host</param>
+            <param name="search">`win_index` Type=Error sourcetype="WinEventLog:*" [search `xenapp_index` `xa_sessions_sourcetype` $user$ $host$ | stats latest(ServerName) as host earliest(ServerName) as junk_ServerName by UserName | `remove_junk` | head 1 | fields + host] | stats values(SourceName) as "Source(s)"   values(Message) as "Message(s)" by Type host | head 10 | sort - count | rename host as Host</param>
             <module name="SimpleResultsTable">
               <param name="drilldown">row</param>
               <param name="entityName">results</param>
@@ -228,7 +228,7 @@
             </module>
           </module>
           <module name="HiddenSearch" layoutPanel="panel_row8_col1_grp1" group="View Reports">
-            <param name="search">`xenapp_index` [search `xenapp_index` `xa_sessions_sourcetype` $user$ $host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] | head 1  | eval Report="View Installed Applications" | stats first(Report) as Report by host | rename host as Host</param>
+            <param name="search">`xenapp_index` [search `xenapp_index` `xa_sessions_sourcetype` $user$ $host$ | stats latest(ServerName) as host by UserName | head 1 | fields + host] | head 1  | eval Report="View Installed Applications" | stats latest(Report) as Report earliest(*) as junk_* by host | `remove_junk` | rename host as Host</param>
             <module name="SimpleResultsTable" layoutPanel="panel_row8_col1_grp1">
               <param name="displayMenu">true</param>
               <param name="count">100</param>
@@ -236,7 +236,7 @@
               <param name="entityName">results</param>
               <param name="displayRowNumbers">False</param>
               <module name="HiddenSearch">
-                <param name="search">`win_index` `wmi_installedsoftware`  Name!="----" earliest=-7d $host$ | stats first(Version) as Version by Vendor Name</param>
+                <param name="search">`win_index` `wmi_installedsoftware`  Name!="----" earliest=-7d $host$ | stats latest(Version) as Version earliest(Version) as junk_Version by Vendor Name | `remove_junk`</param>
                 <module name="ConvertToIntention">
                   <param name="intention">
                     <param name="name">stringreplace</param>
@@ -256,7 +256,7 @@
             </module>
           </module>
           <module name="HiddenSearch" layoutPanel="panel_row8_col1_grp2" group="View Reports">
-            <param name="search">`xenapp_index` [search `xenapp_index` `xa_sessions_sourcetype` $user$ $host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] | head 1 | eval Report="View Running Processes" | stats first(Report) as Report by host | rename host as Host</param>
+            <param name="search">`xenapp_index` [search `xenapp_index` `xa_sessions_sourcetype` $user$ $host$ | stats latest(ServerName) as host by UserName | head 1 | fields + host] | head 1 | eval Report="View Running Processes" | stats latest(Report) as Report earliest(*) as junk_* by host | `remove_junk` | rename host as Host</param>
             <module name="SimpleResultsTable" layoutPanel="panel_row8_col1_grp2">
               <param name="displayMenu">true</param>
               <param name="count">100</param>
@@ -285,7 +285,7 @@
             </module>
           </module>
           <module name="HiddenSearch" layoutPanel="panel_row8_col1_grp3" group="View Reports">
-            <param name="search">`xenapp_index` [search `xenapp_index` `xa_sessions_sourcetype` $user$ $host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] | head 1 | eval Report="View Bios" | stats first(Report) as Report by host | rename host as Host</param>
+            <param name="search">`xenapp_index` [search `xenapp_index` `xa_sessions_sourcetype` $user$ $host$ | stats latest(ServerName) as host by UserName | head 1 | fields + host] | head 1 | eval Report="View Bios" | stats latest(Report) as Report earliest(*) as junk_* by host | `remove_junk` | rename host as Host</param>
             <module name="SimpleResultsTable" layoutPanel="panel_row8_col1_grp3">
               <param name="displayMenu">true</param>
               <param name="count">100</param>

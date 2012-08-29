@@ -21,10 +21,10 @@
     <param name="text">This report provides details about the Citrix Licenses in your environment. Adjust the time range for this report by changing the timerange picker.</param>
   </module>
   <module name="TimeRangePicker" layoutPanel="viewHeader" autoRun="True">
-    <param name="selected">first 24 Hours</param>
+    <param name="selected">last 24 Hours</param>
     <param name="searchWhenChanged">True</param>
     <module name="HiddenSearch" layoutPanel="viewHeader" autoRun="True">
-      <param name="search">`citrix_licensing` | `citrix_license_type` | `citrix_license_product` | rename Product as Prod | stats first(ProductName) as Product first(Installed) as Installed first(Available) as Available first(InUse_pct) as InUse_pct first(TypeName) as Type by InUse Prod _time</param>
+      <param name="search">`citrix_licensing` | `citrix_license_type` | `citrix_license_product` | rename Product as Prod | stats latest(ProductName) as Product latest(Installed) as Installed latest(Available) as Available latest(InUse_pct) as InUse_pct latest(TypeName) as Type earliest(*) as junk_* by InUse Prod _time | `remove_junk`</param>
       <module name="ViewRedirectorLink" layoutPanel="viewHeader">
         <param name="viewTarget">flashtimeline</param>
         <param name="label">View Full Report</param>
@@ -40,7 +40,7 @@
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row2_col1_grp2" group="License Stats" autoRun="True">
-        <param name="search">| stats first(InUse) as InUse by Product | stats sum(InUse) as count | eval classvalue="user"</param>
+        <param name="search">| stats latest(InUse) as InUse earliest(InUse) as junk_InUse by Product | `remove_junk` | stats sum(InUse) as count | eval classvalue="user"</param>
         <module name="SingleValue">
           <param name="field">count</param>
           <param name="classField">classvalue</param>
@@ -49,7 +49,7 @@
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row2_col1_grp3" group="License Stats" autoRun="True">
-        <param name="search">| stats first(Available) as Available first(InUse) as InUse by Product | stats sum(InUse) as TotalInUse sum(Available) as TotalAvailable | eval pctUsed=( TotalInUse/TotalAvailable ) * 100 | eval count=round(pctUsed,2) | eval classvalue="percent"</param>
+        <param name="search">| stats latest(Available) as Available latest(InUse) as InUse earliest(*) as junk_* by Product | `remove_junk` | stats sum(InUse) as TotalInUse sum(Available) as TotalAvailable | eval pctUsed=( TotalInUse/TotalAvailable ) * 100 | eval count=round(pctUsed,2) | eval classvalue="percent"</param>
         <module name="SingleValue">
           <param name="field">count</param>
           <param name="classField">classvalue</param>
@@ -59,7 +59,7 @@
       </module>
       <module name="HiddenPostProcess" group="License Usage over Time by Product" layoutPanel="panel_row3_col1" autoRun="True">
         <param name="groupLabel">License Usage over Time</param>
-        <param name="search">| search InUse&gt;0 | timechart first(InUse) by Product</param>
+        <param name="search">| search InUse&gt;0 | timechart latest(InUse) earliest(InUse) as junk_* by Product | `remove_junk`</param>
         <module name="HiddenChartFormatter">
           <param name="chart">line</param>
           <param name="chart.nullValueMode">connect</param>
@@ -70,7 +70,7 @@
       </module>
       <module name="HiddenPostProcess" group="License Usage (Percentage) over Time by Product" layoutPanel="panel_row3_col2" autoRun="True">
         <param name="groupLabel">License Usage over Time</param>
-        <param name="search">| search InUse_pct&gt;0 | timechart first(InUse_pct) by Product</param>
+        <param name="search">| search InUse_pct&gt;0 | timechart latest(InUse_pct) earliest(InUse_pct) as junk_InUse_pct by Product | `remove_junk`</param>
         <module name="HiddenChartFormatter">
           <param name="chart">line</param>
           <param name="chart.nullValueMode">connect</param>
@@ -80,7 +80,7 @@
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row6_col1" group="License Detail" autoRun="True">
-        <param name="search">| stats first(Installed) as Installed first(Available) as Available first(InUse_pct) as InUse_pct first(Type) as Type by InUse Product | table Product InUse InUse_pct Available Type | rename InUse as "In Use" InUse_pct as "In Use (Percent)"</param>
+        <param name="search">| stats latest(Installed) as Installed latest(Available) as Available latest(InUse_pct) as InUse_pct latest(Type) as Type earliest(*) as junk_* by InUse Product | `remove_junk` | table Product InUse InUse_pct Available Type | rename InUse as "In Use" InUse_pct as "In Use (Percent)"</param>
         <module name="SimpleResultsTable" layoutPanel="panel_row6_col1">
           <param name="displayMenu">true</param>
           <param name="count">100</param>
