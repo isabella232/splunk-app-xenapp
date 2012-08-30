@@ -37,40 +37,48 @@
                     <module name="GenericHeader" layoutPanel="panel_row2_col1">
                         <param name="label">Farm Data</param>
                         <module name="Search">
-                            <param name="search"><![CDATA[ `xenapp_index` `xa_farm_sourcetype` | lookup xa_zone_farm FarmName | search ZoneName="$ZoneName$" | stats latest(Users) as Users latest(SessionCount) as Sessions latest(Servers) as Servers latest(AdministratorType) as AdminType earliest(*) as junk_* by FarmName | `remove_junk` | Transpose ]]></param>
-                            <module name="SimpleResultsTable">
-                                <param name="drilldown">row</param>
-                            </module> <!-- SimpleResultsTable -->
+                            <param name="search"><![CDATA[ `xenapp_index` `xa_farm_sourcetype` | lookup xa_zone_farm FarmName | search ZoneName="$ZoneName$" | stats latest(Users) as Users latest(SessionCount) as Sessions latest(Servers) as Servers latest(AdministratorType) as AdminType earliest(*) as junk_* by FarmName | rename FarmName as "Farm Name" | `remove_junk` ]]></param>
+                            <module name="ListView">
+                                <param name="fieldList">
+                                    <param name="1">Farm Name</param>
+                                    <param name="2">Users</param>
+                                    <param name="3">Sessions</param>
+                                    <param name="4">Servers</param>
+                                </param>
+                            </module> <!-- ListView -->
                         </module> <!-- Search -->
                     </module> <!-- Search -->
 
                     <module name="GenericHeader" layoutPanel="panel_row2_col1">
                         <param name="label">Zone Data</param>
                         <module name="Search">
-                            <param name="search"><![CDATA[ `xenapp_index` `xa_zone_sourcetype` ZoneName="$ZoneName$" | stats latest(DataCollector) as DataCollector latest(FarmName) as FarmName earliest(*) as junk_* by ZoneName | `remove_junk` | rename ZoneName as "Zone Name" DataCollector as "Data Collector" FarmName as "Farm Name" ]]></param>
-                            <module name="SimpleResultsTable">
-                                <param name="drilldown">row</param>
-                            </module> <!-- SimpleResultsTable -->
+                            <param name="search"><![CDATA[ `xenapp_index` `xa_zone_sourcetype` ZoneName="$ZoneName$" | stats latest(DataCollector) as "Data Collector" latest(FarmName) as FarmName earliest(*) as junk_* by ZoneName | rename ZoneName as "Zone Name" | `remove_junk` ]]></param>
+                            <module name="ListView">
+                                <param name="fieldList">
+                                    <param name="1">Zone Name</param>
+                                    <param name="2">Data Collector</param>
+                                </param>
+                            </module> <!-- ListView -->
                         </module> <!-- Search -->
                     </module> <!-- Search -->
-
+                    
                     <module name="GenericHeader" layoutPanel="panel_row2_col2">
                         <param name="label">Servers</param>
                         <module name="Search">
                             <param name="search"><![CDATA[ `xenapp_index` `xa_server_sourcetype` ZoneName="$ZoneName$" | stats latest(CitrixProductName) as Product latest(CitrixVersion) as Version latest(CitrixEdition) as Edition latest(LogOnsEnabled) as LogonEnabled latest(ZoneName) as ZoneName earliest(*) as junk_* by ServerName | `remove_junk` | rename ServerName as "Server Name" LogonEnabled as "Logon Enabled" ZoneName as "Zone Name" ]]></param>
                             <module name="SimpleResultsTable">
                                 <param name="drilldown">row</param>
-                                <module name="NotSideview">
+                                <!--<module name="NotSideview">
                                     <param name="to">server_status</param>
                                     <param name="butt">ServerName</param>
-                                </module>
-                                <!-- <module name="Redirector">
+                                </module>-->
+                                <module name="Redirector">
                                     <param name="url">server_status</param>
                                     <param name="arg.autoRun">True</param>
                                     <param name="arg.ServerName">$click.fields.ServerName$</param>
                                     <param name="arg.earliest">$search.timeRange.earliest$</param>
                                     <param name="arg.latest">$search.timeRange.latest$</param>
-                                </module> --> <!-- Redirector#Drill Down -->
+                                </module> <!-- Redirector#Drill Down -->
                             </module> <!-- SimpleResultsTable -->
                         </module> <!-- Search -->
                     </module> <!-- GenericHeader -->
