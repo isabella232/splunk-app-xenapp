@@ -144,9 +144,6 @@ Black logo, green > for IE6, transparent against white
 	text-decoration: none;
 }
 
-.JobProgressIndicator .splBarGraphBar {
-	background-color: #6d7e56;
-}
 
 .graphLoading {
 	clear: left;
@@ -387,6 +384,22 @@ body, .splBackground-default,
 }
 
 /* Specific overrides */
+
+/* datepicker */
+.DatePicker, .ui-datepicker-trigger {
+    float: left;
+}
+
+.DatePicker {
+    margin-top: 9px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+.ui-datepicker-trigger {
+    margin: 11px 10px 0;
+}
+
 .layoutCellInner .ResultsHeader .splHeader, .layoutCellInner .ResultsHeader .splHeader-secondary {
     background: transparent none;
 }
@@ -1044,17 +1057,44 @@ table.splTable tr:hover td {
 } */
 
 
-
 /* date picker 
 ---------------------------------*/
 .ui-datepicker-current-day {
-    background-color: #12498b;
+    background-color: #6D7E56;
 }
 
 .ui-datepicker-links {
   /*  background-image: url(overlay_gradient.png) repeat-x 0 0; */
     _background-image: none;
-} 
+}
+
+.ui-datepicker-prev {
+    background-position: -27px -418px;
+}
+
+.ui-datepicker-next {
+    background-position: -27px -398px;
+}
+
+.ui-datepicker-trigger {
+    background: url('/static/img/skins/default/overlay_gloss_28.png') repeat-x scroll left -3px #6D7E56 !important;
+    /*background-image: url('/static/img/skins/default/overlay_gloss_28.png') !important;
+    background-repeat: no-repeat !important;
+    background-color: #6D7E56 !important;*/
+    height: 21px;
+    border-radius: 4px;
+    color: #fff !important;
+    padding-bottom: 2px;
+}
+.ui-datepicker-header {
+    background-color:#6B6B6A;
+    background-image: none;
+    color: #fff;
+    font-weight: bold;
+}
+.ui-datepicker-trigger-highlight {
+    background-color: #73A550 !important;
+}
 
 /* popups 
 ---------------------------------*/
@@ -1068,8 +1108,6 @@ table.splTable tr:hover td {
 .splHeader-popup h2 {
     color:#FFF; 
 }
-
-
 
 /* modal overlay */
 .splOverlay, .splOverlay-white {
@@ -1117,7 +1155,6 @@ background-image: url(../../../img/skins/default/loader.gif);
 }
 
 /* Default Class Overloads */
-/* Default Class Overloads */
 
 /* Viewheader organization
 -------------------------------*/
@@ -1126,6 +1163,8 @@ background-image: url(../../../img/skins/default/loader.gif);
 	padding: 10px;
 	margin-top: 10px;
 }
+
+/* Dropdowns */
 
 .viewHeader .StaticSelect {
 	float: left;
@@ -1137,13 +1176,16 @@ background-image: url(../../../img/skins/default/loader.gif);
 	padding-top: 10px;
 }
 
-.viewHeader .ExtendedFieldSearch, .TextField {
-	float: left;
-}
+/* Field search boxes */
 
 .TextField {
 	margin-top: 7px;
 }
+
+.viewHeader .ExtendedFieldSearch, .TextField {
+	float: left;
+}
+/* Time range picker */
 
 .TimeRangePicker .timeRangeActivatorWrapper {
 	background-color: #ddd;
@@ -1154,15 +1196,26 @@ background-image: url(../../../img/skins/default/loader.gif);
 	margin: 5px 0;
 }
 
+/* Search controls */
+
 .viewHeader, .mainSearchControls, .splSearchControls-inline, .SearchBar .saHelpWrapper, .popupContent {
 	background-color: #fff;
 }
+
+/* Job Progress Indicator */
 
 .JobProgressIndicator .splBarGraphValue {
 	bottom: 22px;
 	float: right;
 	margin: -4px;
 }
+
+.JobProgressIndicator .splBarGraphBar {
+	background-color: #6d7e56;
+}
+
+/* Singlevalues
+-------------------------*/
 
 .SingleValueHolder {
     background-color: transparent;
@@ -1187,6 +1240,8 @@ background-image: url(../../../img/skins/default/loader.gif);
 	position: relative;
 	top: 25px;
 }
+
+/* icons */
 
 .SingleValue .time {
     background-image:url(times.png);

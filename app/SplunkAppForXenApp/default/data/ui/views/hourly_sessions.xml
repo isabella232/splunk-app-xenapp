@@ -1,0 +1,37 @@
+<view autoCancelInterval="90" isPersistable="true" isSticky="true" isVisible="true" objectMode="viewconf" onunloadCancelJobs="true" stylesheet="dashboard2.css" template="dashboard.html">
+  <label>Hourly Sessions</label>
+  <module name="AccountBar" layoutPanel="appHeader"/>
+  <module name="AppBar" layoutPanel="navigationHeader"/>
+  <module name="Message" layoutPanel="messaging">
+    <param name="filter">*</param>
+    <param name="clearOnJobDispatch">False</param>
+    <param name="maxSize">1</param>
+  </module>
+  <module name="TitleBar" layoutPanel="viewHeader">
+    <param name="actionsMenuFilter">dashboard</param>
+  </module>
+  <module name="StaticContentSample" layoutPanel="viewHeader">
+    <param name="text">This report shows the number of sessions each hour for a given day.</param>
+  </module>
+<!--  <module name="TimeRangePicker" layoutPanel="viewHeader" autoRun="True">
+    <param name="default">Last 24 Hours</param>
+    <param name="searchWhenChanged">True</param>-->
+    <module name="HiddenSearch" layoutPanel="viewHeader" autoRun="True">
+      <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions`| dedup SessionUID | timechart count as Sessions span=1h</param>
+      <module name="NullModule"/>
+      <module name="ViewRedirectorLink" layoutPanel="viewHeader">
+        <param name="viewTarget">flashtimeline</param>
+        <param name="label">View Full Report</param>
+      </module>
+      <module name="JobProgressIndicator" layoutPanel="viewHeader"/>
+      <module name="HiddenChartFormatter" layoutPanel="panel_row1_col1">
+        <param name="legend.placement">none</param>
+        <param name="primaryAxisTitle.text">Time</param>
+        <param name="secondaryAxisTitle.text">Sessions</param>
+        <module name="JSChart">
+          
+        </module>
+      </module>
+    </module>
+  <!--</module>-->
+</view>

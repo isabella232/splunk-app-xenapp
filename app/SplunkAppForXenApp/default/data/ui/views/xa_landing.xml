@@ -189,11 +189,15 @@
               <param name="drilldown">all</param>
               <param name="entityName">results</param>
               <param name="displayRowNumbers">False</param>
+              <module name="NotSideview">
+                <param name="to">zone_status</param>
+                <param name="thingToPass">ZoneName</param>
+              </module>
               <module name="Redirector">
                 <param name="url">zone_status</param>
                 <param name="arg.ZoneName">$click.fields.ZoneName$</param>
                 <param name="arg.autoRun">True</param>
-            </module>
+              </module>
             </module>-->
           </module>
 
