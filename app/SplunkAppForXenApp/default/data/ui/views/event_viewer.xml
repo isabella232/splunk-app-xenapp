@@ -1,0 +1,95 @@
+<view autoCancelInterval="90" isPersistable="true" isSticky="true" isVisible="true" objectMode="SimpleDashboard" onunloadCancelJobs="true" refresh="-1" template="dashboard.html">
+    <label>Windows Event Viewer</label>
+    <module name="AccountBar" layoutPanel="appHeader"/>
+    <module name="AppBar" layoutPanel="navigationHeader"/>
+    <module name="SideviewUtils" layoutPanel="appHeader" />
+    
+    <module name="Message" layoutPanel="messaging">
+      <param name="filter">*</param>
+      <param name="clearOnJobDispatch">False</param>
+      <param name="maxSize">1</param>
+    </module>
+    
+    <module name="DashboardTitleBar" layoutPanel="viewHeader"/>
+    
+    <module name="Message" layoutPanel="navigationHeader">
+      <param name="filter">splunk.search.job</param>
+      <param name="clearOnJobDispatch">True</param>
+      <param name="maxSize">1</param>
+      <param name="level">warn</param>
+    </module>
+  
+    <module name="URLLoader" layoutPanel="viewHeader" autoRun="true">
+    
+    <module name="TimeRangePicker" layoutPanel="viewHeader">
+      <param name="default">Last 1 Hours</param>
+      <param name="searchWhenChanged">True</param>
+      
+        <module name="TextField" layoutPanel="viewHeader">
+            <param name="name">ServerName</param>
+            <param name="label">Server Name:</param>
+            
+            <module name="TextField" layoutPanel="viewHeader">
+                <param name="name">LogName</param>
+                <param name="label">Log Name:</param>
+
+                <module name="TextField" layoutPanel="viewHeader">
+                    <param name="name">EventCode</param>
+                    <param name="label">Event Code:</param>
+    
+                    <module name="TextField" layoutPanel="viewHeader">
+                        <param name="name">SourceName</param>
+                        <param name="label">Source Name:</param>
+    
+                            <module name="TextField" layoutPanel="viewHeader">
+                                <param name="name">Type</param>
+                                <param name="label">Type:</param>
+                                
+                                <module name="SubmitButton" layoutpanel="viewHeader">
+                                	<param name="allowSoftSubmit">False</param>
+                                	<param name="label">Submit</param>
+    
+                                <module name="Search" layoutPanel="panel_row3_col1" group="Windows Events" autoRun="true">
+                                    <param name="search">index="xenapp_winevents" sourcetype="WinEventLog:*" $ServerName$ |
+                                                      search $EventCode$ $SourceName$ $Type$ $LogName$ |
+                                                      fields host, LogName, Type, SourceName, EventCode, TaskCategory, Message |
+                                                      eval ServerName=host |
+                                                      eval Time=strftime(_time, "%Y-%m-%d %H:%M:%S") |
+                                                      table Message, Time, ServerName, LogName, Type, SourceName, EventCode, TaskCategory | rename ServerName as "Server Name" LogName as "Log Name" SourceName as "Source Name" EventCode as "Event Code" TaskCategory as "Task Category"</param>
+                                    
+                                    <param name="groupLabel">Windows Events</param>
+                                    
+                                    <module name="StaticContentSample" layoutPanel="panel_row3_col1">
+                                        <param name="text">&lt;img src="/static/app/SplunkAppForXenApp/info.gif" class="info_icon" /&gt; Click on a row below to view more details about the event.</param>
+                                    </module>
+                                    
+                                    <module name="JobProgressIndicator"/>
+                                    
+                                    <module name="Paginator" layoutPanel="panel_row3_col1">
+                                        <param name="count">10</param>
+                                        <param name="entityName">results</param>
+                                        <module name="SimpleResultsTable">
+                                            <param name="displayMenu">true</param>
+                                            <param name="drilldown">row</param>
+                                            <param name="displayRowNumbers">False</param>
+                                          <module name="NullModule"/>
+                                        </module>
+                                        <module name="ViewRedirectorLink">
+                                          <param name="viewTarget">flashtimeline</param>
+                                        </module>
+                                        <module name="StaticContentSample" layoutPanel="panel_row4_col1">
+                                            <param name="text">&lt;div id="evtMsg" style="white-space: pre;"&gt;&lt;/div&gt;</param>
+                                        	<module name="JobProgressIndicator" layoutpanel="panel_row4_col1"/>
+                                        </module>
+                                    </module>
+                                    
+                                </module>
+                                </module>
+                            </module>
+                        </module>
+                    </module>
+                </module>
+            </module>
+        </module>
+    </module>
+</view>

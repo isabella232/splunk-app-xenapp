@@ -1,0 +1,104 @@
+/*
+ * ListView CSS File
+ */
+#ListViewWrapper {
+	padding-top:	0;
+	/*margin-top:		-10px;*/
+	padding-bottom:	20px;
+}
+ 
+#ListViewWrapper table {
+ 	width: 			100%;
+}
+ 
+#ListViewWrapper table tr.divider {
+ 	line-height: 	8px;
+ 	height: 		8px;
+}
+
+#ListViewWrapper table tr.hline {
+	line-height:	1px;
+	height:			1px;
+	border-top:		1px solid #333;
+}
+
+#ListViewWrapper table tr {
+ 	line-height: 	20px;
+ 	height: 		20px;
+ 	vertical-align:	middle;
+}
+
+#ListViewWrapper table tr td.col1 {
+ 	font-family:	Tahoma, Geneva, sans-serif;
+ 	font-size:		12px;
+ 	color:			black;
+	width: 			50%;
+ 	color:			#333333;
+ 	padding-left: 		10%;
+	vertical-align: 	top;
+	font-weight:		bold;
+}
+
+#ListViewWrapper table tr td.col2, #ListViewWrapper .subList td {
+ 	font-family:	Tahoma, Geneva, sans-serif;
+ 	font-size:		12px;
+ 	color:			black;
+	width:			50%;
+}
+
+#ListViewWrapper table tr td.col2 a:link,
+#ListViewWrapper table tr td.col2 a:visited {
+ 	font-family:	Tahoma, Geneva, sans-serif;
+ 	font-size:		12px;
+ 	color:			black;
+	width:			50%;
+}
+
+#ListViewWrapper table tr td.col2 a:hover,
+#ListViewWrapper table tr td.col2 a:active {
+ 	font-family:	Tahoma, Geneva, sans-serif;
+ 	font-size:		12px;
+ 	color:			#2B9969;
+	width:			50%;
+}
+
+.subList td {
+	font-size: 11px !important;
+	font-style: italic;
+}
+
+#ListViewWrapper .imageFalse {
+	background-image:	url('ListView/img/false.png');
+	display: block;
+    height: 16px;
+    width: 16px;
+}
+
+#ListViewWrapper .imageTrue {
+	background-image:	url('ListView/img/true.png');
+	display: block;
+    height: 16px;
+    width: 16px;
+}
+
+#ListViewWrapper .imageon {
+	background-image: url('ListView/img/on.png');
+	display: block;
+    height: 16px;
+    width: 16px;
+}
+
+#ListViewWrapper .imageoff {
+	background-image: url('ListView/img/off.png');
+	display: block;
+    height: 16px;
+    width: 16px;
+}
+
+tr:hover .listRow {
+	background-color: #0067C5;
+}
+
+tr:hover .icon {
+	border: 1px solid #0067C5;
+}

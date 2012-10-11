@@ -1,0 +1,325 @@
+#TableView, .subList
+{
+	width:			100%;
+}
+
+#TableView .MSADTopology_DataTable
+{
+	width:			100%;
+}
+
+#TableView h2.title
+{
+	color:			#73A550;
+	font-size:		14px;
+	font-weight:	bold;
+	margin:			16px 0 10px;
+	display:		block;
+	clear:			both;
+}
+
+#TableView td.fsmoroles, 
+#TableView td.dsaoptions,
+#TableView td.truefalse {
+	width:			128px;
+}
+
+div.fsmoroles, div.dsaoptions {
+	display:		inline-block;
+}
+
+#TableView span.imageSep {
+	display:		block;
+	float:			left;
+	width:			8px;
+	height:			8px;
+}
+
+#TableView span.host {
+	vertical-align:	middle;
+	height:			16px;
+	margin-left:	12px;
+}
+
+#TableView div.imageTrue {
+	background: 	url('TableView/img/tick.png');
+	display:		block;
+	margin:			0 auto;
+	width: 			16px;
+	height: 		16px;
+}
+
+#TableView div.imageFalse {
+	background: 	url('TableView/img/cross.png');
+	display:		block;
+	margin:			0 auto;
+	width: 			16px;
+	height: 		16px;
+}
+
+#TableView .dataTables_wrapper {
+	position: 		relative;
+	clear: 			both;
+	zoom: 			1; /* Feeling sorry for IE */
+}
+
+#TableView .dataTables_processing {
+	position: 		absolute;
+	top: 			50%;
+	left: 			50%;
+	width: 			250px;
+	height: 		30px;
+	margin-left: 	-125px;
+	margin-top: 	-15px;
+	padding: 		14px 0 2px 0;
+	border: 		none;
+	text-align: 	center;
+	color: 			#999;
+	font-size: 		14px;
+	background-color: white;
+}
+
+#TableView .dataTables_length {
+	width: 			40%;
+	float: 			left;
+}
+
+#TableView .dataTables_length label {
+	font-size: 		11px;
+}
+
+#TableView .dataTables_filter {
+	width: 			50%;
+	float: 			right;
+	text-align: 	right;
+	display:		none;
+}
+
+#TableView .dataTables_info {
+	width: 			60%;
+	float: 			left;
+	padding-top:	5px;
+}
+
+#TableView .dataTables_paginate {
+	float: 			right;
+	text-align: 	right;
+	width:			44px;
+}
+
+#TableView .paginate_disabled_previous, 
+#TableView .paginate_enabled_previous, 
+#TableView .paginate_disabled_next, 
+#TableView .paginate_enabled_next {
+	height: 		19px;
+	width: 			19px;
+	margin-left: 	1px;
+	margin-right:	1px;
+	padding:		0px;
+	float: 			left;
+}
+
+#TableView .paginate_disabled_previous {
+	background-image: url('TableView/img/back_disabled.png');
+	background-size: 15px 11px;
+}
+
+#TableView .paginate_enabled_previous {
+	background-image: url('TableView/img/back_enabled.png');
+	background-size: 15px 11px;
+}
+
+#TableView .paginate_disabled_next {
+	background-image: url('TableView/img/forward_disabled.png');
+	background-size: 15px 11px;
+}
+
+#TableView .paginate_enabled_next {
+	background-image: url('TableView/img/forward_enabled.png');
+	background-size: 15px 11px;
+}
+
+#TableView table.MSADTopology_DataTable {
+	margin: 		0 auto;
+	clear: 			both;
+	width: 			100%;
+	border-bottom: 1px solid #aaa;
+}
+
+#TableView table.MSADTopology_DataTable thead th {
+	padding: 		3px 18px 3px 10px;
+	border-bottom:	1px solid #aaa;
+	font-weight: 	bold;
+	cursor: 		pointer;
+	* cursor: 		hand;
+}
+
+#TableView table.MSADTopology_DataTable tfoot th {
+	padding: 		3px 18px 3px 10px;
+	font-weight: 	bold;
+}
+
+#TableView table.MSADTopology_DataTable tr.heading2 td {
+	border-bottom: 	1px solid #aaa;
+}
+
+#TableView table.MSADTopology_DataTable td {
+	padding: 		3px 10px;
+}
+
+#TableView table.MSADTopology_DataTable td.center {
+	text-align: 	center;
+	margin:			0 auto;
+}
+
+#TableView .sorting_asc {
+	background: 	url('TableView/img/sort_asc.png') no-repeat center right;
+}
+
+#TableView .sorting_desc {
+	background: 	url('TableView/img/sort_desc.png') no-repeat center right;
+}
+
+#TableView .sorting {
+	background: 	url('TableView/img/sort_both.png') no-repeat center right;
+}
+
+#TableView .sorting_asc_disabled {
+	background: 	url('TableView/img/sort_asc_disabled.png') no-repeat center right;
+}
+
+#TableView .sorting_desc_disabled {
+	background: 	url('TableView/img/sort_desc_disabled.png') no-repeat center right;
+}
+
+#TableView tr.odd {
+	background-color: #ddd;
+}
+
+#TableView tr.even {
+	background-color: transparent;
+}
+
+#TableView .dataTables_scroll {
+	clear: 			both;
+}
+
+#TableView .dataTables_scrollBody {
+	*margin-top: 	-1px;
+}
+
+#TableView .top, .bottom {
+	padding: 		15px;
+	background-color: #F5F5F5;
+	border: 		1px solid #CCCCCC;
+}
+
+#TableView .top .dataTables_info {
+	float: 			none;
+}
+
+#TableView .clear {
+	clear: 			both;
+}
+
+#TableView .dataTables_empty {
+	text-align: 	center;
+}
+
+#TableView tfoot input {
+	margin: 		0.5em 0;
+	width: 			100%;
+	color: 			#444;
+}
+
+#TableView tfoot input.search_init {
+	color: 			#999;
+}
+
+#TableView td.group {
+	background-color: #d1cfd0;
+	border-bottom: 	2px solid #A19B9E;
+	border-top: 	2px solid #A19B9E;
+}
+
+#TableView td.details {
+	background-color: #d1cfd0;
+	border: 		2px solid #A19B9E;
+}
+
+#TableView .paging_full_numbers {
+	width: 			400px;
+	height: 		22px;
+	line-height: 	22px;
+}
+
+#TableView .paging_full_numbers span.paginate_button,
+#TableView .paging_full_numbers span.paginate_active {
+	border: 		1px solid #aaa;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	padding: 		2px 5px;
+	margin: 		0 3px;
+	cursor: 		pointer;
+	*cursor: 		hand;
+}
+
+#TableView .paging_full_numbers span.paginate_button {
+	background-color: #ddd;
+}
+
+#TableView .paging_full_numbers span.paginate_button:hover {
+	background-color: #ccc;
+}
+
+#TableView .paging_full_numbers span.paginate_active {
+	background-color: #99B3FF;
+}
+
+#TableView table.MSADTopology_DataTable tr.even.row_selected td {
+	background-color: #B0BED9;
+}
+
+#TableView table.MSADTopology_DataTable tr td {
+	cursor: 		pointer;
+}
+
+#TableView table.MSADTopology_DataTable tr.odd.row_selected td {
+	background-color: #9FAFD1;
+}
+
+#TableView tr.odd td.sorting_1 {
+	background-color: rgba(109,126,86,0.68);
+}
+
+#TableView tr.odd td.sorting_2 {
+	background-color: rgba(109,126,86,0.34);
+}
+
+#TableView tr.odd td.sorting_3 {
+	background-color: #E0E2FF;
+}
+
+#TableView tr.even td.sorting_1 {
+	background-color: rgba(109,126,86,0.34);
+}
+
+#TableView tr.even td.sorting_2 {
+	background-color: #F2F3FF;
+}
+
+#TableView tr.even td.sorting_3 {
+	background-color: #F9F9FF;
+}
+
+#TableView table.KeyTable td {
+	border: 3px solid transparent;
+}
+
+#TableView div.box {
+	height: 		100px;
+	padding: 		10px;
+	overflow: 		auto;
+	border: 		1px solid #8080FF;
+	background-color: #E5E5FF;
+}
