@@ -11,6 +11,101 @@ function getParameterByName(name) {
 
 switch (Splunk.util.getCurrentView()) {
     
+    case "xa_landing":
+	
+	if (Splunk.Module.NullModule) {
+                Splunk.Module.NullModule = $.klass(Splunk.Module.NullModule, {
+                    onContextChange: function() {
+                        var context = this.getContext();
+                        
+                        var name = context.get("click.name");
+                        var val = context.get("click.value");
+                        var name2 = context.get("click.name2");
+                        var val2 = context.get("click.value2");
+			
+                        if (name == "Farm Name") {
+                            location.href=Splunk.util.make_url("app", Splunk.util.getCurrentApp(), "farm_status") + "?farmname=" + val;
+                        }
+                    },
+                });
+        }
+	
+    break;
+
+    case "farm_status":
+	
+	$(document).ready(function() {
+            var farmname = getParameterByName("farmname");
+            
+            if(farmname != "") {
+                $('input[name="farm"]').val(farmname);
+		$('input[name="farm"]').closest("form").submit();
+            } else {
+                $('input[name="farm"]').val("Search by Farm Name");
+                $('input[name="farm"]').focus(function(){
+                    if($(this).val() == "Search by Farm Name") {
+                        $(this).val("");
+                    }
+                });
+            }
+        });
+	
+	if (Splunk.Module.NullModule) {
+                Splunk.Module.NullModule = $.klass(Splunk.Module.NullModule, {
+                    onContextChange: function() {
+                        var context = this.getContext();
+                        
+                        var name = context.get("click.name");
+                        var val = context.get("click.value");
+                        var name2 = context.get("click.name2");
+                        var val2 = context.get("click.value2");
+			
+                        if (name == "Server Name") {
+                            location.href=Splunk.util.make_url("app", Splunk.util.getCurrentApp(), "server_status") + "?servername=" + val;
+                        }
+                    },
+                });
+        }
+	
+    break;
+
+    case "server_status":
+	
+	$(document).ready(function() {
+            var servername = getParameterByName("servername");
+            
+            if(servername != "") {
+                $('input[name="server"]').val(servername);
+		$('input[name="server"]').closest("form").submit();
+            } else {
+                $('input[name="server"]').val("Search by Server Name");
+                $('input[name="server"]').focus(function(){
+                    if($(this).val() == "Search by Server Name") {
+                        $(this).val("");
+                    }
+                });
+            }
+        });
+	
+	if (Splunk.Module.NullModule) {
+                Splunk.Module.NullModule = $.klass(Splunk.Module.NullModule, {
+                    onContextChange: function() {
+                        var context = this.getContext();
+                        
+                        var name = context.get("click.name");
+                        var val = context.get("click.value");
+                        var name2 = context.get("click.name2");
+                        var val2 = context.get("click.value2");
+			
+                        if (name == "Server Name") {
+                            location.href=Splunk.util.make_url("app", Splunk.util.getCurrentApp(), "server_status") + "?servername=" + val;
+                        }
+                    },
+                });
+        }
+	
+    break;
+    
     case "event_viewer":
         
         Splunk.Module.SimpleResultsTable = $.klass(Splunk.Module.SimpleResultsTable, {
@@ -80,7 +175,33 @@ switch (Splunk.util.getCurrentView()) {
 	
     break;
 
-    case "xa_userexp_profiler2":
+    case "xa_userexp_wizard":
+	$(document).ready(function() {
+	    
+	    var selectText = "Type in a user name and press 'List Servers'";
+	    
+	    $("#SearchSelectLister_0_3_0_id option:first").text(selectText);
+	    
+	    $("#btnSubmit").click(function(){
+		
+		var username = $('input[name="user"]').val();
+		var servername = $("#SearchSelectLister_0_3_0_id option:selected").text();
+		
+		if($.trim(username) == "") {
+		    alert("Please enter a user name");
+		    $('input[name="user"]').focus();
+		} else if(servername == selectText) {
+			alert(selectText);
+		} else {
+		    location.href=Splunk.util.make_url("app", Splunk.util.getCurrentApp(), "xa_user_experience") + "?username=" + username + "&hostname=" + servername;
+		}
+		
+	    });
+	});
+	
+    break;
+
+    case "xa_user_experience":
 	$(document).ready(function() {
 	    
 	    var hostname = getParameterByName("hostname");

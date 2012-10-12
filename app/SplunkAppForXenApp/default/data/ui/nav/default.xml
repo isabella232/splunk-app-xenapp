@@ -1,7 +1,7 @@
 <nav>
   <view name="xa_landing" default="true" />
   <view name="xa_deployment"/>
-  <view name="xa_userexp_profiler"/>
+  <view name="xa_userexp_wizard"/>
   <view name="xa_perf_overview"/>
   <view name="client_device_report"/>
   <view name="alert_monitor"/>

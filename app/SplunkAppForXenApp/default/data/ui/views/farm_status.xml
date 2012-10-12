@@ -3,7 +3,6 @@
     <label>Farm Status</label>
     <module name="AccountBar" layoutPanel="appHeader" />
     <module name="AppBar" layoutPanel="appHeader" />
-    <module name="SideviewUtils" layoutPanel="appHeader" />
 
     <module name="Message" layoutPanel="messaging">
         <param name="filter">*</param>
@@ -12,91 +11,100 @@
     </module>
 
     <module name="TitleBar" layoutPanel="viewHeader"/>
-    <!--<module name="GenericHeader" layoutPanel="panel_row1_col1_grp1"><param name="label">Farm Status</param></module> -->
-    <module name="URLLoader" layoutPanel="viewHeader" autoRun="true">
-
         <module name="TimeRangePicker" layoutPanel="viewHeader">
             <param name="default">Last 60 minutes</param>
             <param name="searchWhenChanged">true</param>
-
-            <module name="Search">
-                <param name="search"><![CDATA[ `xenapp_index` `xa_farm_sourcetype` | eval FarmName=upper(FarmName) | stats count by FarmName | table FarmName ]]></param>
-                <module name="Pulldown" layoutPanel="viewHeader">
-                    <param name="name">FarmName</param>
-                    <param name="size">1</param>
-                    <param name="width">300px</param>
-                    <param name="staticFieldsToDisplay"></param>
-                    <param name="label">Farm Name:</param>
-                    <param name="searchFieldsToDisplay">
-                        <list>
-                            <param name="label">FarmName</param>
-                            <param name="value">FarmName</param>
-                        </list>
+            
+            <!-- Farm Name -->
+            <module name="ExtendedFieldSearch" layoutPanel="viewHeader">
+                <param name="label">Farm Name: </param>
+                <param name="field">farm</param>
+                <param name="replacementMap">
+                  <param name="arg">
+                    <param name="farm">
+                      <param name="value"/>
                     </param>
+                  </param>
+                </param>
+                <param name="intention">
+                  <param name="name">stringreplace</param>
+                  <param name="arg">
+                    <param name="farm">
+                      <param name="default"/>
+                      <param name="fillOnEmpty">false</param>
+                    </param>
+                  </param>
+                </param>
 
-                    <module name="GenericHeader" layoutPanel="panel_row2_col1">
-                        <param name="label">Farm Data</param>
-                        <module name="Search">
-                            <param name="search"><![CDATA[ `xenapp_index` `xa_farm_sourcetype` FarmName="$FarmName$" | stats latest(Users) as Users latest(SessionCount) as Sessions latest(Servers) as Servers latest(AdministratorType) as AdminType earliest(*) as junk_* by FarmName | rename FarmName as "Farm Name" | `remove_junk` ]]></param>
-                            <module name="ListView">
-                                <param name="fieldList">
-                                    <param name="1">Farm Name</param>
-                                    <param name="2">Users</param>
-                                    <param name="3">Sessions</param>
-                                    <param name="4">Servers</param>
-                                </param>
-                            </module> <!-- ListView -->
-                        </module> <!-- Search -->
+                <module name="GenericHeader" layoutPanel="panel_row2_col1">
+                    <param name="label">Farm Data</param>
+                    <module name="HiddenSearch">
+                        <param name="search">
+                            `xenapp_index` `xa_farm_sourcetype` FarmName="$farm$" |
+                            stats latest(Users) as Users latest(SessionCount) as Sessions latest(Servers) as Servers latest(AdministratorType) as AdminType earliest(*) as junk_* by FarmName |
+                            rename FarmName as "Farm Name" |
+                            `remove_junk`
+                        </param>
+                        <module name="ListView">
+                            <param name="fieldList">
+                                <param name="1">Farm Name</param>
+                                <param name="2">Users</param>
+                                <param name="3">Sessions</param>
+                                <param name="4">Servers</param>
+                            </param>
+                        </module> <!-- ListView -->
                     </module> <!-- Search -->
+                </module> <!-- Search -->
 
-                    <module name="GenericHeader" layoutPanel="panel_row2_col1">
-                        <param name="label">Zone Data</param>
-                        <module name="Search">
-                            <param name="search"><![CDATA[ `xenapp_index` `xa_zone_sourcetype` FarmName="$FarmName$" | stats latest(DataCollector) as DataCollector latest(FarmName) as FarmName earliest(*) as junk_* by ZoneName | `remove_junk` ]]></param>
+                <module name="GenericHeader" layoutPanel="panel_row2_col1">
+                    <param name="label">Zone Data</param>
+                    <module name="HiddenSearch">
+                        <param name="search">
+                            `xenapp_index` `xa_zone_sourcetype` FarmName="$farm$" |
+                            stats latest(DataCollector) as DataCollector latest(FarmName) as FarmName earliest(*) as junk_* by ZoneName |
+                            `remove_junk`
+                        </param>
+                        <module name="SimpleResultsTable">
+                            <param name="drilldown">row</param>
+                        </module>
+                    </module>
+                </module>
+
+                <module name="GenericHeader" layoutPanel="panel_row2_col2">
+                    <param name="label">Servers</param>
+                    <module name="HiddenSearch">
+                        <param name="search">
+                            `xenapp_index` `xa_server_sourcetype` FarmName="$farm$" |
+                            stats latest(CitrixProductName) as Product latest(CitrixVersion) as Version latest(CitrixEdition) as Edition latest(LogOnsEnabled) as LogonEnabled latest(ZoneName) as ZoneName earliest(*) as junk_* by ServerName |
+                            `remove_junk` |
+                            rename ServerName AS "Server Name" LogonEnabled AS "Logons Enabled" ZoneName AS "Zone Name"
+                        </param>
+                        <module name="SimpleResultsTable">
+                            <param name="drilldown">row</param>
+                            <module name="NullModule" />
+                        </module>
+                    </module>
+                </module>
+
+
+                <module name="GenericHeader" layoutPanel="panel_row3_col1">
+                    <param name="label">Applications</param>
+                    <module name="HiddenSearch">
+                        <param name="search">
+                            `xenapp_index` `xa_application_sourcetype` FarmName="$farm$" |
+                            stats latest(DisplayName) as DisplayName latest(Description) as Description latest(ApplicationType) as Type latest(FolderPath) as FolderPath earliest(*) as junk_* by BrowserName |
+                            `remove_junk`
+                        </param>
+
                             <module name="SimpleResultsTable">
-                                <param name="drilldown">row</param>
-                            </module> <!-- SimpleResultsTable -->
-                        </module> <!-- Search -->
-                    </module> <!-- Search -->
-
-                    <module name="GenericHeader" layoutPanel="panel_row2_col2">
-                        <param name="label">Servers</param>
-                        <module name="Search">
-                            <param name="search"><![CDATA[ `xenapp_index` `xa_server_sourcetype` FarmName="$FarmName$" | stats latest(CitrixProductName) as Product latest(CitrixVersion) as Version latest(CitrixEdition) as Edition latest(LogOnsEnabled) as LogonEnabled latest(ZoneName) as ZoneName earliest(*) as junk_* by ServerName | `remove_junk` ]]></param>
-                            <module name="SimpleResultsTable">
-                                <param name="drilldown">row</param>
-                                <!--<module name="NotSideview">
-                                    <param name="to">server_status</param>
-                                    <param name="butt">ServerName</param>
-                                </module>-->
-                                <module name="Redirector">
-                                    <param name="url">server_status</param>
-                                    <param name="arg.autoRun">True</param>
-                                    <param name="arg.ServerName">$click.fields.ServerName$</param>
-                                    <param name="arg.earliest">$search.timeRange.earliest$</param>
-                                    <param name="arg.latest">$search.timeRange.latest$</param>
-                                </module> <!-- Redirector#Drill Down -->
-                            </module> <!-- SimpleResultsTable -->
-                        </module> <!-- Search -->
-                    </module> <!-- GenericHeader -->
-
-
-                    <module name="GenericHeader" layoutPanel="panel_row3_col1">
-                        <param name="label">Applications</param>
-                        <module name="Search">
-                            <param name="search"><![CDATA[ `xenapp_index` `xa_application_sourcetype` FarmName="$FarmName$" | stats latest(DisplayName) as DisplayName latest(Description) as Description latest(ApplicationType) as Type latest(FolderPath) as FolderPath earliest(*) as junk_* by BrowserName | `remove_junk`]]></param>
-                            <module name="Pager">
-                                <param name="entityName">results</param>
-                                <module name="SimpleResultsTable">
-                                    <param name="displayMenu">true</param>
-                                    <param name="count">100</param>
-                                </module>
+                                <param name="displayMenu">true</param>
+                                <param name="count">100</param>
                             </module>
-                        </module> <!-- Search -->
-                    </module> <!-- GenericHeader -->
 
-                </module> <!-- Pulldown#host -->
-            </module> <!-- Search#host Pulldown -->
+                    </module> <!-- HiddenSearch -->
+                </module> <!-- GenericHeader -->
+
+            </module> <!-- ExtendedFieldSearch -->
         </module> <!-- TimeRangePicker -->
-    </module> <!-- URLLoader -->
+
 </view>

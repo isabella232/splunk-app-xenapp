@@ -1,0 +1,591 @@
+<?xml version="1.0"?>
+<view template="dashboard.html" stylesheet="dashboard2.css">
+  <label>User Experience</label>
+  <module name="AccountBar" layoutPanel="appHeader"/>
+  <module name="AppBar" layoutPanel="navigationHeader"/>
+  <module name="Message" layoutPanel="messaging">
+    <param name="filter">splunk.search.error</param>
+    <param name="clearOnJobDispatch">False</param>
+    <param name="maxSize">1</param>
+  </module>
+  <module name="TitleBar" layoutPanel="viewHeader">
+    <param name="actionsMenuFilter">dashboard</param>
+  </module>
+  <!--
+        Global index summary counts
+    -->
+  <!--<module name="GenericHeader" layoutPanel="panel_row1_col1">
+    <param name="label">User Experience</param>
+  </module> -->
+  <module name="StaticContentSample" layoutPanel="viewHeader">
+    <param name="text">This report allows you to profile and score user sessions. A user experience score of 1 (lowest) to 5 (highest) is assigned to the various components monitored as part of a user's session. To get started, enter a username, server hostname, select a time range and click Submit.</param>
+  </module>
+  
+  <module name="ServerSideInclude" layoutPanel="viewHeader">
+    <param name="src">usrexp_key.html</param>
+  </module>
+  
+  <module name="TimeRangePicker" layoutPanel="viewHeader">
+    <param name="selected">Last 15 Minutes</param>
+    <param name="searchWhenChanged">True</param>
+    
+    <!-- Username -->
+    <module name="ExtendedFieldSearch" layoutPanel="viewHeader">
+      <param name="label">User: </param>
+      <param name="field">user</param>
+      <param name="replacementMap">
+        <param name="arg">
+          <param name="user">
+            <param name="value"/>
+          </param>
+        </param>
+      </param>
+      <param name="intention">
+        <param name="name">stringreplace</param>
+        <param name="arg">
+          <param name="user">
+            <param name="default"/>
+            <param name="prefix">UserName="</param>
+            <param name="suffix">"</param>
+            <param name="fillOnEmpty">false</param>
+          </param>
+        </param>
+      </param>
+      
+      <!-- Server -->
+      <module name="ExtendedFieldSearch" layoutPanel="viewHeader">
+        <param name="label">Server Name: </param>
+        <param name="field">host</param>
+        <param name="replacementMap">
+          <param name="arg">
+            <param name="host">
+              <param name="value"/>
+            </param>
+          </param>
+        </param>
+        <param name="intention">
+          <param name="name">stringreplace</param>
+          <param name="arg">
+            <param name="host">
+              <param name="default"/>
+              <param name="fillOnEmpty">false</param>
+            </param>
+          </param>
+        </param>
+        
+        <!-- Submit button -->
+        <module name="SubmitButton" layoutPanel="viewHeader">
+          <param name="allowSoftSubmit">false</param>
+          <param name="label">Go</param>
+          
+          
+          <!-- Start ICA performance stats -->
+          <module name="HiddenSearch" layoutPanel="panel_row4_col1" >
+            <param name="search">
+              `xenapp_index` `xa_ica` $user$ host=$host$ |
+              eval SessionBandwidth=InputSessionBandwidth+OutputSessionBandwidth |
+              search SessionBandwidth&gt;=0 |
+              timechart span=1m
+                max(SessionBandwidth) as MaxSessionBandwidth
+                min(SessionBandwidth) as MinSessionBandwidth
+                median(SessionBandwidth) as "AvgSessionBandwidth"
+                Max(LatencySessionAverage) as "LatencySessionAverage" |
+              eval AvgSessionBandwidth = round(AvgSessionBandwidth,2) |
+              where MaxSessionBandwidth&gt;=0 |
+              sort - _time
+            </param>
+            <module name="JobProgressIndicator" layoutPanel="viewHeader"/>
+
+            <!-- ICA Session Bandwidth -->
+            <module name="HiddenPostProcess" layoutPanel="panel_row4_col1" group="ICA Session Bandwidth">
+              <param name="search"> | timechart span=1m avg(AvgSessionBandwidth) as Bandwidth</param>
+              <module name="HiddenChartFormatter">
+                <param name="chart">line</param>
+                <param name="chart.stackMode">none</param>
+                <param name="chart.nullValueMode">connect</param>
+                <param name="charting.primaryAxisTitle.text">Time</param>
+                <param name="legend.placement">none</param>
+                <module name="FlashChart">
+                  <param name="width">100%</param>
+                  <module name="ConvertToDrilldownSearch">
+                    <module name="ViewRedirector">
+                      <param name="viewTarget">flashtimeline</param>
+                    </module>
+                  </module>
+                </module>
+              </module>
+              <module name="ViewRedirectorLink">
+              <param name="viewTarget">flashtimeline</param>
+              <param name="label">Session Counters</param>
+            </module>
+            </module>
+            
+            <!-- ICA Session Latency -->
+            <module name="HiddenPostProcess" layoutPanel="panel_row4_col2" group="ICA Session Latency">
+              <param name="search">| timechart span=1m Max(LatencySessionAverage) as Latency</param>
+              <module name="HiddenChartFormatter">
+                <param name="chart">line</param>
+                <param name="chart.nullValueMode">connect</param>
+                <param name="chart.stackMode">none</param>
+                <param name="charting.primaryAxisTitle.text">Time</param>
+                <param name="legend.placement">bottom</param>
+                <module name="FlashChart">
+                  <param name="width">100%</param>
+                  <module name="ConvertToDrilldownSearch">
+                    <module name="ViewRedirector">
+                      <param name="viewTarget">flashtimeline</param>
+                    </module>
+                  </module>
+                </module>
+              </module>
+            </module>
+            
+            <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp1">
+              <param name="search">| stats avg(AvgSessionBandwidth) as SessionBandwidth | eval SessionBandwidth = round(SessionBandwidth,2) | `usrexp_icabw` | eval usrexp="usrexp"+usrexp</param>
+              <module name="SingleValue">
+                <param name="field">SessionBandwidth</param>
+                <param name="classField">usrexp</param>
+                <param name="format">count</param>
+                <param name="beforeLabel">ICA Session Bandwidth: </param>
+                <param name="afterLabel">kbs</param>
+              </module>
+            </module>
+            
+            <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp2">
+              <param name="search">| stats median(LatencySessionAverage) as LatencySessionAverage | eval LatencySessionAverage = round(LatencySessionAverage,2) | `usrexp_icalatency` | eval usrexp="usrexp"+usrexp</param>
+              <module name="SingleValue">
+                <param name="field">LatencySessionAverage</param>
+                <param name="classField">usrexp</param>
+                <param name="format">count</param>
+                <param name="beforeLabel">ICA Session Latency: </param>
+              </module>
+            </module>
+          </module>
+          <!-- End ICA performance stats -->
+          
+          <!-- Start XenApp Host performance -->
+          <module name="HiddenSearch" layoutPanel="panel_row6_col1">
+            <param name="search">
+              `perfmon_cpu`
+                [search `xenapp_index` `xa_sessions_sourcetype` $user$ host=$host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] |
+              bin _time span=1m |
+              stats last(Value) as Value by _time host
+            </param>
+            <module name="JobProgressIndicator"/>
+            <module name="HiddenPostProcess" layoutPanel="panel_row6_col1" group="% CPU Utilization">
+              <param name="search">
+                | timechart span=1m max(Value) as "Max % CPU" avg(Value) as "Avg % CPU"  min(Value) as "Min % CPU"
+              </param>
+              <module name="HiddenChartFormatter">
+                <param name="chart">line</param>
+                <param name="chart.nullValueMode">connect</param>
+                <param name="charting.primaryAxisTitle.text">Time</param>
+                <param name="chart.stackMode">none</param>
+                <param name="legend.placement">bottom</param>
+                <param name="charting.axisTitleY.text">%</param>
+                <param name="charting.axisY.minimumNumber">0</param>
+                <param name="charting.axisY.maximumNumber">100</param>
+                <param name="charting.axisTitleX.text"> </param>
+                <module name="FlashChart">
+                  <param name="height">300px</param>
+                </module>
+              </module>
+            </module>
+            <module name="HiddenPostProcess" layoutPanel="panel_row5_col1_grp1" group="XenApp Host Performance">
+              <param name="search"> | stats median(Value) as Value | eval Value=round(Value,2)   | `usrexp_cpu`| eval usrexp="usrexp"+usrexp</param>
+              <module name="SingleValue">
+                <param name="field">Value</param>
+                <param name="classField">usrexp</param>
+                <param name="format">count</param>
+                <param name="beforeLabel">% Processor Time: </param>
+              </module>
+            </module>
+          </module>
+          
+          <module name="HiddenSearch" layoutPanel="panel_row6_col2">
+            <param name="search">
+              `perfmon_mem`
+                [search `xenapp_index` `xa_sessions_sourcetype` $user$ host=$host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] |
+              bin _time span=1m  |
+              stats first(Value) as Value  by _time host
+            </param>
+            <module name="JobProgressIndicator"/>
+            <module name="HiddenPostProcess" layoutPanel="panel_row6_col2" group="Available Memory in Megabytes">
+              <param name="search">| eval Value=Value/1024/1024 | timechart span=1m max(Value) as MaxMBFree avg(Value) as AvgMBFree min(Value) as MinMBFree | eval MaxMBFree= round(MaxMBFree,2) | eval AvgMBFree= round(AvgMBFree,2) | eval MinMBFree= round(MinMBFree,2)</param>
+              <module name="HiddenChartFormatter">
+                <param name="chart">line</param>
+                <param name="chart.nullValueMode">connect</param>
+                <param name="charting.primaryAxisTitle.text">Time</param>
+                <param name="chart.stackMode">none</param>
+                <param name="legend.placement">bottom</param>
+                <module name="FlashChart">
+                  <param name="height">300px</param>
+                </module>
+              </module>
+            </module>
+            <module name="HiddenPostProcess" layoutPanel="panel_row5_col1_grp2" group="XenApp Host Performance">
+              <param name="search"> | eval Value=Value/1024/1024 | stats median(Value) as Value | eval Value=round(Value,2)   | `usrexp_mem`| eval usrexp="usrexp"+usrexp</param>
+              <module name="SingleValue">
+                <param name="field">Value</param>
+                <param name="classField">usrexp</param>
+                <param name="format">count</param>
+                <param name="beforeLabel">Available Memory in Megabytes: </param>
+              </module>
+            </module>
+          </module>
+          
+          <module name="HiddenSearch" layoutPanel="panel_row6_col3">
+            <param name="search">
+              counter="Disk Transfers/Sec" `perfmon_logdisk` object=LogicalDisk
+                [search `xenapp_index` `xa_sessions_sourcetype` $user$ host=$host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] |
+              stats first(Value) as Value  by _time host |
+              bin _time span=1m
+            </param>
+            <module name="JobProgressIndicator"/>
+            <module name="HiddenPostProcess" layoutPanel="panel_row6_col3" group="XenApp Host Performance">
+              <param name="search">| timechart span=1m max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min Disk Transfers/Sec" | rename max as "Max Disk Transfers/Sec" | rename avg as "Avg Disk Transfers/Sec"</param>
+              <module name="HiddenChartFormatter">
+                <param name="chart">line</param>
+                <param name="chart.nullValueMode">connect</param>
+                <param name="charting.primaryAxisTitle.text">Time</param>
+                <param name="chart.stackMode">none</param>
+                <param name="legend.placement">bottom</param>
+                <module name="FlashChart">
+                  <param name="height">300px</param>
+                </module>
+              </module>
+            </module>
+            <module name="HiddenPostProcess" layoutPanel="panel_row5_col1_grp3" group="XenApp Host Performance">
+              <param name="search">| stats median(Value) as Value | eval Value=round(Value,2)   | `usrexp_io`| eval usrexp="usrexp"+usrexp</param>
+              <module name="SingleValue">
+                <param name="field">Value</param>
+                <param name="classField">usrexp</param>
+                <param name="format">count</param>
+                <param name="beforeLabel">Disk Transfers/Sec: </param>
+              </module>
+            </module>
+          </module>
+          <!-- End XenApp Host performance -->
+          
+          <!--
+           *************  Start Hypervisor Host performance (CPU) *************
+          -->
+          <module name="HiddenSearch" layoutPanel="panel_row7_col1_grp1">
+            <param name="search">
+              eventtype=servervirt:performance:*:host:processor counter="% Processor Time"  instance="_Total"
+                [search eventtype=servervirt:vm vm_name=$host$ | fields vm_host | head 1 | rename vm_host AS hyp_hostname]
+              | fields object counter instance Value hyp_hostname
+            </param>
+            
+            <module name="HiddenPostProcess">
+                <param name="search">
+                  | fields hyp_hostname
+                </param>
+
+                <module name="SingleLink" group="Hypervisor Host Performance">
+                  <param name="url">/app/SplunkAppForServerVirt/host</param>
+                  <param name="target">_blank</param>
+                  <param name="urlParams"><![CDATA[?hostname=[linkTextField]]]></param>
+                  <param name="afterElement">h2[title="Hypervisor Host Performance"]</param>
+                  <param name="beforeLabel">Hypervisor details:</param>
+                  <param name="afterLabel"><![CDATA[<img id="imgICAPerf" src="/static/app/SplunkAppForXenApp/icon-new-window.gif" />]]></param>
+                  <param name="linkTextField">hyp_hostname</param>
+                </module>
+              </module>
+
+            <module name="ConditionalPanel">
+              <param name="condition">
+                job.getResultCount() > 0
+              </param>
+              <param name="mode">serializeAll</param>
+              <param name="panel">panel_row7_col</param>
+
+              <module name="HiddenPostProcess" layoutPanel="panel_row8_col1">
+                <param name="search">
+                  | timechart max(Value) as "CPU"
+                </param>
+                <module name="HiddenChartFormatter">
+                  <param name="chart">line</param>
+                  <param name="chart.nullValueMode">connect</param>
+                  <param name="chart.stackMode">none</param>
+                  <param name="legend.placement">bottom</param>
+                  <param name="charting.axisTitleY.text">%</param>
+                  <param name="charting.axisY.minimumNumber">0</param>
+                  <param name="charting.axisY.maximumNumber">100</param>
+                  <param name="charting.axisTitleX.text"> </param>
+                  <module name="FlashChart">
+                    <param name="height">300px</param>
+                  </module>
+                </module>
+              </module>
+        
+              <module name="HiddenPostProcess" layoutPanel="panel_row7_col1_grp1" group="Hypervisor Host Performance">
+                <param name="search">
+                  | stats max(Value) as Value | eval Value=round(Value,2)  | `usrexp_cpu` | eval usrexp="usrexp"+usrexp
+                </param>
+                <module name="SingleValue">
+                  <param name="field">Value</param>
+                  <param name="classField">usrexp</param>
+                  <param name="format">count</param>
+                  <param name="beforeLabel">Hypervisor % Processor Time: </param>
+                </module>
+              </module>
+              
+            </module> <!-- ConditionalPanel -->
+          </module> <!-- HiddenSearch -->
+          
+          <module name="HiddenSearch" layoutPanel="panel_row7_col1_grp2">
+            <param name="search">
+              eventtype=servervirt:performance:*:host:memory counter="Available Bytes"
+                [search eventtype=servervirt:vm vm_name=$host$ | fields vm_host | head 1 | rename vm_host AS hyp_hostname]
+              | fields object counter instance Value hyp_hostname
+            </param>
+            
+            <module name="ConditionalPanel">
+              <param name="condition">
+                job.getResultCount() > 0
+              </param>
+              <param name="mode">serializeAll</param>
+              <param name="panel">panel_row7_col</param>
+              
+              <module name="HiddenPostProcess" layoutPanel="panel_row8_col2">
+                <param name="search">
+                  | eval MB=`toMB(Value)` |
+                  timechart max(MB) as "Available Megabytes"
+                </param>
+                <module name="HiddenChartFormatter">
+                  <param name="chart">line</param>
+                  <param name="chart.nullValueMode">connect</param>
+                  <param name="chart.stackMode">none</param>
+                  <param name="charting.axisY.minimumNumber">0</param>
+                  <param name="charting.axisTitleX.text"> </param>
+                  <param name="charting.axisTitleY.text"> </param>
+                  <param name="charting.legend.placement">none</param>
+                  <param name="charting.axisTitleY.text">MB</param>
+                          
+                  <module name="FlashChart">
+                    <param name="height">300px</param>
+                  </module>
+                </module>
+              </module>
+                
+              <module name="HiddenPostProcess" layoutPanel="panel_row7_col1_grp2" group="Hypervisor Host Performance">
+                <param name="search">
+                  | stats median(Value) as Value | eval Value=round(Value,2)  | `usrexp_mem` | eval usrexp="usrexp"+usrexp | eval mem=`formatBytes(Value)`
+                </param>
+                <module name="SingleValue">
+                  <param name="field">mem</param>
+                  <param name="classField">usrexp</param>
+                  <param name="format">count</param>
+                  <param name="beforeLabel">Hypervisor - Available Memory: </param>
+                </module>
+              </module>
+                  
+              
+            </module> <!-- ConditionalPanel -->
+          </module> <!-- HiddenSearch -->
+          
+          <!--
+           *************  End Hypervisor Host performance *************
+          -->
+          
+          <!--
+           *************  Start NetApp performance *************
+          -->
+          <module name="HiddenSearch" layoutPanel="panel_row9_col1" group="NetApp Performance">
+              <param name="search">
+                index=netapp_perf
+                  [search eventtype=servervirt:*:sr
+                    [search eventtype=servervirt:*:vdisk vm_name=$host$ |
+                      fields sr_id |
+                      head 1
+                    ] |
+                    fields vol_name |
+                    rename vol_name as instance |
+                    head 1
+                  ] |
+                  eval read_lat=`get_latency(read_latency,read_latency_2, read_ops, read_ops_2)` |
+                  eval write_lat=`get_latency(write_latency, write_latency_2, write_ops, write_ops_2)` |
+                  timechart avg(read_lat) AS "Read Latency" avg(write_lat) AS "Write Latency"
+              </param>
+              
+              <module name="ConditionalPanel">
+                <param name="condition">
+                  job.getResultCount() > 0
+                </param>
+                <param name="mode">serializeAll</param>
+                <param name="panel">panel_row9_col</param>
+              
+                <module name="HiddenChartFormatter">
+                  <param name="chart">line</param>
+                  <param name="chart.nullValueMode">connect</param>
+                  <param name="chart.stackMode">none</param>
+                  <param name="charting.axisY.minimumNumber">0</param>
+                  <param name="charting.axisTitleX.text"> </param>
+                  <param name="charting.axisTitleY.text"> </param>
+                  <param name="charting.legend.placement">right</param>
+                          
+                  <module name="JSChart">
+                    <param name="height">150px</param>
+                  </module>
+                </module>
+              </module> <!-- ConditionalPanel -->
+          </module> <!-- HiddenSearch -->
+          <!--
+           *************  End NetApp performance *************
+          -->
+          
+          <!--
+            ************* Start Netscaler performance *************
+          -->
+          <module name="HiddenSearch" layoutPanel="panel_row10_col1" group="Netscaler Performance">
+              <param name="search">
+                eventtype=citrix_ns
+                  [search index=xenapp sourcetype="xenapp:65:session" $user$ |
+                    fields ClientAddress | head 5 |
+                    rename ClientAddress as src_ip
+                  ] |
+                fields total_bytes_send total_bytes_recv |
+                timechart avg(total_bytes_recv) AS "Avg Bytes Received" avg(total_bytes_send) AS "Avg Bytes Sent"
+              </param>
+              
+              <module name="ConditionalPanel">
+                <param name="condition">
+                  job.getResultCount() > 0
+                </param>
+                <param name="mode">serializeAll</param>
+                <param name="panel">panel_row10_col</param>
+                
+                <module name="HiddenChartFormatter">
+                  <param name="chart">line</param>
+                  <param name="chart.nullValueMode">connect</param>
+                  <param name="chart.stackMode">none</param>
+                  <param name="charting.axisY.minimumNumber">0</param>
+                  <param name="charting.axisTitleX.text"> </param>
+                  <param name="charting.axisTitleY.text"> </param>
+                  <param name="charting.legend.placement">right</param>
+                          
+                  <module name="JSChart">
+                    <param name="height">150px</param>
+                  </module>
+                </module>
+              </module> <!-- ConditionalPanel -->
+          </module> <!-- HiddenSearch -->
+          <!--
+            ************* End Netscaler performance *************
+          -->
+          
+          <!-- Start Windows Event Logs -->
+          <module name="HiddenSearch" layoutPanel="panel_row11_col1" group="Windows WinEvent Log">
+            <param name="search">`win_index` Type=Error sourcetype="WinEventLog:*" [search `xenapp_index` `xa_sessions_sourcetype` $user$ host=$host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] |stats values(SourceName) as "Source(s)"   values(Message) as "Message(s)" by Type host | head 10 | sort - count | rename host as Host</param>
+            <module name="SimpleResultsTable">
+              <param name="drilldown">row</param>
+              <param name="entityName">results</param>
+              <param name="count">15</param>
+              <param name="displayRowNumbers">False</param>
+            </module>
+            <module name="ViewRedirectorLink">
+              <param name="viewTarget">flashtimeline</param>
+              <param name="label">View WinEvent Errors</param>
+            </module>
+          </module>
+          <!-- End Windows Event Logs -->
+          
+          <!-- Start View Reports -->
+          <module name="HiddenSearch" layoutPanel="panel_row12_col1_grp1" group="View Reports">
+            <param name="search">`xenapp_index` [search `xenapp_index` `xa_sessions_sourcetype` $user$ host=$host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] | head 1  | eval Report="View Installed Applications" | stats first(Report) as Report by host | rename host as Host</param>
+            <module name="SimpleResultsTable" layoutPanel="panel_row12_col1_grp1">
+              <param name="displayMenu">true</param>
+              <param name="count">100</param>
+              <param name="drilldown">row</param>
+              <param name="entityName">results</param>
+              <param name="displayRowNumbers">False</param>
+              <module name="HiddenSearch">
+                <param name="search">`win_index` `wmi_installedsoftware`  Name!="----" earliest=-7d host=$host$ | stats first(Version) as Version by Vendor Name</param>
+                <module name="ConvertToIntention">
+                  <param name="intention">
+                    <param name="name">stringreplace</param>
+                    <param name="arg">
+                      <param name="host">
+                        <param name="prefix">host=</param>
+                        <param name="fillOnEmpty">True</param>
+                        <param name="value">$click.value$</param>
+                      </param>
+                    </param>
+                  </param>
+                  <module name="ViewRedirector">
+                    <param name="viewTarget">installedapps_drilldown</param>
+                  </module>
+                </module>
+              </module>
+            </module>
+          </module>
+          
+          <module name="HiddenSearch" layoutPanel="panel_row12_col1_grp2" group="View Reports">
+            <param name="search">`xenapp_index` [search `xenapp_index` `xa_sessions_sourcetype` $user$ host=$host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] | head 1 | eval Report="View Running Processes" | stats first(Report) as Report by host | rename host as Host</param>
+            <module name="SimpleResultsTable" layoutPanel="panel_row12_col1_grp2">
+              <param name="displayMenu">true</param>
+              <param name="count">100</param>
+              <param name="drilldown">row</param>
+              <param name="entityName">results</param>
+              <param name="displayRowNumbers">False</param>
+              <module name="HiddenSearch">
+                <param name="search">host=$host$ `perfmon_process` | table host process_name Value counter instance | eval mem = if(counter=="Virtual Bytes",Value,"") | eval cpu = if(counter=="% Processor Time",Value,"") | eval ioread = if(counter="IO Read Operations/sec",Value,"") | eval iowrite = if(counter="IO Write Operations/sec",Value,"") 
+                  </param>
+                <module name="ConvertToIntention">
+                  <param name="intention">
+                    <param name="name">stringreplace</param>
+                    <param name="arg">
+                      <param name="host">
+                        <param name="prefix">host=</param>
+                        <param name="fillOnEmpty">True</param>
+                        <param name="value">$click.value$</param>
+                      </param>
+                    </param>
+                  </param>
+                  <module name="ViewRedirector">
+                    <param name="viewTarget">proc_detail_drilldown</param>
+                  </module>
+                </module>
+              </module>
+            </module>
+          </module>
+          
+          <module name="HiddenSearch" layoutPanel="panel_row12_col1_grp3" group="View Reports">
+            <param name="search">`xenapp_index` [search `xenapp_index` `xa_sessions_sourcetype` $user$ host=$host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] | head 1 | eval Report="View Bios" | stats first(Report) as Report by host | rename host as Host</param>
+            <module name="SimpleResultsTable" layoutPanel="panel_row12_col1_grp3">
+              <param name="displayMenu">true</param>
+              <param name="count">100</param>
+              <param name="drilldown">row</param>
+              <param name="entityName">results</param>
+              <param name="displayRowNumbers">False</param>
+              <module name="HiddenSearch">
+                <param name="search">`win_index` sourcetype=WMI:Win32BIOS host=$host$ earliest=-180d | head 1 | table BIOSVersion BiosCharacteristics BuildNumber Caption CodeSet CurrentLanguage Description IdentificationCode InstallDate InstallableLanguages LanguageEdition ListOfLanguages Manufacturer Message Name OtherTargetOS PrimaryBIOS ReleaseDate SMBIOSBIOSVersion SMBIOSMajorVersion SMBIOSMinorVersion SMBIOSPresent SerialNumber SoftwareElementID SoftwareElementState Status TargetOperatingSystem Version wmi_type | transpose</param>
+                <module name="ConvertToIntention">
+                  <param name="intention">
+                    <param name="name">stringreplace</param>
+                    <param name="arg">
+                      <param name="host">
+                        <param name="prefix">host=</param>
+                        <param name="fillOnEmpty">True</param>
+                        <param name="value">$click.value$</param>
+                      </param>
+                    </param>
+                  </param>
+                  <module name="ViewRedirector">
+                    <param name="viewTarget">bios_drilldown</param>
+                  </module>
+                </module>
+              </module>
+            </module>
+          </module>
+          <!-- End View Reports -->
+          
+        </module>
+      
+          </module>
+          </module>
+      
+    </module>
+  
+</view>
