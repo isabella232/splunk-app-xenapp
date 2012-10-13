@@ -78,7 +78,7 @@
 
 								<module name="HiddenChartFormatter">
 									<param name="chart">line</param>
-									<param name="chart.nullValueMode">zero</param>
+									<param name="chart.nullValueMode">connect</param>
 									<param name="legend.placement">bottom</param>
 									<param name="primaryAxisTitle.text">Time</param>
 									<param name="secondaryAxisTitle.text">Counter</param>

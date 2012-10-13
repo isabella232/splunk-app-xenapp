@@ -44,48 +44,48 @@
       <module name="SubmitButton" layoutPanel="viewHeader">
     	<param name="allowSoftSubmit">False</param>
     	<param name="label">Submit</param>
-      <module name="HiddenSearch" layoutPanel="viewHeader" autoRun="True">
-        <param name="search">`perfmon_brief` | eval ServerName=host | lookup xa_zone_farm ServerName OUTPUT ZoneName FarmName | search FarmName="*" ZoneName="*" | stats median(Value) as Value by counter object ServerName FarmName ZoneName</param>
-        <module name="ViewRedirectorLink" layoutPanel="viewHeader">
+	
+	<module name="HiddenSearch" layoutPanel="viewHeader" autoRun="True">
+	  <param name="search">
+	    `perfmon_brief` |
+	    eval ServerName=host |
+	    lookup xa_zone_farm ServerName OUTPUT ZoneName FarmName |
+	    search FarmName="*" ZoneName="*" |
+	    stats median(Value) as Value by counter object ServerName FarmName ZoneName
+	  </param>
+	  <module name="ViewRedirectorLink" layoutPanel="viewHeader">
           <param name="viewTarget">flashtimeline</param>
           <param name="label">View Full Report</param>
         </module>
+	  
         <module name="JobProgressIndicator" layoutPanel="viewHeader"/>
-        <!--% CPU Utilization-->
+        
+	<!-- % CPU Min -->
         <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp1" group="% CPU Utilization">
-          <param name="search">search counter="% Processor Time" counter="% Processor Time" | stats min(Value) as Value | eval Value=round(Value,2) | `usrexp_cpu`| eval usrexp="usrexp"+usrexp</param>
+          <param name="search">
+	    search counter="% Processor Time" |
+	    stats min(Value) as Value |
+	    eval Value=round(Value,2) |
+	    `usrexp_cpu`|
+	    eval usrexp="usrexp"+usrexp
+	  </param>
           <module name="SingleValue">
             <param name="field">Value</param>
             <param name="classField">usrexp</param>
             <param name="format">count</param>
             <param name="beforeLabel">Min. CPU %:</param>
-<!--	    <module name="HiddenSearch">
-	      <param name="search">`perfmon_brief` | eval ServerName=host | lookup xa_zone_farm ServerName OUTPUT ZoneName FarmName | search FarmName="*" ZoneName="*" | stats median(Value) as Value by counter object ServerName FarmName ZoneName | search counter="% Processor Time" | stats max(Value) as Value by ServerName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. % CPU" ServerName as "Server Name" | head 10</param>
-	      <module name="ConvertToIntention">
-		<param name="intention">
-		  <param name="name">stringreplace</param>
-		  <param name="arg">
-		    <param name="value">$click.value$</param>
-		  </param>
-		</param>
-		<module name="SimpleResultsTable" layoutPanel="panel_row4_col1_grp1">
-		  <param name="displayMenu">true</param>
-		  <param name="count">100</param>
-		  <param name="drilldown">row</param>
-		  <param name="entityName">results</param>
-		  <param name="displayRowNumbers">False</param>
-		  <module name="ConvertToDrilldownSearch">
-		    <module name="ViewRedirector">
-		      <param name="viewTarget">flashtimeline</param>
-		    </module>
-		  </module>
-		</module>
-	      </module>
-	    </module>-->
-          </module>
-        </module>
-        <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp2" group="% CPU Utilization">
-          <param name="search">search counter="% Processor Time" counter="% Processor Time" | stats avg(Value) as Value | eval Value=round(Value,2) | `usrexp_cpu`| eval usrexp="usrexp"+usrexp</param>
+	  </module>
+	</module>
+	
+	<!-- % CPU Avg -->
+	<module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp2" group="% CPU Utilization">
+          <param name="search">
+	    search counter="% Processor Time" |
+	    stats avg(Value) as Value |
+	    eval Value=round(Value,2) |
+	    `usrexp_cpu`|
+	    eval usrexp="usrexp"+usrexp
+	  </param>
           <module name="SingleValue">
             <param name="field">Value</param>
             <param name="classField">usrexp</param>
@@ -93,8 +93,16 @@
             <param name="beforeLabel">Avg. CPU %:</param>
           </module>
         </module>
-        <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp3" group="% CPU Utilization">
-          <param name="search">search counter="% Processor Time" counter="% Processor Time" | stats max(Value) as Value | eval Value=round(Value,2) | `usrexp_cpu`| eval usrexp="usrexp"+usrexp</param>
+	
+	<!-- % CPU Max -->
+	<module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp3" group="% CPU Utilization">
+          <param name="search">
+	    search counter="% Processor Time" |
+	    stats max(Value) as Value |
+	    eval Value=round(Value,2) |
+	    `usrexp_cpu`|
+	    eval usrexp="usrexp"+usrexp
+	  </param>
           <module name="SingleValue">
             <param name="field">Value</param>
             <param name="classField">usrexp</param>
@@ -102,6 +110,55 @@
             <param name="beforeLabel">Max. CPU %:</param>
           </module>
         </module>
+	
+	<!-- % CPU Details -->
+	<module name="HiddenPostProcess" layoutPanel="panel_row4_col1_grp1" group="Top CPU % Utilization" autoRun="True">
+	  <param name="search">
+	    search counter="% Processor Time" |
+	    stats max(Value) as Value by ServerName |
+	    sort - Value |
+	    eval Value=round(Value,2) |
+	    rename Value as "Avg % CPU" |
+	    head 10
+	  </param>
+	  <module name="SimpleResultsTable" layoutPanel="panel_row4_col1_grp1">
+	    <param name="displayMenu">true</param>
+	    <param name="count">100</param>
+	    <param name="drilldown">row</param>
+	    <param name="entityName">results</param>
+	    <param name="displayRowNumbers">False</param>
+	    <module name="HiddenSearch">
+	      <param name="search">
+		`perfmon_cpu` $host$ | table host _time Value
+	      </param>
+	      <module name="ConvertToIntention">
+		<param name="intention">
+		  <param name="name">stringreplace</param>
+		  <param name="arg">
+		    <param name="host">
+		      <param name="prefix">host=</param>
+		      <param name="fillOnEmpty">True</param>
+		      <param name="value">$click.value$</param>
+		    </param>
+		  </param>
+		</param>
+		<module name="ViewRedirector">
+		  <param name="viewTarget">cpu_util_drilldown</param>
+		</module>
+	      </module>
+	    </module>
+	    <module name="ConvertToDrilldownSearch">
+	      <module name="ViewRedirector">
+		<param name="viewTarget">flashtimeline</param>
+	      </module>
+	    </module>
+	  </module>
+	</module>
+
+
+	
+        
+        
         <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp1" group="Top CPU % Utilization" autoRun="True">
           <param name="search">| search counter="% Processor Time" | stats max(Value) as Value by ServerName | sort - Value | eval Value=round(Value,2) | rename Value as "Avg. % CPU" ServerName as "Server Name" | head 10</param>
 	  <module name="TableView" layoutPanel="panel_row3_col1_grp1">
