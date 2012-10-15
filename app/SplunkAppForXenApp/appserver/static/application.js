@@ -1,7 +1,7 @@
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
     var regexS = "[\\?&]" + name + "=([^&#]*)";
-    var regex = new RegExp(regexS);
+    var regex = new RegExp(regexS, 'gi');
     var results = regex.exec(window.location.search);
     if(results == null)
         return "";
@@ -25,6 +25,10 @@ switch (Splunk.util.getCurrentView()) {
 			
                         if (name == "Farm Name") {
                             location.href=Splunk.util.make_url("app", Splunk.util.getCurrentApp(), "farm_status") + "?farmname=" + val;
+                        }
+			
+			if (name == "Server") {
+                            location.href=Splunk.util.make_url("app", Splunk.util.getCurrentApp(), "event_viewer") + "?servername=" + val + "&SourceName=" + val2;
                         }
                     },
                 });
@@ -107,13 +111,59 @@ switch (Splunk.util.getCurrentView()) {
     break;
     
     case "event_viewer":
+	
+	$(document).ready(function() {
+	    
+	    var submitForm = false;
+	    var servername = getParameterByName("servername");
+	    var eventcode = getParameterByName("eventcode");
+	    var sourcename = getParameterByName("sourcename");
+	    var eventtype = getParameterByName("type");
+            
+            if(servername != "") {
+                $('input[name="ServerName"]').val(servername);
+		submitForm = true;
+            }
+	    
+	    if(eventcode != "") {
+                $('input[name="EventCode"]').val(eventcode);
+		submitForm = true;
+            }
+	    
+	    if(sourcename != "") {
+                $('input[name="SourceName"]').val(sourcename);
+		submitForm = true;
+            }
+	    
+	    if(eventtype != "") {
+                $('input[name="Type"]').val(eventtype);
+		submitForm = true;
+            }
+	    
+	    if(submitForm) {
+		$("#SubmitButton_0_5_0").find('.splButton-primary').click();
+	    }
+	    
+            
+            $.getScript("/static/app/SplunkAppForXenApp/jquery-ui.min.js", function() {
+                $('#dialog').dialog({
+                    autoOpen: false,
+                    width: 600,
+                    buttons: {
+                        Ok: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+            });
+	});
         
         Splunk.Module.SimpleResultsTable = $.klass(Splunk.Module.SimpleResultsTable, {
             renderResults: function($super,data) {
                 $super(data);
                 //$('td:nth-child(1),th:nth-child(1)', this.container).hide();
-                $(".panel_row3_col").find('td:nth-child(1)', this.container).hide();
-                $(".panel_row3_col").find('th:nth-child(1)', this.container).hide();
+                $(".panel_row2_col").find('td:nth-child(1)', this.container).hide();
+                $(".panel_row2_col").find('th:nth-child(1)', this.container).hide();
             }
         });
         
@@ -122,8 +172,8 @@ switch (Splunk.util.getCurrentView()) {
                     onContextChange: function() {
                         var val = this.getContext().get("click.value");
                         
-                        $('div#evtMsg').html(val);
-                        
+			$('#dialog').html("<p>"+val+"</p>");
+			$('#dialog').dialog('open');
                     },
                 });
             }
@@ -177,6 +227,17 @@ switch (Splunk.util.getCurrentView()) {
 
     case "xa_userexp_wizard":
 	$(document).ready(function() {
+	    
+	    $('input[name="user"]').focus();
+	    
+	    var timeDiv = $("#sTime").parent().parent().parent();
+	    $(timeDiv).addClass("timeCell");
+	    
+	    var userDiv = $("#sUser").parent().parent().parent();
+	    $(userDiv).addClass("userCell");
+	    
+	    var serverDiv = $("#sServer").parent().parent().parent();
+	    $(serverDiv).addClass("serverCell");
 	    
 	    var selectText = "Type in a user name and press 'List Servers'";
 	    

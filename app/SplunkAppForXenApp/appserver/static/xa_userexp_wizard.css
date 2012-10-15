@@ -1,0 +1,43 @@
+.timeCell {
+    background-image: url(clock_64.png);
+    background-repeat: no-repeat;
+    background-position: 5px;
+    background-size: auto;
+}
+
+.timeCell .TimeRangePicker {
+    padding-left: 70px;
+}
+
+.userCell {
+    background-image: url(user_64.png);
+    background-repeat: no-repeat;
+    background-position: 5px;
+    background-size: auto;
+}
+
+.userCell .ExtendedFieldSearch {
+    padding-left: 70px;
+}
+
+
+.userCell .SubmitButton {
+    display: block;
+    float: right;
+}
+
+.serverCell {
+    background-image: url(server_64.png);
+    background-repeat: no-repeat;
+    background-position: 5px;
+    background-size: auto;
+}
+
+.serverCell .SearchSelectLister {
+    padding-left: 70px;
+}
+
+#btnSubmit {
+    display: block;
+    float: right;
+}

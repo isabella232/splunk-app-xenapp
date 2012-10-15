@@ -47,7 +47,7 @@
 	
 	<module name="HiddenSearch" layoutPanel="viewHeader" autoRun="True">
 	  <param name="search">
-	    `perfmon_brief` |
+	    `perfmon_brief` $host$ |
 	    eval ServerName=host |
 	    lookup xa_zone_farm ServerName OUTPUT ZoneName FarmName |
 	    search FarmName="*" ZoneName="*" |
@@ -114,12 +114,25 @@
 	<!-- % CPU Details -->
 	<module name="HiddenPostProcess" layoutPanel="panel_row4_col1_grp1" group="Top CPU % Utilization" autoRun="True">
 	  <param name="search">
-	    search counter="% Processor Time" |
+	    | search counter="% Processor Time" |
 	    stats max(Value) as Value by ServerName |
 	    sort - Value |
-	    eval Value=round(Value,2) |
+	    eval Value=round(Value,2)."%" |
 	    rename Value as "Avg % CPU" |
-	    head 10
+	    head 10 |
+	    eval vm_name=ServerName |
+	    join type=outer vm_name
+	      [ search eventtype=servervirt:vm |
+		fields vm_name vm_host |
+		dedup vm_name |
+		rename vm_host AS hyp_hostname |
+		join type=inner hyp_hostname
+		  [ search eventtype=servervirt:performance:*:host:processor |
+		    fields hyp_hostname Value |
+		    stats avg(Value) AS Value by hyp_hostname |
+		    eval avgCPU = round(Value,2)."%" ] ] |
+	    table ServerName "Avg % CPU" hyp_hostname avgCPU |
+	    rename hyp_hostname AS Hypervisor avgCPU AS "Hypervisor Avg % CPU"
 	  </param>
 	  <module name="SimpleResultsTable" layoutPanel="panel_row4_col1_grp1">
 	    <param name="displayMenu">true</param>

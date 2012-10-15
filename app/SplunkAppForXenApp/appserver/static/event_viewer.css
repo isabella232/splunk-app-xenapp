@@ -1,0 +1,9 @@
+@import url('/static/app/SplunkAppForXenApp/flick/flick.css');
+
+#dialog {
+    height: 300px !important;
+}
+
+.ExtendedFieldSearch label {
+    display: block;
+}

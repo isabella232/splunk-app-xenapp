@@ -3,7 +3,7 @@
   <label>Environment</label>
   <module name="AccountBar" layoutPanel="appHeader"/>
   <module name="AppBar" layoutPanel="navigationHeader"/>
-    <module name="Message" layoutPanel="messaging">
+  <module name="Message" layoutPanel="messaging">
     <param name="filter">*</param>
     <param name="clearOnJobDispatch">False</param>
     <param name="maxSize">1</param>
@@ -13,7 +13,11 @@
   </module>
 
   <module name="StaticContentSample" layoutPanel="viewHeader">
-    <param name="text">This report provides details about the XenApp Farms in your environment. Adjust the time range for this report by changing the timerange picker. Filter this view by entering values in the fields below and pressing Enter.</param>
+    <param name="text">
+      This report provides details about the XenApp Farms in your environment.
+      Adjust the time range for this report by changing the timerange picker.
+      Filter this view by entering values in the fields below and pressing Enter.
+    </param>
   </module>
   <module name="TimeRangePicker" layoutPanel="viewHeader">
     <param name="default">Last 24 Hours</param>
@@ -74,16 +78,6 @@
               <param name="label">View Farm Data</param>
             </module>
             <module name="JobProgressIndicator"/>
-            <!--
-            <module name="TableView" layoutPanel="panel_row3_col1">
-              <param name="fieldList">
-                <param name="1">Farm Name</param>
-                <param name="2">Servers</param>
-                <param name="3">Sessions</param>
-                <param name="4">Users</param>
-              </param>
-            </module>
-            -->
             <module name="SimpleResultsTable">
               <param name="displayMenu">true</param>
               <param name="count">100</param>
@@ -92,9 +86,9 @@
               <param name="displayRowNumbers">False</param>
               <module name="NullModule" />
             </module>
-            
           </module>
         </module>
+        
         <module name="HiddenSearch" layoutPanel="panel_row4_col1" autoRun="True" group="Server Alerts">
           <param name="search">`xenapp_alerts` $FarmName$ $ZoneName$ | eval MachineName=lower(vm_name) | rename alert_name as Alert | stats count as Number sparkline as "Over Time" by Alert</param>
           <module name="ViewRedirectorLink">
@@ -131,71 +125,57 @@
         </module>
         
         <module name="HiddenSearch" layoutPanel="panel_row4_col2" autoRun="True" group="Errors by Server">
-          <param name="search">`win_index` Type=error | stats count as Count by host,SourceName | sort -Count  | head 5 | rename host as Server | rename SourceName as Source</param>
+          <param name="search">
+            `win_index`
+            Type=error |
+            stats count as Count by host,SourceName |
+            sort -Count  |
+            head 5 |
+            rename host as Server |
+            rename SourceName as Source
+          </param>
           <module name="ViewRedirectorLink">
             <param name="viewTarget">flashtimeline</param>
             <param name="label">View Error Data</param>
           </module>
           <module name="JobProgressIndicator"/>
-          <module name="TableView">
-            <param name="fieldList">
-              <param name="1">Server</param>
-              <param name="2">Source</param>
-              <param name="3">Count</param>
-            </param>
-          </module>
-<!--          <module name="SimpleResultsTable">
+          <module name="SimpleResultsTable">
             <param name="displayMenu">true</param>
             <param name="count">100</param>
             <param name="drilldown">all</param>
             <param name="entityName">results</param>
             <param name="displayRowNumbers">False</param>
-            <module name="Redirector">
-                <param name="url">event_viewer</param>
-                <param name="arg.ServerName">$click.fields.Server$</param>
-                <param name="arg.SourceName">$click.fields.Source$</param>
-                <param name="arg.Type">"Error"</param>
-                <param name="arg.autoRun">True</param>
-                <param name="arg.latest">$search.timeRange.latest$</param>
-                <param name="arg.earliest">$search.timeRange.earliest$</param>
-            </module>
-          </module>-->
+            <module name="NullModule" />
+          </module>
         </module>
         
         <module name="HiddenSearch" layoutPanel="panel_row5_col1" autoRun="True">
-          <param name="search">`xenapp_index` `xa_sessions_sourcetype` `valid_sessions` | table _time SessionUID ServerName AccountName ZoneName FarmName </param>
+          <param name="search">
+            `xenapp_index` `xa_sessions_sourcetype` `valid_sessions` |
+            table _time SessionUID ServerName AccountName ZoneName FarmName
+          </param>
           <module name="JobProgressIndicator"/>
 
           <module name="HiddenPostProcess" layoutPanel="panel_row4_col3" autoRun="True" group="Zone Info">
-            <param name="search">lookup xa_zone_farm ServerName | stats dc(SessionUID) as Sessions dc(AccountName) as Users by ZoneName, FarmName | strcat Sessions "(" Users ")" Session(User) | table ZoneName Session(User) FarmName | rename ZoneName as "Zone Name" FarmName as "Farm Name"</param>
+            <param name="search">
+              lookup xa_zone_farm ServerName |
+              stats dc(SessionUID) as Sessions dc(AccountName) as Users by ZoneName, FarmName |
+              strcat Sessions "(" Users ")" Session(User) |
+              table ZoneName Session(User) FarmName |
+              rename ZoneName as "Zone Name" FarmName as "Farm Name"
+            </param>
             <module name="ViewRedirectorLink">
               <param name="viewTarget">flashtimeline</param>
               <param name="label">View Zone Data</param>
             </module>
             <module name="JobProgressIndicator"/>
-            <module name="TableView">
-              <param name="fieldList">
-                <param name="1">Zone Name</param>
-                <param name="2">Session(User)</param>
-                <param name="3">Farm Name</param>
-              </param>
-            </module>
-<!--            <module name="SimpleResultsTable">
+            <module name="SimpleResultsTable">
               <param name="displayMenu">true</param>
               <param name="count">100</param>
-              <param name="drilldown">all</param>
+              <param name="drilldown">none</param>
               <param name="entityName">results</param>
               <param name="displayRowNumbers">False</param>
-              <module name="NotSideview">
-                <param name="to">zone_status</param>
-                <param name="thingToPass">ZoneName</param>
-              </module>
-              <module name="Redirector">
-                <param name="url">zone_status</param>
-                <param name="arg.ZoneName">$click.fields.ZoneName$</param>
-                <param name="arg.autoRun">True</param>
-              </module>
-            </module>-->
+            </module>
           </module>
 
           <module name="HiddenPostProcess" layoutPanel="panel_row5_col1" autoRun="True" group="Sessions over Time">
@@ -215,7 +195,10 @@
           </module>
           
           <module name="HiddenPostProcess" layoutPanel="panel_row5_col2" autoRun="True" group="Users Over Time">
-            <param name="search"> timechart dc(AccountName) as Users by FarmName | eval Users=if(Users=="0",blank,Users) </param>
+            <param name="search">
+              timechart dc(AccountName) as Users by FarmName |
+              eval Users=if(Users=="0",blank,Users)
+            </param>
             <module name="ViewRedirectorLink">
               <param name="viewTarget">flashtimeline</param>
               <param name="label">View User Data</param>

@@ -14,14 +14,14 @@
   <!--
         Global index summary counts
     -->
-  <!--<module name="GenericHeader" layoutPanel="panel_row1_col1">
-    <param name="label">Installed Applications</param>
-  </module> -->
+
   <module name="StaticContentSample" layoutPanel="viewHeader">
-    <param name="text">The following applications are installed on the selected desktop</param>
+    <param name="text">The following applications are publised on the selected server</param>
   </module>
   <module name="HiddenSearch" layoutPanel="panel_row1_col1" autoRun="True">
-    <param name="search">`win_index` sourcetype="wmi:installedsoftware" Name!="----" earliest=-7d $vm_name$ | stats first(Version) as Version by Vendor Name</param>
+    <param name="search">
+      `win_index` sourcetype="wmi:installedsoftware" Name!="----" earliest=-7d $host$
+    </param>
     <module name="ViewRedirectorLink">
       <param name="viewTarget">flashtimeline</param>
       <param name="label">View Full Report</param>

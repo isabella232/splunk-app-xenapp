@@ -55,3 +55,9 @@ modtime = 1341597170.538164000
 version = 4.3.2
 modtime = 1341597170.581149000
 
+[]
+access = read : [ * ], write : [ admin, power ]
+export = none
+version = 4.3.4
+modtime = 1350304303.663171000
+
