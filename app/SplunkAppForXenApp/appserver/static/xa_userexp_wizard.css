@@ -1,43 +1,52 @@
 .timeCell {
-    background-image: url(clock_64.png);
-    background-repeat: no-repeat;
-    background-position: 5px;
-    background-size: auto;
+    background-image: url(clock_64.png) !important;
+    background-repeat: no-repeat !important;
+    background-position: 5px !important;
+    background-size: auto !important;
 }
 
 .timeCell .TimeRangePicker {
-    padding-left: 70px;
+    padding-left: 70px !important;
 }
 
 .userCell {
-    background-image: url(user_64.png);
-    background-repeat: no-repeat;
-    background-position: 5px;
-    background-size: auto;
+    background-image: url(user_64.png) !important;
+    background-repeat: no-repeat !important;
+    background-position: 5px !important;
+    background-size: auto !important;
 }
 
 .userCell .ExtendedFieldSearch {
-    padding-left: 70px;
+    padding-left: 70px !important;
 }
 
 
 .userCell .SubmitButton {
-    display: block;
-    float: right;
+    display: block !important;
+    float: right !important;
 }
 
 .serverCell {
-    background-image: url(server_64.png);
-    background-repeat: no-repeat;
-    background-position: 5px;
-    background-size: auto;
+    background-image: url(server_64.png) !important;
+    background-repeat: no-repeat !important;
+    background-position: 5px !important;
+    background-size: auto !important;
 }
 
 .serverCell .SearchSelectLister {
-    padding-left: 70px;
+    padding-left: 70px !important;
+}
+
+.serverCell .SubmitButton {
+    display: block !important;
+    float:  right !important;
 }
 
 #btnSubmit {
     display: block;
     float: right;
+}
+
+.panel_row2_col {
+    display: none;
 }

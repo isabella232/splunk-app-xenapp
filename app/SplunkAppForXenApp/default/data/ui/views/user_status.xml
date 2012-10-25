@@ -3,7 +3,6 @@
     <label>User Status</label>
     <module name="AccountBar" layoutPanel="appHeader" />
     <module name="AppBar" layoutPanel="appHeader" />
-    <module name="SideviewUtils" layoutPanel="appHeader" />
 
     <module name="Message" layoutPanel="messaging">
         <param name="filter">*</param>
@@ -17,49 +16,72 @@
         <param name="label">User Info</param>
     </module> -->
     
-    <module name="URLLoader" layoutPanel="viewHeader" autoRun="true">
+    <module name="TimeRangePicker" layoutPanel="viewHeader" autoRun="True">
+        <param name="default">Last 60 minutes</param>
+        <param name="searchWhenChanged">true</param>
 
-        <module name="TimeRangePicker" layoutPanel="viewHeader">
-            <param name="default">Last 60 minutes</param>
-            <param name="searchWhenChanged">true</param>
+        <module name="ExtendedFieldSearch" layoutPanel="viewHeader">
+            <param name="label">User: </param>
+            <param name="field">user</param>
+            <param name="replacementMap">
+              <param name="arg">
+                <param name="user">
+                  <param name="value"/>
+                </param>
+              </param>
+            </param>
+            <param name="intention">
+              <param name="name">stringreplace</param>
+              <param name="arg">
+                <param name="user">
+                  <param name="default"/>
+                  <param name="prefix">UserName="</param>
+                  <param name="suffix">"</param>
+                  <param name="fillOnEmpty">false</param>
+                </param>
+              </param>
+            </param>
 
-            <module name="TextField" layoutPanel="viewHeader">
-                <param name="name">UserName</param>
-                <param name="label">UserName</param>
+            <module name="HiddenSearch" layoutPanel="panel_row4_col1">
+                <param name="search">
+                    `xenapp_index` `xa_sessions_sourcetype` `valid_sessions` $user$ |
+                    dedup SessionUID |
+                    `fill_clientversion`|
+                    `get_ica_devicetype` |
+                    eval Time=strftime(_time, "%H:%M:%S %m-%d-%y") |
+                    fields Time, BrowserName, ClientVersion, ClientIPV4, ClientAddress, ClientName, ClientProductId, DeviceType, LogOnTime, SessionUID, SessionId, AccountName, UserName, ServerName, FarmName
+                </param>
+                <module name="ViewRedirectorLink" layoutPanel="panel_row4_col1">
+                    <param name="viewTarget">flashtimeline</param>
+                    <param name="label">View Full Report</param>
+                </module>
+                
+                <module name="JobProgressIndicator" layoutPanel="viewHeader"/>
+                
+                <module name="HiddenPostProcess" layoutPanel="panel_row3_col1" group="Servers" >
+                    <param name="search"> stats first(Time) as Time first(BrowserName) as Application by ServerName | sort - ServerName </param>
+                    <module name="SimpleResultsTable">
+                        <param name="drilldown">none</param>
+                    </module> <!-- SimpleResultsTable -->
+                </module>
 
-                <module name="Search" layoutPanel="panel_row4_col1" >
-                    <param name="search"> `xenapp_index` `xa_sessions_sourcetype` `valid_sessions` UserName="$UserName$" | dedup SessionUID | `fill_clientversion`| `get_ica_devicetype` | eval Time=strftime(_time, "%H:%M:%S %m-%d-%y") | fields Time, BrowserName, ClientVersion, ClientIPV4, ClientAddress, ClientName, ClientProductId, DeviceType, LogOnTime, SessionUID, SessionId, AccountName, UserName, ServerName, FarmName </param>
-                    <module name="ViewRedirectorLink" layoutPanel="panel_row4_col1">
-                        <param name="viewTarget">flashtimeline</param>
-                        <param name="label">View Full Report</param>
-                    </module>
-                    
-                    <module name="JobProgressIndicator" layoutPanel="viewHeader"/>
-                    
-                    <module name="PostProcess" layoutPanel="panel_row3_col1" group="Servers" >
-                        <param name="search"> stats first(Time) as Time first(BrowserName) as Application by ServerName | sort - ServerName </param>
-                        <module name="SimpleResultsTable">
-                            <param name="drilldown">row</param>
-                        </module> <!-- SimpleResultsTable -->
-                    </module>
+                <module name="HiddenPostProcess" layoutPanel="panel_row3_col2" group="Sessions" >
+                    <param name="search"> stats first(Time) as Time first(ServerName) as Server first(BrowserName) as Application by SessionUID | table Time Server Application SessionUID </param>
+                    <module name="SimpleResultsTable">
+                        <param name="drilldown">none</param>
+                    </module> <!-- SimpleResultsTable -->
+                </module>
 
-                    <module name="PostProcess" layoutPanel="panel_row3_col2" group="Sessions" >
-                        <param name="search"> stats first(Time) as Time first(ServerName) as Server first(BrowserName) as Application by SessionUID | table Time Server Application SessionUID </param>
-                        <module name="SimpleResultsTable">
-                            <param name="drilldown">row</param>
-                        </module> <!-- SimpleResultsTable -->
-                    </module>
+                <module name="HiddenPostProcess" layoutPanel="panel_row4_col1" group="Applications" >
+                    <param name="search"> stats first(Time) as Time first(UserName) as User first(BrowserName) as Application first(ServerName) as Server first(ClientVersion) as ClientVersion first(DeviceType) as DeviceType first(ClientType) as ClientType by SessionUID | fields - SessionUID | sort - Application </param>
+                    <module name="SimpleResultsTable">
+                        <param name="drilldown">none</param>
+                    </module> <!-- SimpleResultsTable -->
+                </module>
 
-                    <module name="PostProcess" layoutPanel="panel_row4_col1" group="Applications" >
-                        <param name="search"> stats first(Time) as Time first(UserName) as User first(BrowserName) as Application first(ServerName) as Server first(ClientVersion) as ClientVersion first(DeviceType) as DeviceType first(ClientType) as ClientType by SessionUID | fields - SessionUID | sort - Application </param>
-                        <module name="SimpleResultsTable">
-                            <param name="drilldown">row</param>
-                        </module> <!-- SimpleResultsTable -->
-                    </module>
-
-                </module> <!-- TextField -->
             </module> <!-- HiddenSearch -->
-        </module> <!-- TimeRangePicker -->
-    </module> <!-- URLLoader -->
+        </module> <!-- ExtendedFieldSerch -->
+    </module> <!-- TimeRangePicker -->
+
 
 </view>

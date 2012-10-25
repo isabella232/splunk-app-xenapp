@@ -87,6 +87,18 @@
               </param>
             </module>
             
+            <module name="SubmitButton">
+              <param name="allowSoftSubmit">False</param>
+              <param name="label">Go</param>
+
+              
+              <module name="HiddenSearch">
+                <param name="search">index=xenapp | head 1</param>
+                              <module name="NullModule" />
+              </module>
+            </module>
+            
+            <!--
             <module name="StaticContentSample">
               <param name="text">
                 <![CDATA[
@@ -100,7 +112,8 @@
                 ]]>
               </param>
             </module>
-      
+            -->
+            
           </module> <!-- Server Select -->
         </module> <!-- Submit button -->
     </module> <!-- ExtendedFieldSearch (username) -->

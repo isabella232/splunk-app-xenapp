@@ -25,12 +25,7 @@
   
   <module name="HiddenSearch" layoutPanel="viewHeader" autoRun="True">
     <param name="search">
-      `perfmon_process` |
-      table vm_name Value counter instance process_name |
-      eval mem = if(counter=="Virtual Bytes",Value,"") |
-      eval cpu = if(counter=="% Processor Time",Value,"") |
-      eval ioread = if(counter="IO Read Operations/sec",Value,"") |
-      eval iowrite = if(counter="IO Write Operations/sec",Value,"")
+      `perfmon_process` | table *
     </param>
     <module name="ViewRedirectorLink" layoutPanel="viewHeader">
       <param name="viewTarget">flashtimeline</param>
@@ -49,7 +44,7 @@
     <module name="JobProgressIndicator"/>
     <module name="HiddenPostProcess" layoutPanel="panel_row4_col1" group="Max Memory Consumption by Process" autoRun="True">
       <param name="search">
-        | stats max(mem) as bits by process_name |
+        stats max(Virtual_Bytes) as bits by process_name |
         `bits2mb` |
         rename bits to "Memory in MB" |
         rename process_name as Process |
@@ -70,8 +65,8 @@
     </module>
     <module name="HiddenPostProcess" layoutPanel="panel_row4_col2" group="Max CPU Consumption by Process" autoRun="True">
       <param name="search">
-        search process_name != "idle" cpu!="" |
-        stats max(cpu) as "% CPU" by process_name |
+        search process_name != "idle" |
+        stats max(%_Processor_Time) as "% CPU" by process_name |
         rename process_name as Process |
         sort - "%CPU" |
         head 10
@@ -90,8 +85,7 @@
     </module>
     <module name="HiddenPostProcess" layoutPanel="panel_row5_col1" group="Avg Disk/Network IO Write by Process" autoRun="True">
       <param name="search">
-        search iowrite != "" |
-        stats avg(iowrite) as "Avg I/O Write Operations" by process_name |
+        stats avg(IO_Write_Operations/sec) as "Avg I/O Write Operations" by process_name |
         rename process_name as Process |
         sort - "Avg I/O Write Operations" |
         head 10
@@ -110,8 +104,7 @@
     </module>
     <module name="HiddenPostProcess" layoutPanel="panel_row5_col2" group="Avg Disk/Network IO Read by Process" autoRun="True">
       <param name="search">
-        search ioread !="" |
-        stats avg(ioread) as "Avg I/O Read Operations" by process_name |
+        stats avg(IO_Read_Operations/sec) as "Avg I/O Read Operations" by process_name |
         rename process_name as Process |
         sort - "Avg I/O Read Operations" |
         head 10

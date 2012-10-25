@@ -226,6 +226,9 @@ switch (Splunk.util.getCurrentView()) {
     break;
 
     case "xa_userexp_wizard":
+	
+	var selectText = "Type in a user name and press 'List Servers'";
+	
 	$(document).ready(function() {
 	    
 	    $('input[name="user"]').focus();
@@ -239,12 +242,10 @@ switch (Splunk.util.getCurrentView()) {
 	    var serverDiv = $("#sServer").parent().parent().parent();
 	    $(serverDiv).addClass("serverCell");
 	    
-	    var selectText = "Type in a user name and press 'List Servers'";
-	    
 	    $("#SearchSelectLister_0_3_0_id option:first").text(selectText);
 	    
 	    $("#btnSubmit").click(function(){
-		
+
 		var username = $('input[name="user"]').val();
 		var servername = $("#SearchSelectLister_0_3_0_id option:selected").text();
 		
@@ -258,8 +259,62 @@ switch (Splunk.util.getCurrentView()) {
 		}
 		
 	    });
+	    
+	    
 	});
 	
+	if(Splunk.Module.SubmitButton) {
+	    Splunk.Module.SubmitButton = $.klass(Splunk.Module.SubmitButton , {
+		onClick : function($super, event) {
+		    $super(event);
+		    if(this.getParam("label") == "Go") {
+			var username = $('input[name="user"]').val();
+			var servername = $("#SearchSelectLister_0_3_0_id option:selected").text();
+		
+			if($.trim(username) == "") {
+			    alert("Please enter a user name");
+			    $('input[name="user"]').focus();
+			} else if(servername == selectText) {
+				alert(selectText);
+			} else {
+			    location.href=Splunk.util.make_url("app", Splunk.util.getCurrentApp(), "xa_user_experience") + "?username=" + username + "&hostname=" + servername;
+			}
+		    }
+		},
+	    });
+	}
+	
+	if (Splunk.Module.SimpleResultsTable) {
+	    Splunk.Module.SimpleResultsTable = $.klass(Splunk.Module.SimpleResultsTable, {
+		onResultsRendered: function ($super) {
+		    var retVal = $super();
+		    //this.myCustomHeatMapDecorator();
+		    //var context = this.getContext();
+		    //var search = context.get("search");
+		    var job = this.getContext().get("search").job;
+		    //var timeRange = search.getTimeRange();
+		    
+		    var username = $('input[name="user"]').val();
+		    var servername = $("#SearchSelectLister_0_3_0_id option:selected").text();
+		    
+		    if($.trim(username) == "") {
+			alert("Please enter a user name");
+			$('input[name="user"]').focus();
+		    } else if(servername == selectText) {
+			alert(selectText);
+		    } else {
+			location.href=Splunk.util.make_url("app", Splunk.util.getCurrentApp(), "xa_user_experience") +
+			"?username=" + username +
+			"&hostname=" + servername +
+			"&earliest=" + job["_searchEarliestTime"] +
+			"&latest=" + job["_searchLatestTime"];
+		    }
+		    return retVal;
+		}
+	    });
+	}
+            
+
     break;
 
     case "xa_user_experience":
@@ -321,6 +376,31 @@ switch (Splunk.util.getCurrentView()) {
 
 		});
 	});
+	
+	var earliest = getParameterByName("earliest");
+	var latest = getParameterByName("latest");
+	
+	
+	if(earliest != "" && latest != "") {
+	    
+	    var range = new Splunk.TimeRange(earliest, latest);
+	    var search = new Splunk.Search("*", range);
+	    var tcontext = new Splunk.Context();
+	    tcontext.set("search", search);
+	    
+	    
+	    
+	    if (Splunk.Module.TimeRangePicker) {
+		//alert(tcontext.get("search").getTimeRange());
+		    //Splunk.Module.TimeRangePicker = $.klass(Splunk.Module.TimeRangePicker, {
+			
+		    
+		//});
+		alert(Splunk.Module.TimeRangePicker);
+		Splunk.Module.TimeRangePicker.applyContext(tcontext);
+	    }
+	}
+
 	
     break;
     

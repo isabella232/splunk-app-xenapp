@@ -735,80 +735,14 @@ table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper {
     color: #Eee;
 }
 
-table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:hover, table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:focus, table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:hover {
-	background-color: #78a22f;
-	border-color: #78a22f;
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:hover,
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:focus,
+table.mainSearchControlsTable .TimeRangePicker .timeRangeActivatorWrapper:hover
+{
+    background-color: #78a22f;
+    border-color: #78a22f;
 }
 
-/* Flash line and charts 
----------------------------------*/
-
-/* All flash charts */
-/*
-  background-color -> controls bgcolor
-  border-left-color -> controls foregroundColor
-  color -> controls fontColor
-  controls and and font color get screened via an alpha layer, so should probably be set to all black or white, depending on main background
-*/
-div.FlashChart {
-    background-color: transparent; 
-  /*  border-left-color:#000; */
-   /* color: #000; */
-   padding: 0 !important;
-}
-
-div.FlashWrapperContainer object {
-	border-radius: 5px;
-}
-
-/*.highcharts-placeholder {
-	background-color: #eee;
-}
-*/
-
-.highcharts-container {
-	/* border: 1px solid #eee; */
-}
-
-/* flash timeline specific */
-/*
-  background-color -> controls bgcolor
-  border-left-color -> controls foregroundColor
-  color -> controls fontColor
-  border-right-color -> controls seriesColor
-controls and and font color get screened via an alpha layer, so should probably be set to all black or white, depending on main background
-*/
-div.FlashTimeline {
-    background-color: #eee;
-   /* border-left-color: #000; */
-  /*  color: #000; */
-    /* the color of the histogram bar. border-right-color = fill */
-    border-right-color: #6d7e56;
-    margin: 0 20px;
-    border-radius: 6px 6px 0 0;
-}
-
-.resultsArea {
-	margin: 0 20px;
-}
-
-div.FlashTimeline .controlLinks {
-	background-color: #eee;
-	background-image: url('../../../img/skins/default/overlay_reversegradient_light_28.png');
-	border-radius: 6px 6px 0 0;
-}
-
-div.FlashTimeline .bucketSize {
-	color: #6b6b6a;
-}
-
-div.FlashTimeline span.linLogLabel{
-	color: #6b6b6a;
-}
-
-div.FlashTimeline a.linLogToggle .splIcon-triangle-4-s {
-    background-position: -7px -367px;
-}
 
 /* popup bar chart; should be same color as flash timeline */
 .splBarGraphBar {

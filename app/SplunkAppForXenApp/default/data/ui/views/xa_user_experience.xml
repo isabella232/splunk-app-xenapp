@@ -18,7 +18,11 @@
     <param name="label">User Experience</param>
   </module> -->
   <module name="StaticContentSample" layoutPanel="viewHeader">
-    <param name="text">This report allows you to profile and score user sessions. A user experience score of 1 (lowest) to 5 (highest) is assigned to the various components monitored as part of a user's session. To get started, enter a username, server hostname, select a time range and click Submit.</param>
+    <param name="text">
+      This report allows you to profile and score user sessions.
+      A user experience score of 1 (lowest) to 5 (highest) is assigned to the various components monitored as part of a user's session.
+      To get started, enter a username, server hostname, select a time range and click Submit.
+    </param>
   </module>
   
   <module name="ServerSideInclude" layoutPanel="viewHeader">
@@ -169,12 +173,12 @@
               `perfmon_cpu`
                 [search `xenapp_index` `xa_sessions_sourcetype` $user$ host=$host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] |
               bin _time span=1m |
-              stats last(Value) as Value by _time host
+              stats last(%_Processor_Time) as Value by _time host
             </param>
             <module name="JobProgressIndicator"/>
             <module name="HiddenPostProcess" layoutPanel="panel_row6_col1" group="% CPU Utilization">
               <param name="search">
-                | timechart span=1m max(Value) as "Max % CPU" avg(Value) as "Avg % CPU"  min(Value) as "Min % CPU"
+                | timechart span=1m avg(Value) as "Avg % CPU"
               </param>
               <module name="HiddenChartFormatter">
                 <param name="chart">line</param>
@@ -192,7 +196,7 @@
               </module>
             </module>
             <module name="HiddenPostProcess" layoutPanel="panel_row5_col1_grp1" group="XenApp Host Performance">
-              <param name="search"> | stats median(Value) as Value | eval Value=round(Value,2)   | `usrexp_cpu`| eval usrexp="usrexp"+usrexp</param>
+              <param name="search"> | stats median(Value) as Value | eval Value=round(Value,2) | `usrexp_cpu`| eval usrexp="usrexp"+usrexp</param>
               <module name="SingleValue">
                 <param name="field">Value</param>
                 <param name="classField">usrexp</param>
@@ -207,11 +211,14 @@
               `perfmon_mem`
                 [search `xenapp_index` `xa_sessions_sourcetype` $user$ host=$host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] |
               bin _time span=1m  |
-              stats first(Value) as Value  by _time host
+              stats first(Available_Bytes) as Value  by _time host
             </param>
             <module name="JobProgressIndicator"/>
             <module name="HiddenPostProcess" layoutPanel="panel_row6_col2" group="Available Memory in Megabytes">
-              <param name="search">| eval Value=Value/1024/1024 | timechart span=1m max(Value) as MaxMBFree avg(Value) as AvgMBFree min(Value) as MinMBFree | eval MaxMBFree= round(MaxMBFree,2) | eval AvgMBFree= round(AvgMBFree,2) | eval MinMBFree= round(MinMBFree,2)</param>
+              <param name="search">
+                | eval Value=Value/1024/1024 |
+                timechart span=1m avg(Value) as AvgMBFree | eval AvgMBFree = round(AvgMBFree,2) | rename AvgMBFree AS "Avg Free MB"
+              </param>
               <module name="HiddenChartFormatter">
                 <param name="chart">line</param>
                 <param name="chart.nullValueMode">connect</param>
@@ -224,7 +231,13 @@
               </module>
             </module>
             <module name="HiddenPostProcess" layoutPanel="panel_row5_col1_grp2" group="XenApp Host Performance">
-              <param name="search"> | eval Value=Value/1024/1024 | stats median(Value) as Value | eval Value=round(Value,2)   | `usrexp_mem`| eval usrexp="usrexp"+usrexp</param>
+              <param name="search">
+                | eval Value=Value/1024/1024 |
+                stats median(Value) as Value |
+                eval Value=round(Value,2) |
+                `usrexp_mem`|
+                eval usrexp="usrexp"+usrexp
+              </param>
               <module name="SingleValue">
                 <param name="field">Value</param>
                 <param name="classField">usrexp</param>
@@ -236,14 +249,16 @@
           
           <module name="HiddenSearch" layoutPanel="panel_row6_col3">
             <param name="search">
-              counter="Disk Transfers/Sec" `perfmon_logdisk` object=LogicalDisk
+              `perfmon_logdisk`
                 [search `xenapp_index` `xa_sessions_sourcetype` $user$ host=$host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] |
-              stats first(Value) as Value  by _time host |
-              bin _time span=1m
+              bin _time span=1m |
+              stats max(Disk_Transfers/Sec) as Value  by _time host
             </param>
             <module name="JobProgressIndicator"/>
             <module name="HiddenPostProcess" layoutPanel="panel_row6_col3" group="XenApp Host Performance">
-              <param name="search">| timechart span=1m max(Value) as max avg(Value) as avg min(Value) as min | eval avg = round(avg,2) | eval max = round(max,2) | eval min = round(min,2) | rename min as "Min Disk Transfers/Sec" | rename max as "Max Disk Transfers/Sec" | rename avg as "Avg Disk Transfers/Sec"</param>
+              <param name="search">
+                | timechart span=1m avg(Value) as avg | eval avg = round(avg,2) | rename avg as "Avg Disk Transfers/Sec"
+              </param>
               <module name="HiddenChartFormatter">
                 <param name="chart">line</param>
                 <param name="chart.nullValueMode">connect</param>
@@ -256,7 +271,12 @@
               </module>
             </module>
             <module name="HiddenPostProcess" layoutPanel="panel_row5_col1_grp3" group="XenApp Host Performance">
-              <param name="search">| stats median(Value) as Value | eval Value=round(Value,2)   | `usrexp_io`| eval usrexp="usrexp"+usrexp</param>
+              <param name="search">
+                | stats median(Value) as Value |
+                eval Value=round(Value,2) |
+                `usrexp_io`|
+                eval usrexp="usrexp"+usrexp
+              </param>
               <module name="SingleValue">
                 <param name="field">Value</param>
                 <param name="classField">usrexp</param>
@@ -392,7 +412,7 @@
           <!--
            *************  Start NetApp performance *************
           -->
-          <module name="HiddenSearch" layoutPanel="panel_row9_col1" group="NetApp Performance">
+          <module name="HiddenSearch" layoutPanel="panel_row10_col1" group="NetApp Performance">
               <param name="search">
                 index=netapp_perf
                   [search eventtype=servervirt:*:sr
@@ -414,7 +434,7 @@
                   job.getResultCount() > 0
                 </param>
                 <param name="mode">serializeAll</param>
-                <param name="panel">panel_row9_col</param>
+                <param name="panel">panel_row10_col</param>
               
                 <module name="HiddenChartFormatter">
                   <param name="chart">line</param>
@@ -438,7 +458,7 @@
           <!--
             ************* Start Netscaler performance *************
           -->
-          <module name="HiddenSearch" layoutPanel="panel_row10_col1" group="Netscaler Performance">
+          <module name="HiddenSearch" layoutPanel="panel_row11_col1" group="Netscaler Performance">
               <param name="search">
                 eventtype=citrix_ns
                   [search index=xenapp sourcetype="xenapp:65:session" $user$ |
@@ -454,7 +474,7 @@
                   job.getResultCount() > 0
                 </param>
                 <param name="mode">serializeAll</param>
-                <param name="panel">panel_row10_col</param>
+                <param name="panel">panel_row11_col</param>
                 
                 <module name="HiddenChartFormatter">
                   <param name="chart">line</param>
@@ -476,7 +496,7 @@
           -->
           
           <!-- Start Windows Event Logs -->
-          <module name="HiddenSearch" layoutPanel="panel_row11_col1" group="Windows WinEvent Log">
+          <module name="HiddenSearch" layoutPanel="panel_row12_col1" group="Windows WinEvent Log">
             <param name="search">`win_index` Type=Error sourcetype="WinEventLog:*" [search `xenapp_index` `xa_sessions_sourcetype` $user$ host=$host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] |stats values(SourceName) as "Source(s)"   values(Message) as "Message(s)" by Type host | head 10 | sort - count | rename host as Host</param>
             <module name="SimpleResultsTable">
               <param name="drilldown">row</param>
@@ -492,7 +512,7 @@
           <!-- End Windows Event Logs -->
           
           <!-- Start View Reports -->
-          <module name="HiddenSearch" layoutPanel="panel_row12_col1" group="View Reports">
+          <module name="HiddenSearch" layoutPanel="panel_row13_col1" group="View Reports">
             <param name="search">
               `xenapp_index`
                 [search `xenapp_index` `xa_sessions_sourcetype` $user$ $host$ |
@@ -504,7 +524,7 @@
                 stats first(Report) as Report by host |
                 rename host as Host
             </param>
-            <module name="SimpleResultsTable" layoutPanel="panel_row12_col1">
+            <module name="SimpleResultsTable" layoutPanel="panel_row13_col1">
               <param name="displayMenu">true</param>
               <param name="count">100</param>
               <param name="drilldown">row</param>

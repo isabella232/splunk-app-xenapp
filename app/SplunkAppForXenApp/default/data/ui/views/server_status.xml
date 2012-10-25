@@ -90,33 +90,45 @@
                 <param name="label">OS Performance</param>
                 <module name="HiddenSearch">
                     <param name="search">
-                        `perfmon_index` host="$server$" sourcetype="Perfmon:CPULoad" OR sourcetype="PerfMon:AvailableMemory" OR sourcetype="PerfMon:*Disk*" |
-                        stats sparkline(avg(Value)) as "Average" avg(Value) as "Average Value" by counter |
-                        sort counter |
-                        rename counter as "Performance Counter"
+                        `perfmon_brief` host="$server$" | table*
                     </param>
-                    <module name="SimpleResultsTable">
-                        <param name="drilldown">row</param>
-                        <!-- drilldown to performance view -->
-                    </module> <!-- SimpleResultsTable -->
+                    
+                    <module name="HiddenPostProcess">
+                        <param name="search">
+                            search object="Processor" |
+                            stats sparkline(avg(%_Processor_Time)) AS "Avg. % Processor", avg(%_Processor_Time) AS "Avg. Value" by object | rename object AS Object    
+                        </param>
+                        <module name="SimpleResultsTable">
+                            <param name="drilldown">none</param>
+                            <param name="displayRowNumbers">False</param>
+                        </module> <!-- SimpleResultsTable -->
+                    </module> <!-- HiddenPostProcess -->
+                    
+                    <module name="HiddenPostProcess">
+                        <param name="search">
+                            search object="Memory" |
+                            stats sparkline(avg(Available_Bytes)) AS "Avg. Free Bytes", avg(Available_Bytes) AS "Avg. Value" by object | rename object AS Object
+                        </param>
+                        <module name="SimpleResultsTable">
+                            <param name="drilldown">none</param>
+                            <param name="displayRowNumbers">False</param>
+                        </module> <!-- SimpleResultsTable -->
+                    </module> <!-- HiddenPostProcess -->
+                    
+                    <module name="HiddenPostProcess">
+                        <param name="search">
+                            search object="LogicalDisk" |
+                            stats sparkline(avg(Disk_Transfers/Sec)) AS "Avg. Disk I/O", avg(Disk_Transfers/Sec) AS "Avg. Value" by object | rename object AS Object
+                        </param>
+                        <module name="SimpleResultsTable">
+                            <param name="drilldown">none</param>
+                            <param name="displayRowNumbers">False</param>
+                        </module> <!-- SimpleResultsTable -->
+                    </module> <!-- HiddenPostProcess -->
+                    
                 </module> <!-- Search -->
             </module> <!-- GenericHeader -->
 
-            <module name="GenericHeader" layoutPanel="panel_row2_col2">
-                <param name="label">Network Performance</param>
-                <module name="HiddenSearch">
-                    <param name="search">
-                        `perfmon_index` host="$server$" sourcetype="Perfmon:NetworkInterface" |
-                        stats sparkline(avg(Value)) as "Average" avg(Value) as "Average Value" by counter |
-                        sort counter |
-                        rename counter as "Performance Counter"
-                    </param>
-                    <module name="SimpleResultsTable">
-                        <param name="drilldown">row</param>
-                        <!-- drilldown to performance -->
-                    </module> <!-- SimpleResultsTable -->
-                </module> <!-- Search -->
-            </module> <!-- GenericHeader -->
 
             <module name="GenericHeader" layoutPanel="panel_row3_col1">
                 <param name="label">Windows Events</param>
@@ -126,6 +138,7 @@
                         stats count by Type EventCode LogName Message
                     </param>
                         <module name="SimpleResultsTable">
+                            <param name="displayRowNumbers">False</param>
                             <param name="drilldown">row</param>
                             <!-- Add View Results Link -->
                         </module>

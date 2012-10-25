@@ -65,7 +65,8 @@
                             `remove_junk`
                         </param>
                         <module name="SimpleResultsTable">
-                            <param name="drilldown">row</param>
+                            <param name="displayRowNumbers">False</param>
+                            <param name="drilldown">none</param>
                         </module>
                     </module>
                 </module>
@@ -81,6 +82,7 @@
                         </param>
                         <module name="SimpleResultsTable">
                             <param name="drilldown">row</param>
+                            <param name="displayRowNumbers">False</param>
                             <module name="NullModule" />
                         </module>
                     </module>
@@ -98,6 +100,7 @@
 
                             <module name="SimpleResultsTable">
                                 <param name="displayMenu">true</param>
+                                <param name="displayRowNumbers">False</param>
                                 <param name="count">100</param>
                             </module>
 
