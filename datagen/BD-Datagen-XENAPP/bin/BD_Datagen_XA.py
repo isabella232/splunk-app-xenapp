@@ -221,125 +221,135 @@ def getXDSession(VDI_SESSION):
 	xd_session["SmartAccessTags"] =""
 	return xd_session
 
-def writePerfMon(ServerName, EventTime):
-	host = ServerName
-	perf_ts = EventTime
-	
-	
-	print "***SPLUNK*** host="+host+" source=Perfmon:CPULoad sourcetype=Perfmon:CPULoad "
-	print perf_ts
-	CPU = random.randint(30,80)
-	print 'collection=CPULoad' 
-	print 'object=Processor'
-	print 'counter="% Processor Time'
-	print 'instance=Idle'
-	print 'Value='+str(CPU)
-	print ""
 
-	print "***SPLUNK*** host="+host+" source=Perfmon:AvailableMemory sourcetype=Perfmon:AvailableMemory "
-	print perf_ts
-	MEM = random.randint(268435456,1610612736)
-	print 'collection=AvailableMemory' 
-	print 'object=Memory'
-	print 'counter="Available Bytes'
-	print 'Value='+str(MEM)
-	print ""
+def writePerfMon(Desktop, dateTime):
+    host = Desktop["MachineName"][Desktop["MachineName"].find('\\') + 1:]
+    EventTime = dateTime.strftime("%m/%d/%Y %H:%M:%S.%f %z")
 
-	print "***SPLUNK*** host="+host+" source=Perfmon:FreeDiskSpace sourcetype=Perfmon:FreeDiskSpace "
-	print perf_ts
-	FREE = random.randint(5120,10240)
-	print 'collection=FreeDiskSpace' 
-	print 'object=LogicalDisk'
-	print 'counter="Free Megabytes'
-	print 'instance=_Total'
-	print 'Value='+str(FREE)
-	print ""
-	print perf_ts
-	FREEPERC = random.randint(50,99)
-	print 'collection=FreeDiskSpace' 
-	print 'object=LogicalDisk'
-	print 'counter="% Free Space'
-	print 'instance=_Total'
-	print 'Value='+str(FREEPERC)
-	print ""
+    # CPULoad
+    cpu = random.uniform(0.30,0.80)
+    print """
+***SPLUNK*** host={host} source=PerfmonMk:CPULoad sourcetype=PerfmonMk:CPULoad
+{time}
+collection=CPULoad
+category=CPULoad
+object=Processor
+instance\t%_Processor_Time\t%_User_Time\t%_Interrupt_Time
+_Total\t{processor}\t{user}\t{interrupt}
 
-	print "***SPLUNK*** host="+host+" source=Perfmon:NetworkInterface sourcetype=Perfmon:NetworkInterface "
-	IN = random.randint(20480,204800)
-	print perf_ts
-	print 'collection=NetworkInterface' 
-	print 'object=Network Interface'
-	print 'counter="Bytes Sent/sec'
-	print 'instance=Intel[R] PRO_1000 MT Network Connection'
-	print 'Value='+str(IN)
-	print ""
+""".format(
+        host = host,
+        time = EventTime,
+        processor = cpu,
+        user = random.uniform(0.30,cpu *.8),
+        interrupt = random.uniform(0.03,0.20))
 
-	OUT = random.randint(20480,204800)
-	print perf_ts
-	print 'collection=NetworkInterface' 
-	print 'object=Network Interface'
-	print 'counter=Bytes Received/sec'
-	print 'instance=Intel[R] PRO_1000 MT Network Connection'
-	print 'Value='+str(OUT)
-	print ""
-	
-	XFER = random.randint(1,50)
-	print "***SPLUNK*** host="+host+" source=Perfmon:perfmon:LogicalDisk sourcetype=Perfmon:LogicalDisk "	
-	print perf_ts
-	print 'collection=LogicalDisk'
-	print 'object=LogicalDisk'
-	print 'counter="Disk Transfers/Sec"'
-	print 'instance=_Total'
-	print 'Value='+str(XFER)
-	
-	
-	PROCS = {
-			"CdfSvc":(2,5120880,1,3,2,5,2),"CitrixCGPServer":(2,21662345,1,1,2),"CtxAudioService":(6,65755483,2,4,4),"CtxSvcHost":(4,5120550,1,1,2),"FlashUtil11e_ActiveX":(19,456423,1,1,2),"LogonUI":(.01,125534,4,4,2),"PicaSessionMgr":(2,34567,8,8,2),"PvsVmAgent":(2,5125500,1,1,2),"WmiPrvSE":(2,51200,1,1,2),"WorkstationAgent":(2,51200,1,1,2),"ccsvchst":(20,102400,1,3,7),"explorer":(3,637495,1,2,1),"iexplore":(19,51200,10,10,20),"jusched":(9,6455759,4,5,4)
-		}
-		
-	
+    # AvailableMemory
+    print """
+***SPLUNK*** host={host} source=PerfmonMk:AvailableMemory sourcetype=PerfmonMk:AvailableMemory
+{time}
+collection=AvailableMemory
+category=AvailableMemory
+object=Memory
+instance\tAvailable_Bytes\tPage_Faults_sec\tPage_Writes_sec\tPage_Reads_sec
+0\t{available}\t{faults}\t{writes}\t{reads}
 
-	for P in PROCS:
-		CPU = PROCS[P][0]
-		MEM = PROCS[P][1]
-		READ = PROCS[P][2]
-		WRITE = PROCS[P][3]
-		print "***SPLUNK*** host="+host+" source=Perfmon:RunningProcesses sourcetype=Perfmon:RunningProcesses "
-		print perf_ts
-		print 'collection=RunningProcesses' 
-		print 'object=Process'
-		print 'counter=Virtual Bytes'
-		print 'instance='+P
-		print 'Value='+str(MEM)
-		print ""
-		print ""
-		print "***SPLUNK*** host="+host+" source=Perfmon:RunningProcesses sourcetype=Perfmon:RunningProcesses "
-		print perf_ts
-		print 'collection=RunningProcesses' 
-		print 'object=Process'
-		print 'counter=% Processor Time'
-		print 'instance='+P
-		print 'Value='+str(CPU)
-		print ""
-		print ""
-		print "***SPLUNK*** host="+host+" source=Perfmon:RunningProcesses sourcetype=Perfmon:RunningProcesses "
-		print perf_ts
-		print 'collection=RunningProcesses' 
-		print 'object=Process'
-		print 'counter="IO Read Operations/sec"'
-		print 'instance='+P
-		print 'Value='+str(READ)
-		print ""
-		print ""
-		print "***SPLUNK*** host="+host+" source=Perfmon:RunningProcesses sourcetype=Perfmon:RunningProcesses "
-		print perf_ts
-		print 'collection=RunningProcesses' 
-		print 'object=Process'
-		print 'counter="IO Write Operations/sec"'
-		print 'instance='+P
-		print 'Value='+str(WRITE)
-		print ""
-		print ""		
+""".format(
+    host = host,
+    time = EventTime,
+    available = random.randint(268435456, 1610612736),
+    faults = random.gauss(448.899461, 100.459544), # Joel made this up based on shdev
+    writes = '0.000000', # Joel made this up too, it's always zero in shdev
+    reads = random.gauss(0.0080, 0.0104)) # Joel made this up based on shdev)
 
+    # PhysicalDisk
+    # LogicalDisk
+    reads = random.uniform(0.005,0.13)
+    reads = random.choice([0,reads])
+    writes = random.gauss(0.549401, 0.521513)
+    ios = random.uniform(0.11,0.71)
+
+    print """
+***SPLUNK*** host={host} source=PerfmonMk:LogicalDisk sourcetype=PerfmonMk:LogicalDisk
+{time}
+collection=LogicalDisk
+category=LogicalDisk
+object=LogicalDisk
+instance\tFree_Megabytes\t%_Disk_Time\t%_Free_Space\tSplit_IO/Sec\tDisk_Reads/Sec\tDisk_Writes/Sec\tDisk_Transfers/Sec\tDisk_Bytes/Sec
+C:\t{freeMb}\t{diskTime}\t{freePc}\t{splitIO}\t{diskReads}\t{diskWrites}\t{diskXfer}\t{diskBytes}
+_Total\t{freeMb}\t{diskTime}\t{freePc}\t{splitIO}\t{diskReads}\t{diskWrites}\t{diskXfer}\t{diskBytes}
+
+""".format(
+        host = host,
+        time = EventTime,
+        freeMb = random.randint(5120, 10240),
+        freePc = random.uniform(0.50, 0.99),
+        diskTime = random.gauss(0.211,0.44),
+        splitIO = random.choice([0,0,ios]),
+        diskReads = reads,
+        diskWrites = writes,
+        diskXfer = reads + writes,
+        diskBytes = random.choice([0,random.uniform(2000,80000)])
+    )
+
+    # NetworkInterface
+    print """
+***SPLUNK*** host={host} source=PerfmonMk:NetworkInterface sourcetype=PerfmonMK:NetworkInterface
+{time}
+collection=NetworkInterface
+category=NetworkInterface
+object=Network_Interface
+instance\tBytes_Received/sec\tBytes_Sent/sec
+Intel[R] PRO_1000 MT Network Connection\t{received}\t{sent}
+
+""".format(
+        host = host,
+        time = EventTime,
+        received = random.randint(20480, 204800),
+        sent = random.randint(20480, 204800))
+
+
+    # RunningProcesses
+    PROCS = {
+        "CdfSvc"                : (2,  5120880,  1, 3, 2, 1255),
+        "CitrixCGPServer"       : (2,  21662345, 1, 1, 2, 1235),
+        "CtxAudioService"       : (6,  65755483, 2, 4, 4, 4256),
+        "CtxSvcHost"            : (4,  5120550,  1, 1, 2, 3529),
+        "FlashUtil11e_ActiveX"  : (19, 456423,  1, 1, 2, 3321),
+        "LogonUI"               : (.01, 125534, 4, 4, 2, 3601),
+        "PicaSessionMgr"        : (2,  34567,   8, 8, 2, 5305),
+        "PvsVmAgent"            : (2,  5125500, 1, 1, 2, 2368),
+        "WmiPrvSE"              : (2,  51200,   1, 1, 2, 1922),
+        "WorkstationAgent"      : (2,  51200,   1, 1, 2, 5903),
+        "ccsvchst"              : (20, 102400,  1, 3, 7, 4988),
+        "explorer"              : (3,  637495,  1, 2, 1, 1893),
+        "iexplore"              : (19, 51200,  10, 10, 20, 1204),
+        "jusched"               : (9,  6455759, 4, 5, 4, 2395)
+    }
+
+    print """
+***SPLUNK*** host={host} source=PerfmonMk:RunningProcesses sourcetype=PerfmonMK:RunningProcesses
+{time}
+collection=RunningProcesses
+category=RunningProcesses
+object=Process
+instance\t%_Processor_Time\tVirtual_Bytes\tIO_Write_Operations/sec\tIO_Read_Operations/sec\tID_Process\tPage_Faults/Sec\tElapsed_Time""".format( host = host, time = EventTime)
+
+    for P in PROCS:
+        print "{process}\t{percent}\t{virtual}\t{writes}\t{reads}\t{id}\t{faults}\t{elapsed}".format(
+            host = host,
+            time = EventTime,
+            process = P,
+            percent = PROCS[P][0],
+            virtual = PROCS[P][1],
+            reads = PROCS[P][2],
+            writes = PROCS[P][3],
+            faults = random.choice([0,0,0,0,random.uniform(0.01,120.0)]),
+            id = PROCS[P][4],
+            elapsed = random.uniform(0.500000, 1500000.000000)
+        )
+
+    print ""
 
 def writeInventory(Desktop, EventTime):
 		perf_ts = EventTime
