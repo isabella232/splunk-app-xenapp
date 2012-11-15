@@ -1,0 +1,23 @@
+site,ip,name,fullname
+cupertino,172.16.43.10,exch-hub-cup-01,exch-hub-cup-01.cupertino.spl.com
+cupertino,172.16.43.11,exch-cas-cup-01,exch-cas-cup-01.cupertino.spl.com
+cupertino,172.16.43.50,exch-mbx-cup-00,exch-mbx-cup-00.cupertino.spl.com
+cupertino,172.16.43.51,exch-mbx-cup-01,exch-mbx-cup-01.cupertino.spl.com
+denver,172.16.70.5,csco-ironport-esa-den-01,csco-ironport-esa-den-01.denver.spl.com
+denver,172.16.70.6,sendmail-den-01,sendmail-den-01.denver.spl.com
+denver,172.16.70.7,ext-cas-den-01,exch-cas-den-01.denver.spl.com
+denver,172.16.75.10,exch-hub-den-01,exch-hub-den-01.denver.spl.com
+denver,172.16.75.11,exch-cas-den-01,exch-cas-den-01.denver.spl.com
+denver,172.16.43.50,exch-mbx-den-00,exch-mbx-den-00.denver.spl.com
+denver,172.16.43.51,exch-mbx-den-01,exch-mbx-den-01.denver.spl.com
+plano,172.16.115.10,exch-hub-pla-01,exch-hub-pla-01.plano.spl.com
+plano,172.16.115.11,exch-cas-pla-01,exch-cas-pla-01.plano.spl.com
+plano,172.16.43.50,exch-mbx-pla-00,exch-mbx-pla-00.plano.spl.com
+plano,172.16.43.51,exch-mbx-pla-01,exch-mbx-pla-01.plano.spl.com
+san francisco,172.16.200.5,csco-ironport-esa-san-01,csco-ironport-esa-san-01.sanfrancisco.spl.com
+san francisco,172.16.200.6,sendmail-san-01,sendmail-san-01.sanfrancisco.spl.com
+san francisco,172.16.200.7,ext-cas-san-01,ext-cas-san-01.sanfrancisco.spl.com
+san francisco,172.16.205.10,exch-hub-san-01,exch-hub-san-01.sanfrancisco.spl.com
+san francisco,172.16.205.11,exch-cas-san-01,exch-cas-san-01.sanfrancisco.spl.com
+san francisco,172.16.43.50,exch-mbx-san-00,exch-mbx-san-00.sanfrancisco.spl.com
+san francisco,172.16.43.51,exch-mbx-san-01,exch-mbx-san-01.sanfrancisco.spl.com
