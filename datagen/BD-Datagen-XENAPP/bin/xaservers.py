@@ -7,7 +7,7 @@ APP_LIB_PATH = os.path.join(os.environ["SPLUNK_HOME"], 'etc','apps','BD-Datagen-
 
 class XAServers(object):
     
-    def __init__(self):
+    def __init__(self, farmName):
 
 	self.datadir = os.path.join(os.path.dirname(__file__), 'data')
 	self.cache = list()
@@ -22,7 +22,8 @@ class XAServers(object):
 	    'ServerIP' : row[2],
 	    }
 
-	    self.cache.append(r)
+	    if(r["FarmName"] == farmName):
+		self.cache.append(r)
 	    
 	f.close()
 

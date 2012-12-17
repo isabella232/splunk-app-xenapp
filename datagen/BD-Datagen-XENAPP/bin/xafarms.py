@@ -19,7 +19,8 @@ class XAFarms(object):
 	    r = {
 	    'FarmName' : row[0],
 	    'ServerCount' : row[1],
-	    'AppCount' : row[2]
+	    'AppCount' : row[2],
+	    'SessionCount' : row[3]
 	    }
 
 	    self.cache.append(r)

@@ -1,0 +1,4 @@
+"UserName EXP - RDP Session",RDPSession,"RDPSession",3
+"UserName EXP - Application Crash or Hang",Microsoft-Windows-PerfDisk,"Application Crash or Hang",1
+"UserName EXP - Available Memory Cirtical",250.937500,"Available Memory Cirtical",2
+"UserName EXP - High Disk IO",133.116597,"High Disk IO",1
