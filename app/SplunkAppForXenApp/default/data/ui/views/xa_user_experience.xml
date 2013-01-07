@@ -410,6 +410,45 @@
           -->
           
           <!--
+           *************  Start UCS performance *************
+          -->
+          <module name="HiddenSearch" layoutPanel="panel_row9_col1" group="UCS Faults">
+              <param name="search">
+                eventtype=ucs-fault
+                  [search index="cisco_ucs*" sourcetype="ciscoucs:ucsm:inventory" class="vnicEtherIf"
+                    [search eventtype=servervirt:host
+                      [search eventtype=servervirt:vm vm_name=$host$ | fields vm_host | head 1 | rename vm_host AS hyp_hostname] |
+                      eval addr = dvc0_mac + ";" + dvc1_mac + ";" + dvc2_mac+ ";" |
+                      makemv delim=";" addr |
+                      mvexpand addr |
+                      fields addr
+                    ] |
+                    fields ucs |
+                    dedup ucs
+                  ] |
+                table severity type cause rule descr
+              </param>
+              
+              <module name="ConditionalPanel">
+                <param name="condition">
+                  job.getResultCount() > 0
+                </param>
+                <param name="mode">serializeAll</param>
+                <param name="panel">panel_row9_col</param>
+
+                <module name="SimpleResultsTable">
+                  <param name="drilldown">row</param>
+                  <param name="entityName">results</param>
+                  <param name="count">15</param>
+                  <param name="displayRowNumbers">False</param>
+                </module>
+              </module> <!-- ConditionalPanel -->
+          </module> <!-- HiddenSearch -->
+          <!--
+           *************  End UCS performance *************
+          -->
+          
+          <!--
            *************  Start NetApp performance *************
           -->
           <module name="HiddenSearch" layoutPanel="panel_row10_col1" group="NetApp Performance">
@@ -533,11 +572,7 @@
               <module name="HiddenSearch">
                 <param name="search">
                   `perfmon_index` $host$ `perfmon_process` |
-                  table host process_name Value counter instance |
-                  eval mem = if(counter=="Virtual Bytes",Value,"") |
-                  eval cpu = if(counter=="% Processor Time",Value,"") |
-                  eval ioread = if(counter="IO Read Operations/sec",Value,"") |
-                  eval iowrite = if(counter="IO Write Operations/sec",Value,"") 
+                  table host process_name Virtual_Bytes  %_Processor_Time IO_Write_Operations/sec IO_Read_Operations/sec
                 </param>
                 <module name="ConvertToIntention">
                   <param name="intention">

@@ -115,7 +115,7 @@
               <param name="intention">
                 <param name="name">stringreplace</param>
                 <param name="arg">
-                  <param name="user">
+                  <param name="UserName">
                     <param name="default"/>
                     <param name="prefix">UserName="</param>
                     <param name="suffix">"</param>
@@ -148,7 +148,7 @@
                 	<param name="allowSoftSubmit">False</param>
                 	<param name="label">Submit</param>
                 <module name="HiddenSearch" layoutPanel="viewHeader" autoRun="True">
-                  <param name="search">`get_alerts` | search $ServerName $UserName$ $FarmName$ </param>
+                  <param name="search">`get_alerts` | search $ServerName$ $UserName$ $FarmName$ </param>
                   <module name="ViewRedirectorLink" layoutPanel="viewHeader">
                     <param name="viewTarget">flashtimeline</param>
                     <param name="label">View Full Report</param>

@@ -65,10 +65,9 @@
     </module>
     <module name="HiddenPostProcess" layoutPanel="panel_row4_col2" group="Max CPU Consumption by Process" autoRun="True">
       <param name="search">
-        search process_name != "idle" |
         stats max(%_Processor_Time) as "% CPU" by process_name |
         rename process_name as Process |
-        sort - "%CPU" |
+        sort - "% CPU" |
         head 10
       </param>
       <module name="HiddenChartFormatter">
