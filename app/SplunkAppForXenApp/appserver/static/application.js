@@ -30,7 +30,36 @@ switch (Splunk.util.getCurrentView()) {
 			if (name == "Server") {
                             location.href=Splunk.util.make_url("app", Splunk.util.getCurrentApp(), "event_viewer") + "?servername=" + val + "&SourceName=" + val2;
                         }
-                    },
+                    }
+                });
+        }
+	
+    break;
+
+    case "xa_deployment":
+	
+	if (Splunk.Module.NullModule) {
+                Splunk.Module.NullModule = $.klass(Splunk.Module.NullModule, {
+                    onContextChange: function() {
+                        var context = this.getContext();
+                        
+                        var name = context.get("click.name");
+                        var val = context.get("click.value");
+                        var name2 = context.get("click.name2");
+                        var val2 = context.get("click.value2");
+			
+                        if (name == "Server Name") {
+                            location.href=Splunk.util.make_url("app", Splunk.util.getCurrentApp(), "server_status") + "?servername=" + val;
+                        }
+			
+			if (name == "Farm Name") {
+                            location.href=Splunk.util.make_url("app", Splunk.util.getCurrentApp(), "farm_status") + "?farmname=" + val;
+                        }
+			
+			if (name == "Username") {
+                            location.href=Splunk.util.make_url("app", Splunk.util.getCurrentApp(), "user_status") + "?username=" + val;
+                        }
+                    }
                 });
         }
 	
@@ -67,7 +96,7 @@ switch (Splunk.util.getCurrentView()) {
                         if (name == "Server Name") {
                             location.href=Splunk.util.make_url("app", Splunk.util.getCurrentApp(), "server_status") + "?servername=" + val;
                         }
-                    },
+                    }
                 });
         }
 	
@@ -104,7 +133,44 @@ switch (Splunk.util.getCurrentView()) {
                         if (name == "Server Name") {
                             location.href=Splunk.util.make_url("app", Splunk.util.getCurrentApp(), "server_status") + "?servername=" + val;
                         }
-                    },
+                    }
+                });
+        }
+	
+    break;
+
+    case "user_status":
+	
+	$(document).ready(function() {
+            var username = getParameterByName("username");
+            
+            if(username != "") {
+                $('input[name="user"]').val(username);
+		$('input[name="user"]').closest("form").submit();
+            } else {
+                $('input[name="user"]').val("Search by Username");
+                $('input[name="user"]').focus(function(){
+                    if($(this).val() == "Search by Username") {
+                        $(this).val("");
+                    }
+                });
+            }
+        });
+	
+	if (Splunk.Module.NullModule) {
+                Splunk.Module.NullModule = $.klass(Splunk.Module.NullModule, {
+                    onContextChange: function() {
+                        var context = this.getContext();
+                        
+                        var name = context.get("click.name");
+                        var val = context.get("click.value");
+                        var name2 = context.get("click.name2");
+                        var val2 = context.get("click.value2");
+			
+                        if (name == "Server Name") {
+                            location.href=Splunk.util.make_url("app", Splunk.util.getCurrentApp(), "server_status") + "?servername=" + val;
+                        }
+                    }
                 });
         }
 	
@@ -174,7 +240,7 @@ switch (Splunk.util.getCurrentView()) {
                         
 			$('#dialog').html("<p>"+val+"</p>");
 			$('#dialog').dialog('open');
-                    },
+                    }
                 });
             }
     
@@ -280,7 +346,7 @@ switch (Splunk.util.getCurrentView()) {
 			    location.href=Splunk.util.make_url("app", Splunk.util.getCurrentApp(), "xa_user_experience") + "?username=" + username + "&hostname=" + servername;
 			}
 		    }
-		},
+		}
 	    });
 	}
 	

@@ -68,7 +68,7 @@
       <module name="SimpleResultsTable" layoutPanel="panel_row8_col1">
         <param name="displayMenu">true</param>
         <param name="count">100</param>
-        <param name="drilldown">all</param>
+        <param name="drilldown">none</param>
         <param name="entityName">results</param>
         <param name="displayRowNumbers">False</param>
       </module>

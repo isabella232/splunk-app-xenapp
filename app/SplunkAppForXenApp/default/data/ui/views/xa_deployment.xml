@@ -33,10 +33,7 @@
         `fill_clientversion`|
         fields ClientVersion, ClientIPV4,ClientAddress, ClientName, ClientProductId, LogOnTime, SessionUID, SessionId, AccountName, UserName, ServerName, FarmName
       </param>
-      <module name="ViewRedirector" layoutPanel="viewHeader">
-        <param name="viewTarget">flashtimeline</param>
-      </module>
-      
+
       <module name="JobProgressIndicator"/>
       <module name="HiddenPostProcess" layoutPanel="panel_row3_col1_grp1" group="Session Stats" autoRun="True">
         <param name="search">
@@ -89,33 +86,7 @@
           <param name="drilldown">row</param>
           <param name="entityName">results</param>
           <param name="displayRowNumbers">False</param>
-          
-          <module name="HiddenSearch">
-            <param name="search">
-              `xenapp_index` `xa_sessions_sourcetype` `valid_sessions` $UserName$ |
-              dedup SessionUID |
-              `fill_clientversion`|
-              `get_ica_devicetype` |
-              eval Time=strftime(_time, "%H:%M:%S %m-%d-%y") |
-              fields Time, BrowserName, ClientVersion, ClientIPV4, ClientAddress, ClientName, ClientProductId, DeviceType, LogOnTime, SessionUID, SessionId, AccountName, UserName, ServerName, FarmName
-            </param>
-            
-            <module name="ConvertToIntention">
-              <param name="intention">
-                <param name="name">stringreplace</param>
-                <param name="arg">
-                  <param name="UserName">
-                    <param name="prefix">UserName=</param>
-                    <param name="fillOnEmpty">True</param>
-                    <param name="value">$click.value$</param>
-                  </param>
-                </param>
-              </param>
-              <module name="ViewRedirector">
-                <param name="viewTarget">user_status</param>
-              </module>
-            </module>
-          </module> <!-- HiddenSearch -->
+          <module name="NullModule" />
         </module> <!-- SimpleResultsTable -->
       </module> <!-- HiddenPostProcess -->
       
@@ -156,7 +127,7 @@
           <param name="drilldown">row</param>
           <param name="entityName">results</param>
           <param name="displayRowNumbers">False</param>
-          
+          <module name="NullModule" />
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row7_col1" group="Top Farms" autoRun="True">
@@ -167,7 +138,7 @@
           <param name="drilldown">row</param>
           <param name="entityName">results</param>
           <param name="displayRowNumbers">False</param>
-          
+          <module name="NullModule" />
         </module>
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row7_col2" group="Top Device Type" autoRun="True">

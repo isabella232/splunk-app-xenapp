@@ -61,3 +61,8 @@ export = none
 version = 4.3.4
 modtime = 1350304303.663171000
 
+[inputs/splunktcp%3A%2F%2F9997]
+owner = admin
+version = 5.0.2
+modtime = 1365007251.868772000
+

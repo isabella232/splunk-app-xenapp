@@ -86,14 +86,14 @@
           <!-- Start ICA performance stats -->
           <module name="HiddenSearch" layoutPanel="panel_row4_col1" >
             <param name="search">
-              `xenapp_index` `xa_ica` $user$ host=$host$ |
-              eval SessionBandwidth=InputSessionBandwidth+OutputSessionBandwidth |
+              index=xenapp_perfmon sourcetype="PerfmonMk:ICASession" $user$ host=$host$ |
+              eval SessionBandwidth=Input_Session_Bandwidth+Output_Session_Bandwidth |
               search SessionBandwidth&gt;=0 |
               timechart span=1m
                 max(SessionBandwidth) as MaxSessionBandwidth
                 min(SessionBandwidth) as MinSessionBandwidth
                 median(SessionBandwidth) as "AvgSessionBandwidth"
-                Max(LatencySessionAverage) as "LatencySessionAverage" |
+                Max(Latency_-_Session_Average) as "LatencySessionAverage" |
               eval AvgSessionBandwidth = round(AvgSessionBandwidth,2) |
               where MaxSessionBandwidth&gt;=0 |
               sort - _time
@@ -538,7 +538,7 @@
           <module name="HiddenSearch" layoutPanel="panel_row12_col1" group="Windows WinEvent Log">
             <param name="search">`win_index` Type=Error sourcetype="WinEventLog:*" [search `xenapp_index` `xa_sessions_sourcetype` $user$ host=$host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] |stats values(SourceName) as "Source(s)"   values(Message) as "Message(s)" by Type host | head 10 | sort - count | rename host as Host</param>
             <module name="SimpleResultsTable">
-              <param name="drilldown">row</param>
+              <param name="drilldown">none</param>
               <param name="entityName">results</param>
               <param name="count">15</param>
               <param name="displayRowNumbers">False</param>

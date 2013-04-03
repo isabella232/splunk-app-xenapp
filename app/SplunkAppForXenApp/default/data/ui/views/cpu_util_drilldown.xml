@@ -58,7 +58,7 @@
       </module>
       <module name="HiddenPostProcess" layoutPanel="panel_row3_col1" group="% CPU Utilization" autoRun="True">
         <param name="search">
-          | stats max(%_Processor_Time) as max avg(%_Processor_Time) as avg min(%_Processor_Time) as min by host |
+          stats max(%_Processor_Time) as max avg(%_Processor_Time) as avg min(%_Processor_Time) as min by host |
           eval avg = round(avg,2) |
           eval max = round(max,2) |
           eval min = round(min,2) |
@@ -72,7 +72,8 @@
           <param name="displayRowNumbers">False</param>
           <module name="HiddenSearch">
             <param name="search">
-              $host$ `perfmon_process` | table *
+              `perfmon_index` $host$ `perfmon_process` |
+              table host process_name Virtual_Bytes  %_Processor_Time IO_Write_Operations/sec IO_Read_Operations/sec
             </param>
             <module name="ConvertToIntention">
               <param name="intention">
