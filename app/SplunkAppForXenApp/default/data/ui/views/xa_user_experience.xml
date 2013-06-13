@@ -86,14 +86,14 @@
           <!-- Start ICA performance stats -->
           <module name="HiddenSearch" layoutPanel="panel_row4_col1" >
             <param name="search">
-              index=xenapp_perfmon sourcetype="PerfmonMk:ICASession" $user$ host=$host$ |
-              eval SessionBandwidth=Input_Session_Bandwidth+Output_Session_Bandwidth |
+              `xenapp_index` `xa_ica` $user$ host=$host$ |
+              eval SessionBandwidth=InputSessionBandwidth+OutputSessionBandwidth |
               search SessionBandwidth&gt;=0 |
-              timechart span=1m
+              timechart
                 max(SessionBandwidth) as MaxSessionBandwidth
                 min(SessionBandwidth) as MinSessionBandwidth
                 median(SessionBandwidth) as "AvgSessionBandwidth"
-                Max(Latency_-_Session_Average) as "LatencySessionAverage" |
+                Max(LatencySessionAverage) as "LatencySessionAverage" |
               eval AvgSessionBandwidth = round(AvgSessionBandwidth,2) |
               where MaxSessionBandwidth&gt;=0 |
               sort - _time
@@ -102,7 +102,7 @@
 
             <!-- ICA Session Bandwidth -->
             <module name="HiddenPostProcess" layoutPanel="panel_row4_col1" group="ICA Session Bandwidth">
-              <param name="search"> | timechart span=1m avg(AvgSessionBandwidth) as Bandwidth</param>
+              <param name="search"> | timechart avg(AvgSessionBandwidth) as Bandwidth</param>
               <module name="HiddenChartFormatter">
                 <param name="chart">line</param>
                 <param name="chart.stackMode">none</param>
@@ -126,7 +126,7 @@
             
             <!-- ICA Session Latency -->
             <module name="HiddenPostProcess" layoutPanel="panel_row4_col2" group="ICA Session Latency">
-              <param name="search">| timechart span=1m Max(LatencySessionAverage) as Latency</param>
+              <param name="search">| timechart Max(LatencySessionAverage) as Latency</param>
               <module name="HiddenChartFormatter">
                 <param name="chart">line</param>
                 <param name="chart.nullValueMode">connect</param>
@@ -210,14 +210,13 @@
             <param name="search">
               `perfmon_mem`
                 [search `xenapp_index` `xa_sessions_sourcetype` $user$ host=$host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] |
-              bin _time span=1m  |
-              stats first(Available_Bytes) as Value  by _time host
+                bin _time span=1m |
+                stats last(Available_Bytes) as Value  by _time host
             </param>
             <module name="JobProgressIndicator"/>
             <module name="HiddenPostProcess" layoutPanel="panel_row6_col2" group="Available Memory in Megabytes">
               <param name="search">
-                | eval Value=Value/1024/1024 |
-                timechart span=1m avg(Value) as AvgMBFree | eval AvgMBFree = round(AvgMBFree,2) | rename AvgMBFree AS "Avg Free MB"
+                timechart avg(Value) AS "Avg Free MB"
               </param>
               <module name="HiddenChartFormatter">
                 <param name="chart">line</param>
@@ -232,9 +231,7 @@
             </module>
             <module name="HiddenPostProcess" layoutPanel="panel_row5_col1_grp2" group="XenApp Host Performance">
               <param name="search">
-                | eval Value=Value/1024/1024 |
                 stats median(Value) as Value |
-                eval Value=round(Value,2) |
                 `usrexp_mem`|
                 eval usrexp="usrexp"+usrexp
               </param>
@@ -251,13 +248,13 @@
             <param name="search">
               `perfmon_logdisk`
                 [search `xenapp_index` `xa_sessions_sourcetype` $user$ host=$host$ | stats first(ServerName) as host by UserName | head 1 | fields + host] |
-              bin _time span=1m |
-              stats max(Disk_Transfers/Sec) as Value  by _time host
+              bin _time | eval wt = 30 |
+              stats max(Disk_Transfers/Sec) as Value  by _time host wt
             </param>
             <module name="JobProgressIndicator"/>
             <module name="HiddenPostProcess" layoutPanel="panel_row6_col3" group="XenApp Host Performance">
               <param name="search">
-                | timechart span=1m avg(Value) as avg | eval avg = round(avg,2) | rename avg as "Avg Disk Transfers/Sec"
+                | timechart avg(Value) as a1 avg(wt) as "Threshold" | eval a1 = round(a1,2) | rename a1 as "Avg Disk Transfers/Sec"
               </param>
               <module name="HiddenChartFormatter">
                 <param name="chart">line</param>
@@ -415,7 +412,7 @@
           <module name="HiddenSearch" layoutPanel="panel_row9_col1" group="UCS Faults">
               <param name="search">
                 eventtype=ucs-fault
-                  [search index="cisco_ucs*" sourcetype="ciscoucs:ucsm:inventory" class="vnicEtherIf"
+                  [search index="cisco_ucs*" class="vnicEtherIf"
                     [search eventtype=servervirt:host
                       [search eventtype=servervirt:vm vm_name=$host$ | fields vm_host | head 1 | rename vm_host AS hyp_hostname] |
                       eval addr = dvc0_mac + ";" + dvc1_mac + ";" + dvc2_mac+ ";" |
@@ -425,7 +422,7 @@
                     ] |
                     fields ucs |
                     dedup ucs
-                  ] |
+                  ] | stats count by severity type cause rule descr |
                 table severity type cause rule descr
               </param>
               
@@ -453,7 +450,7 @@
           -->
           <module name="HiddenSearch" layoutPanel="panel_row10_col1" group="NetApp Performance">
               <param name="search">
-                index=netapp_perf
+                  index=netapp_perf
                   [search eventtype=servervirt:*:sr
                     [search eventtype=servervirt:*:vdisk vm_name=$host$ |
                       fields sr_id |
