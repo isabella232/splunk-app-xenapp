@@ -86,14 +86,14 @@
           <!-- Start ICA performance stats -->
           <module name="HiddenSearch" layoutPanel="panel_row4_col1" >
             <param name="search">
-              `xenapp_index` `xa_ica` $user$ host=$host$ |
-              eval SessionBandwidth=InputSessionBandwidth+OutputSessionBandwidth |
+              index=xenapp_perfmon sourcetype="PerfmonMk:ICASession" $user$ host=$host$ |
+              eval SessionBandwidth=Input_Session_Bandwidth+Output_Session_Bandwidth |
               search SessionBandwidth&gt;=0 |
-              timechart
+              timechart span=1m
                 max(SessionBandwidth) as MaxSessionBandwidth
                 min(SessionBandwidth) as MinSessionBandwidth
                 median(SessionBandwidth) as "AvgSessionBandwidth"
-                Max(LatencySessionAverage) as "LatencySessionAverage" |
+                Max(Latency_-_Session_Average) as "LatencySessionAverage" |
               eval AvgSessionBandwidth = round(AvgSessionBandwidth,2) |
               where MaxSessionBandwidth&gt;=0 |
               sort - _time
